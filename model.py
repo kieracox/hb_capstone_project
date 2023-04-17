@@ -117,7 +117,7 @@ class JobSeekerConnectionRequest(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     requestor_id = db.Column(db.Integer, db.ForeignKey("job_seekers.id"))
     requested_id = db.Column(db.Integer, db.ForeignKey("recruiters.id"))
-    accepted = db.Column(db.Boolean, nullable=True)
+    accepted = db.Column(db.Boolean, nullable=False)
 
     sender = db.relationship("JobSeeker", back_populates="connection_request")
     receiver = db.relationship("Recruiter", back_populates="received_request")
@@ -132,7 +132,7 @@ class RecruiterConnectionRequest(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     requestor_id = db.Column(db.Integer, db.ForeignKey("recruiters.id"))
     requested_id = db.Column(db.Integer, db.ForeignKey("job_seekers.id"))
-    accepted = db.Column(db.Boolean, nullable=True)
+    accepted = db.Column(db.Boolean, nullable=False)
 
     sender = db.relationship("Recruiter", back_populates="connection_request")
     receiver = db.relationship("JobSeeker", back_populates="received_request")
