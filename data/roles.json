@@ -1,0 +1,115 @@
+[
+    {   
+        "name": "Fullstack Engineer",
+        "role_type": "Fullstack",
+        "min_yoe": 1,
+        "level": "Entry Level",
+        "location": "Seattle",
+        "remote": false,
+        "sponsorship_provided": false,
+        "salary": 100000
+    },
+
+    {
+        "name": "Senior Backend Engineer",
+        "role_type": "Backend",
+        "min_yoe": 5,
+        "level": "Senior",
+        "location": "San Francisco",
+        "remote": true,
+        "sponsorship_provided": false,
+        "salary": 150000   
+        
+    },
+
+    {
+        "name": "Frontend Engineer",
+        "role_type": "Frontend",
+        "min_yoe": 3,
+        "level": "Mid Level",
+        "location": "San Francisco",
+        "remote": false,
+        "sponsorship_provided": false,
+        "salary": 100000
+    },
+
+    {
+        "name": "Staff Devops Engineer",
+        "role_type": "Devops",
+        "min_yoe": 10,
+        "level": "Staff",
+        "location": "New York",
+        "remote": false,
+        "sponsorship_provided": true,
+        "salary": 200000
+
+    },
+
+    {
+        "name": "Senior Security Engineer",
+        "role_type": "Security",
+        "min_yoe": 4,
+        "level": "Senior",
+        "location": "San Francisco",
+        "remote": false,
+        "sponsorship_provided": true,
+        "salary": 150000
+    },
+
+    {
+        "name": "Staff Data Engineer",
+        "role_type": "Data",
+        "min_yoe": 8,
+        "level": "Staff",
+        "location": "",
+        "remote": true,
+        "sponsorship_provided": true,
+        "salary": 200000
+    },
+
+    {
+        "name": "Senior Machine Learning Engineer",
+        "role_type": "Machine Learning",
+        "min_yoe": 6,
+        "level": "Senior",
+        "location": "Seattle",
+        "remote": false,
+        "sponsorship_provided": true,
+        "salary": 150000
+    },
+
+    {
+        "name": "Engineering Manager",
+        "role_type": "Management",
+        "min_yoe": 8,
+        "level": "Manager",
+        "location": "New York",
+        "remote": false,
+        "sponsorship_provided": true,
+        "salary": 100000
+    },
+
+    {
+        "name": "Mobile Engineer",
+        "role_type": "Mobile",
+        "min_yoe": 3,
+        "level": "Mid Level",
+        "location": "San Francisco",
+        "remote": true,
+        "sponsorship_provided": true,
+        "salary": 100000
+    },
+
+    {
+        "name": "Junior QA Engineer",
+        "role_type": "QA",
+        "min_yoe": 1,
+        "level": "Entry Level",
+        "location": "",
+        "remote": true,
+        "sponsorship_provided": false,
+        "salary": 100000
+    }
+
+
+]

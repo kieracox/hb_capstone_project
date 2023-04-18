@@ -3,14 +3,14 @@
 from model import db, JobSeeker, Recruiter, Role, RoleSkill, JobSeekerSkill, JobSeekerRoleType, JobSeekerConnectionRequest, RecruiterConnectionRequest, connect_to_db
 
 def create_job_seeker(fname, lname, email, password, 
-                      linkedin, github='', location='', yoe='', 
-                      remote_only=False, sponsorship_needed=False, salary=''):
+                      linkedin, github='', location='', yoe=0, 
+                      remote_only=False, sponsorship_needed=False, desired_salary=0):
    
     """Create and return a new job seeker."""
 
     job_seeker = JobSeeker(fname=fname, lname=lname, email=email, password=password,
                             linkedin=linkedin, github=github, location=location, yoe=yoe,
-                            remote_only=remote_only, sponsorship_needed=sponsorship_needed, salary=salary)
+                            remote_only=remote_only, sponsorship_needed=sponsorship_needed, desired_salary=desired_salary)
     
     return job_seeker
 

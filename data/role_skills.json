@@ -1,0 +1,52 @@
+[
+    {
+        "role_id": 1,
+        "skill_name": "Javascript"
+    },
+
+    {
+        "role_id": 2,
+        "skill_name": "Flask"
+    },
+
+    {
+        "role_id": 3,
+        "skill_name": "React"
+    },
+
+    {
+        "role_id": 4,
+        "skill_name": "Kubernetes"
+    },
+
+    {
+        "role_id": 5,
+        "skill_name": "AWS"
+    },
+
+    {
+        "role_id": 6,
+        "skill_name": "SQL"
+    },
+
+    {
+        "role_id": 7,
+        "skill_name": "Python"
+    },
+
+    {
+        "role_id": 8,
+        "skill_name": "Agile"
+    },
+
+    {
+        "role_id": 9,
+        "skill_name": "Swift"
+    },
+
+    {
+        "role_id": 10,
+        "skill_name": "Selenium"
+    }
+
+]
