@@ -1,0 +1,48 @@
+{% extends 'base.html' %} 
+
+{% block title %} Homepage {% endblock %} 
+
+{% block body %} 
+
+<h1>Welcome!</h1>
+
+<h2>Create an account</h2>
+<form action="/users" method="POST">
+    <p>
+        Email <input type="text" name="email">
+    </p>
+    <p>
+        Password <input type="password" name="password">
+    </p>
+    <p>
+        I am a: 
+        <br>
+        Job Seeker <input type="radio" id="job_seeker" name="user_type" value="job_seeker">
+        <br>
+        Recruiter <input type="radio" id="recruiter" name="user_type" value="recruiter">
+    </p>
+    <p>
+        <input type="submit" value="Create my account">
+    </p>
+</form>
+
+<h2>Log In</h2>
+<form action="/login" method="POST">
+    <p>
+        Email <input type="text" name="email">
+    </p>
+    <p>
+        Password <input type="password" name="password">
+    </p>
+    <p>
+        I am a: 
+        <br>
+        Job Seeker <input type="radio" id="job_seeker" name="user_type" value="job_seeker">
+        <br>
+        Recruiter <input type="radio" id="recruiter" name="user_type" value="recruiter">
+    </p>
+    <p>
+        <input type="submit" value="Log In">
+    </p>
+</form>
+{% endblock %}

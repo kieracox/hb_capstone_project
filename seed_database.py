@@ -33,6 +33,7 @@ with open('data/roles.json') as f:
         lname = f'Test{n}'
         email = f'recruiter{n}@test.com'
         password = 'test'
+        company = 'Hackbright'
         linkedin = 'linkedin.com'
 
         db_recruiter = crud.create_recruiter(fname, lname, email, password, linkedin)

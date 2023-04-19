@@ -40,6 +40,7 @@ class Recruiter(db.Model):
     fname = db.Column(db.String, nullable=False)
     lname = db.Column(db.String, nullable=False)
     email = db.Column(db.String, unique=True, nullable=False)
+    company = db.Column(db.String)
     password = db.Column(db.String, nullable=False)
     linkedin = db.Column(db.String, nullable=False)
 

@@ -22,6 +22,10 @@ def get_js_by_id(id):
     """Get and return a job seeker by their id."""
     return JobSeeker.query.get(id)
 
+def get_js_by_email(email):
+    """Get and return a job seeker by their email."""
+    return JobSeeker.query.get(email)
+
 def create_recruiter(fname, lname, email, password, linkedin):
     """Create and return a new recruiter."""
     recruiter = Recruiter(fname=fname, lname=lname, email=email, password=password, linkedin=linkedin)
@@ -35,6 +39,10 @@ def return_all_recruiters():
 def get_recruiter_by_id(id):
     """Get and return a recruiter by their id."""
     return Recruiter.query.get(id)
+
+def get_recruiter_by_email(email):
+    """Get and return a job seeker by their email."""
+    return Recruiter.query.get(email)
 
 def create_role(recruiter_id, name, role_type, 
                 min_yoe, level='', location='', 
