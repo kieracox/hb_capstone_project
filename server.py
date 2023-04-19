@@ -13,57 +13,37 @@ def homepage():
     """View homepage."""
     return render_template('homepage.html')
 
-@app.route('/', methods=['POST'])
+@app.route('/users', methods=['POST'])
 def register_recruiter():
     """Create a new recruiter account."""
     email = request.form.get("email")
     password = request.form.get("password")
-    fname = request.form.get("first_name")
-    lname = request.form.get("last_name")
-    linkedin = request.form.get("linkedin")
+    user_type = request.form.get("user_type")
 
-    user = crud.get_recruiter_by_email(email)
+    if user_type == "recruiter":
+        user = crud.get_recruiter_by_email(email)
+    else:
+        user = crud.get_js_by_email(email)
 
     if user:
         flash("An account already exists with that email. Please enter another email.")
     
-    else:
-        recruiter = crud.create_recruiter(fname, lname, email, password, linkedin)
+    elif user_type == "recruiter":
+        recruiter = crud.create_recruiter(email, password)
         db.session.add(recruiter)
         db.session.add(recruiter)
         db.session.commit()
         flash("Account created! Please log in.")
     
-    return redirect("/")
-
-@app.route('/users', methods=['POST'])
-def register_jobseeker():
-    """Create a new job seeker account."""
-    email = request.form.get("email")
-    password = request.form.get("password")
-    fname = request.form.get("first_name")
-    lname = request.form.get("last_name")
-    linkedin = request.form.get("linkedin")
-    github = request.form.get("github")
-    location = request.form.get("location")
-    yoe = request.form.get("yoe")
-    remote_only = request.form.get("remote")
-    sponsorship_needed = request.form.get("sponsorship")
-    desired_salary = request.form.get("salary")
-
-    user = crud.get_recruiter_by_email(email)
-
-    if user:
-        flash("An account already exists with that email. Please enter another email.")
-    
-    else:
-        job_seeker = crud.create_job_seeker(fname, lname, email, password, linkedin, github, location, yoe, remote_only, sponsorship_needed, desired_salary)
+    else: 
+        job_seeker = crud.create_job_seeker( email, password)
         db.session.add(job_seeker)
         db.session.add(job_seeker)
         db.session.commit()
         flash("Account created! Please log in.")
     
-    return redirect("/")
+    return redirect("/") #change to redirect to user dashboard
+
 
 @app.route("/login", methods=["POST"])
 def log_in_user():
@@ -84,7 +64,7 @@ def log_in_user():
         session["user_type"] = user_type
         flash(f"Welcome back, {user.fname}!")
     #possibly need to add /<id>
-    return redirect("/user_dashboard")
+    return redirect("/")
 
 @app.route("/user_dashboard")
 def show_dashboard():

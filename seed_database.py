@@ -29,14 +29,14 @@ with open('data/roles.json') as f:
     roles_in_db = []
     
     for n in range(10):
-        fname = f'Recruiter{n}'
-        lname = f'Test{n}'
         email = f'recruiter{n}@test.com'
         password = 'test'
+        fname = f'Recruiter{n}'
+        lname = f'Test{n}'
         company = 'Hackbright'
         linkedin = 'linkedin.com'
 
-        db_recruiter = crud.create_recruiter(fname, lname, email, password, linkedin)
+        db_recruiter = crud.create_recruiter(email, password, fname, lname, company, linkedin)
         model.db.session.add(db_recruiter)
 
     for role in roles_data:
@@ -48,8 +48,9 @@ with open('data/roles.json') as f:
         location = role["location"]
         remote = role["remote"]
         sponsorship_provided = role["sponsorship_provided"]
+        salary = role["salary"]
 
-        db_role = crud.create_role(recruiter_id, name, role_type, min_yoe, level, location, remote, sponsorship_provided)
+        db_role = crud.create_role(recruiter_id, name, role_type, min_yoe, level, location, salary, remote, sponsorship_provided)
         roles_in_db.append(db_role)
     
     model.db.session.add_all(roles_in_db)
@@ -70,10 +71,10 @@ with open('data/role_skills.json') as g:
     model.db.session.commit()
 
 for n in range(10):
-    fname = f'Candidate{n}'
-    lname = f'Test{n}'
     email = f'candidate{n}@test.com'
     password = 'test'
+    fname = f'Candidate{n}'
+    lname = f'Test{n}'
     linkedin = 'linkedin.com'
     github = 'github.com'
     location = choice(locations)
@@ -82,9 +83,9 @@ for n in range(10):
     sponsorship_needed = choice([True, False])
     desired_salary = choice([None, 100000, 150000, 200000])
 
-    db_job_seeker = crud.create_job_seeker(fname, lname, email, password, 
-                                           linkedin, github, location, yoe, 
-                                           remote_only, sponsorship_needed, desired_salary)
+    db_job_seeker = crud.create_job_seeker(email, password, fname, lname,  
+                                           linkedin, github, location, yoe, desired_salary, 
+                                           remote_only, sponsorship_needed,)
     model.db.session.add(db_job_seeker)
 
     for _ in range(10):

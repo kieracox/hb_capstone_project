@@ -6,6 +6,10 @@
 
 <h1>Welcome!</h1>
 
+{% for message in get_flashed_messages() %}
+<h2>{{ message }}</h2>
+{% endfor %}
+
 <h2>Create an account</h2>
 <form action="/users" method="POST">
     <p>
@@ -17,9 +21,9 @@
     <p>
         I am a: 
         <br>
-        Job Seeker <input type="radio" id="job_seeker" name="user_type" value="job_seeker">
+        Job Seeker <input type="radio" id="create_job_seeker" name="user_type" value="job_seeker">
         <br>
-        Recruiter <input type="radio" id="recruiter" name="user_type" value="recruiter">
+        Recruiter <input type="radio" id="create_recruiter" name="user_type" value="recruiter">
     </p>
     <p>
         <input type="submit" value="Create my account">
@@ -37,9 +41,9 @@
     <p>
         I am a: 
         <br>
-        Job Seeker <input type="radio" id="job_seeker" name="user_type" value="job_seeker">
+        Job Seeker <input type="radio" id="login_job_seeker" name="user_type" value="job_seeker">
         <br>
-        Recruiter <input type="radio" id="recruiter" name="user_type" value="recruiter">
+        Recruiter <input type="radio" id="login_recruiter" name="user_type" value="recruiter">
     </p>
     <p>
         <input type="submit" value="Log In">

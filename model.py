@@ -12,17 +12,17 @@ class JobSeeker(db.Model):
     __tablename__ = "job_seekers"
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    fname = db.Column(db.String, nullable=False)
-    lname = db.Column(db.String, nullable=False)
     email = db.Column(db.String, unique=True, nullable=False)
     password = db.Column(db.String, nullable=False)
-    linkedin = db.Column(db.String, nullable=False)
+    fname = db.Column(db.String)
+    lname = db.Column(db.String)
+    linkedin = db.Column(db.String)
     github = db.Column(db.String)
     location = db.Column(db.String)
     yoe = db.Column(db.Integer)
+    desired_salary = db.Column(db.Integer)
     remote_only = db.Column(db.Boolean)
     sponsorship_needed = db.Column(db.Boolean)
-    desired_salary = db.Column(db.Integer)
 
     connection_request = db.relationship("JobSeekerConnectionRequest", back_populates="sender")
     received_request = db.relationship("RecruiterConnectionRequest", back_populates="receiver")
@@ -37,12 +37,12 @@ class Recruiter(db.Model):
     __tablename__ = "recruiters"
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    fname = db.Column(db.String, nullable=False)
-    lname = db.Column(db.String, nullable=False)
     email = db.Column(db.String, unique=True, nullable=False)
-    company = db.Column(db.String)
     password = db.Column(db.String, nullable=False)
-    linkedin = db.Column(db.String, nullable=False)
+    fname = db.Column(db.String)
+    lname = db.Column(db.String)
+    company = db.Column(db.String)
+    linkedin = db.Column(db.String)
 
     roles = db.relationship("Role", back_populates="recruiter")
     connection_request = db.relationship("RecruiterConnectionRequest", back_populates="sender")
@@ -57,14 +57,14 @@ class Role(db.Model):
     
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     recruiter_id = db.Column(db.Integer, db.ForeignKey("recruiters.id"))
-    name = db.Column(db.String, nullable=False)
-    role_type = db.Column(db.String, nullable=False)
-    min_yoe = db.Column(db.Integer, nullable=False)
+    name = db.Column(db.String)
+    role_type = db.Column(db.String)
+    min_yoe = db.Column(db.Integer)
     level = db.Column(db.String)
     location = db.Column(db.String)
+    salary = db.Column(db.Integer)
     remote = db.Column(db.Boolean)
     sponsorship_provided = db.Column(db.Boolean)
-    salary = db.Column(db.Integer)
 
     recruiter = db.relationship("Recruiter", back_populates="roles")
     skills = db.relationship("RoleSkill", back_populates="role")

@@ -2,15 +2,15 @@
 
 from model import db, JobSeeker, Recruiter, Role, RoleSkill, JobSeekerSkill, JobSeekerRoleType, JobSeekerConnectionRequest, RecruiterConnectionRequest, connect_to_db
 
-def create_job_seeker(fname, lname, email, password, 
-                      linkedin, github='', location='', yoe=0, 
-                      remote_only=False, sponsorship_needed=False, desired_salary=0):
+def create_job_seeker(email, password, fname='', lname='',  
+                      linkedin='', github='', location='', yoe=0, desired_salary=0,
+                      remote_only=False, sponsorship_needed=False):
    
     """Create and return a new job seeker."""
 
-    job_seeker = JobSeeker(fname=fname, lname=lname, email=email, password=password,
+    job_seeker = JobSeeker(email=email, password=password, fname=fname, lname=lname,
                             linkedin=linkedin, github=github, location=location, yoe=yoe,
-                            remote_only=remote_only, sponsorship_needed=sponsorship_needed, desired_salary=desired_salary)
+                            desired_salary=desired_salary, remote_only=remote_only, sponsorship_needed=sponsorship_needed)
     
     return job_seeker
 
@@ -24,11 +24,11 @@ def get_js_by_id(id):
 
 def get_js_by_email(email):
     """Get and return a job seeker by their email."""
-    return JobSeeker.query.get(email)
+    return JobSeeker.query.filter(JobSeeker.email == email).first()
 
-def create_recruiter(fname, lname, email, password, linkedin):
+def create_recruiter(email, password, fname='', lname='', company='', linkedin=''):
     """Create and return a new recruiter."""
-    recruiter = Recruiter(fname=fname, lname=lname, email=email, password=password, linkedin=linkedin)
+    recruiter = Recruiter(fname=fname, lname=lname, email=email, password=password, company=company, linkedin=linkedin)
     
     return recruiter
 
@@ -42,17 +42,17 @@ def get_recruiter_by_id(id):
 
 def get_recruiter_by_email(email):
     """Get and return a job seeker by their email."""
-    return Recruiter.query.get(email)
+    return Recruiter.query.filter(Recruiter.email == email).first()
 
-def create_role(recruiter_id, name, role_type, 
-                min_yoe, level='', location='', 
-                remote=False, sponsorship_provided=False, salary=0):
+def create_role(recruiter_id, name='', role_type='', 
+                min_yoe=0, level='', location='', salary=0,
+                remote=False, sponsorship_provided=False):
     
     """Create and return a new role."""
     
     role = Role(recruiter_id=recruiter_id, name=name, role_type=role_type, 
                 min_yoe=min_yoe, level=level, location=location, 
-                remote=remote, sponsorship_provided=sponsorship_provided, salary=salary)
+                salary=salary, remote=remote, sponsorship_provided=sponsorship_provided)
     
     return role
 
