@@ -1,0 +1,17 @@
+{% extends 'base.html' %} 
+
+{% block title %} Search {% endblock %} 
+
+{% block body %} 
+<h1>This is the job seeker search.</h1>
+
+<p>
+    Click <a href="/user_dashboard">here</a> to return to your dashboard.
+</p>
+
+<form action="/search" method="POST">
+    <p>
+        <input type="submit" value="See results">
+    </p>
+</form>
+{% endblock %}

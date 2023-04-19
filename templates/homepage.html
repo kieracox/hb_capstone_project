@@ -10,8 +10,13 @@
 <h2>{{ message }}</h2>
 {% endfor %}
 
+{% if "user_email" in session %} 
+<p>
+    You're already logged in! Click <a href="/user_dashboard">here</a> to go to your dashboard.
+</p>
+{% endif %}
 <h2>Create an account</h2>
-<form action="/users" method="POST">
+<form action="/register" method="POST">
     <p>
         Email <input type="text" name="email">
     </p>

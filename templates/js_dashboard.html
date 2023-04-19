@@ -1,0 +1,17 @@
+{% extends 'base.html' %} 
+
+{% block title %} Dashboard {% endblock %} 
+
+{% block body %} 
+<h1>{{ user.fname }}, here's your dashboard.</h1>
+
+<p>
+    Click <a href ="/user_profile">here</a> to view/edit your profile.
+</p>
+
+<p>
+    Click <a href="/new_search">here</a> to start a new search.
+</p>
+
+
+{% endblock %}
