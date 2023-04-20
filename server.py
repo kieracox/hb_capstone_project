@@ -4,6 +4,7 @@ import crud
 
 from jinja2 import StrictUndefined
 
+
 app = Flask(__name__)
 app.secret_key = "dev"
 app.jinja_env.undefined = StrictUndefined
@@ -76,6 +77,14 @@ def show_dashboard():
     else:
         user = crud.get_recruiter_by_email(user_email)
         return render_template("recruiter_dashboard.html", user=user)
+
+@app.route('/logout', methods=['POST'])
+def logout():
+    """Logs the user out."""
+    session.pop('user_email', None)
+    session.pop('user_type', None)
+    flash('You have been logged out.')
+    return redirect("/")
     
 @app.route("/user_profile")
 def show_profile():
@@ -89,6 +98,53 @@ def show_profile():
     else:
         user = crud.get_recruiter_by_email(user_email)
         return render_template("recruiter_profile.html", user=user)
+
+@app.route("/update_js_profile", methods=['POST'])
+def update_js_profile():
+    """Update a jobseeker's profile."""
+    user_email = session.get("user_email")
+    user = crud.get_js_by_email(user_email)
+
+    fname = request.form.get('fname')
+    if fname:
+        user.fname = fname
+
+    lname = request.form.get('lname')
+    if lname:
+        user.lname = lname
+
+    linkedin= request.form.get('linkedin')
+    if linkedin:
+        user.linkedin = linkedin
+
+    github = request.form.get('github')
+    if github:
+        user.github = github
+
+    location = request.form.get('location')
+    if location:
+        user.location = location
+
+    yoe_str = request.form.get('yoe')
+    if yoe_str:
+        user.yoe = int(yoe_str)
+    
+    desired_salary_str = request.form.get('desired_salary')
+
+    if desired_salary_str:
+        user.desired_salary = int(desired_salary_str)
+
+    remote_only_str = request.form.get("remote_only")
+    if remote_only_str:
+        user.remote_only = bool(remote_only_str == 'True') 
+    
+    sponsorship_needed_str = request.form.get('sponsorship_needed')
+    if sponsorship_needed_str:
+        user.sponsorship_needed = bool(sponsorship_needed_str == 'True')  
+
+    db.session.commit()
+
+    return redirect("/user_profile")
 
 @app.route("/new_search")
 def show_search():

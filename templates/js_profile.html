@@ -4,10 +4,114 @@
 
 {% block body %} 
 <h1>This is the jobseeker profile page.</h1>
-
 <p>
     Click <a href="/user_dashboard">here</a> to return to your dashboard.
 </p>
+
+<h2>Your Profile</h2>
+ <ul>
+    <li>
+        <span class="profile_details" id="js_fname">First name: {{user.fname}}</span>
+    </li>
+    <li>
+        <span class="profile_details" id="js_lname">Last name: {{user.lname}}</span>
+    </li>
+    <li>
+        <span class="profile_details" id="js_linkedin">Linkedin: {{user.linkedin}}</span>
+    </li>
+    <li>
+        <span class="profile_details" id="js_github">Github: {{user.github}}</span>
+    </li>
+    <li>
+        <span class="profile_details" id="js_location">Location: {{user.location}}</span>
+    </li>
+    <li>
+        <span class="profile_details" id="js_yoe">Years of experience: {{user.yoe}}</span>
+    </li>
+    <li>
+        <span class="profile_details" id="js_salary">Desired Salary: {{user.desired_salary}}</span>
+    </li>
+        <span class="profile_details" id="js_remote">Remote only? {{user.remote_only}}</span>
+    <li>
+        <span class="profile_details" id="js_sponsorship">Sponsorship needed? {{user.sponsorship_needed}}</span>
+    </li>
+    <li>
+        <span class="profile_details" id="js_skills">Skill:</span>
+    </li>
+    <li>
+        <span class="profile_details" id="js_role_types">Desired role:</span>
+    </li>
+ </ul>
+
+ <h2>Edit Profile</h2>
+ 
+ <form action="/update_js_profile" id="#edit_profile" method="POST">
+    <p>
+        First Name: <input type="text" name="fname">
+    </p>
+    <p>
+        Last Name: <input type="text" name="lname">
+    </p>
+    <p>
+        Linkedin URL: <input type="text" name="linkedin">
+    </p>
+    <p>
+        Github URL: <input type="text" name="github">
+    </p>
+    <p>
+        Location: <input type="text" name="location">
+    </p>
+    <p>
+        Years of experience: <input type="number" id="yoe" name="yoe" min="0">
+    </p>
+    <p>
+        Minimum desired salary: <input type="number" id="desired_salary" name="desired_salary" min="0">
+    </p>
+    <p>
+        Are you exclusively seeking remote roles? 
+        <br>
+        Yes <input type="radio" id="yes" name="remote_only" value="True">
+        <br>
+        No <input type="radio" id="no" name="remote_only" value="False">
+    </p>
+    <p>
+        Are you looking for visa sponsorship?
+        <br>
+        Yes <input type="radio" id="yes" name="sponsorship_needed" value="True">
+        <br>
+        No <input type="radio" id="no" name="sponsorship_needed" value="False">
+    </p>
+    <p>
+        Select the skill you are most proficient in:
+        <select name="skill" id="js_skill">
+            <option value="python">Python</option>
+            <option value="javascript">Javascript</option>
+            <option value="react">React</option>
+            <option value="flask">Flask</option>
+            <option value="aws">AWS</option>
+            <option value="kubernetes">Kubernetes</option>
+            <option value="agile">Agile Methodologies</option>
+            <option value="sql">SQL</option>
+            <option value="swift">Swift</option>
+            <option value="selenium">Selenium</option>
+        </select>
+    </p>
+    <p>Select the type of role you're most interested in:
+        <select name="role_type" id="js_role_type">
+            <option value="backend">Backend</option>
+            <option value="frontend">Frontend</option>
+            <option value="fullstack">Fullstack</option>
+            <option value="devops">DevOps</option>
+            <option value="security">Security Engineering</option>
+            <option value="data">Data Engineering</option>
+            <option value="machine_learning">Machine Learning</option>
+            <option value="management">Engineering Management</option>
+            <option value="mobile">Mobile</option>
+            <option value="qa">QA</option>
+        </select>
+    </p>
+    <input type="submit">
+ </form>
 
 
 {% endblock %}

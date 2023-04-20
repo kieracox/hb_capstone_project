@@ -6,9 +6,11 @@
 
 <h1>Welcome!</h1>
 
-{% for message in get_flashed_messages() %}
+{% with message = get_flashed_messages()[-1] %}
+{% if message %}
 <h2>{{ message }}</h2>
-{% endfor %}
+{% endif %}
+{% endwith %}
 
 {% if "user_email" in session %} 
 <p>
