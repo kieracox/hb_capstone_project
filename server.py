@@ -1,8 +1,14 @@
 from flask import (Flask, render_template, request, flash, session, redirect)
 from model import connect_to_db, db 
 import crud
+import os
+import cloudinary.uploader
 
 from jinja2 import StrictUndefined
+
+CLOUDINARY_KEY = os.environ['CLOUDINARY_KEY']
+CLOUDINARY_SECRET = os.environ['CLOUDINARY_SECRET']
+CLOUD_NAME = "dmp5wclf8"
 
 
 app = Flask(__name__)
@@ -28,20 +34,21 @@ def register_user():
 
     if user:
         flash("An account already exists with that email. Please enter another email.")
+        return redirect("/")
     
     elif user_type == "recruiter":
         recruiter = crud.create_recruiter(email, password)
         db.session.add(recruiter)
         db.session.commit()
-        session["user_email"] = user.email
+        session["user_email"] = recruiter.email
         session["user_type"] = user_type
         return redirect("/user_dashboard")
     
     else: 
-        job_seeker = crud.create_job_seeker( email, password)
+        job_seeker = crud.create_job_seeker(email, password)
         db.session.add(job_seeker)
         db.session.commit()
-        session["user_email"] = user.email
+        session["user_email"] = job_seeker.email
         session["user_type"] = user_type
         return redirect("/user_dashboard")
     
@@ -94,7 +101,10 @@ def show_profile():
 
     if user_type == "job_seeker":
         user = crud.get_js_by_email(user_email)
-        return render_template("js_profile.html", user=user)
+        user_id = user.id
+        skills = crud.get_js_skill(user_id)
+        roletypes = crud.get_js_roletype(user_id)
+        return render_template("js_profile.html", user=user, skills=skills, roletypes=roletypes)
     else:
         user = crud.get_recruiter_by_email(user_email)
         return render_template("recruiter_profile.html", user=user)
@@ -104,46 +114,73 @@ def update_js_profile():
     """Update a jobseeker's profile."""
     user_email = session.get("user_email")
     user = crud.get_js_by_email(user_email)
+    user_id = user.id
 
     fname = request.form.get('fname')
-    if fname:
-        user.fname = fname
-
     lname = request.form.get('lname')
-    if lname:
-        user.lname = lname
-
     linkedin= request.form.get('linkedin')
-    if linkedin:
-        user.linkedin = linkedin
-
     github = request.form.get('github')
-    if github:
-        user.github = github
-
     location = request.form.get('location')
-    if location:
-        user.location = location
-
+  
     yoe_str = request.form.get('yoe')
     if yoe_str:
-        user.yoe = int(yoe_str)
+        yoe = int(yoe_str)
+    else:
+        yoe = None
     
     desired_salary_str = request.form.get('desired_salary')
-
     if desired_salary_str:
-        user.desired_salary = int(desired_salary_str)
+        desired_salary = int(desired_salary_str)
+    else:
+        desired_salary = None
 
     remote_only_str = request.form.get("remote_only")
     if remote_only_str:
-        user.remote_only = bool(remote_only_str == 'True') 
+        remote_only = bool(remote_only_str == 'True') 
+    else:
+        remote_only = None
     
     sponsorship_needed_str = request.form.get('sponsorship_needed')
     if sponsorship_needed_str:
-        user.sponsorship_needed = bool(sponsorship_needed_str == 'True')  
+        sponsorship_needed = bool(sponsorship_needed_str == 'True') 
+    else:
+        sponsorship_needed = None 
+
+    crud.edit_js_profile(user_id, fname, lname, linkedin, 
+                         github, location, yoe, desired_salary, 
+                         remote_only, sponsorship_needed)
+    
+    skill = request.form.get("skill")
+    js_skill = crud.get_js_skill(user_id)
+    print(js_skill)
+    if js_skill:
+        js_skill[0].skill_name = skill
+    else:
+        js_skill = crud.create_js_skill(user_id, skill)
+        db.session.add(js_skill)
+
+    roletype = request.form.get("role_type")
+    js_roletype = crud.get_js_roletype(user_id)
+    if js_roletype:
+        js_roletype[0].role_type = roletype
+    else:
+        js_roletype = crud.create_js_roletype(user_id, roletype)
+        db.session.add(js_roletype)
 
     db.session.commit()
+    return redirect("/user_profile")
 
+@app.route("/upload_resume", methods=["POST"])
+def upload_resume():
+    """Upload a jobseeker's resume."""
+    resume = request.files['resume']
+    result = cloudinary.uploader.upload(resume, api_key=CLOUDINARY_KEY, api_secret=CLOUDINARY_SECRET, cloud_name=CLOUD_NAME)
+    resume_url = result['secure_url']
+
+    user_email = session.get("user_email")
+    user = crud.get_js_by_email(user_email)
+    user.resume_url = resume_url
+    db.session.commit()
     return redirect("/user_profile")
 
 @app.route("/new_search")

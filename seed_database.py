@@ -82,10 +82,11 @@ for n in range(10):
     remote_only = choice([True, False])
     sponsorship_needed = choice([True, False])
     desired_salary = choice([None, 100000, 150000, 200000])
+    resume_url = ''
 
     db_job_seeker = crud.create_job_seeker(email, password, fname, lname,  
                                            linkedin, github, location, yoe, desired_salary, 
-                                           remote_only, sponsorship_needed,)
+                                           remote_only, sponsorship_needed, resume_url)
     model.db.session.add(db_job_seeker)
 
     for _ in range(10):

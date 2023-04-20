@@ -4,13 +4,13 @@ from model import db, JobSeeker, Recruiter, Role, RoleSkill, JobSeekerSkill, Job
 
 def create_job_seeker(email, password, fname='', lname='',  
                       linkedin='', github='', location='', yoe=0, desired_salary=0,
-                      remote_only=False, sponsorship_needed=False):
+                      remote_only=False, sponsorship_needed=False, resume_url=''):
    
     """Create and return a new job seeker."""
 
     job_seeker = JobSeeker(email=email, password=password, fname=fname, lname=lname,
                             linkedin=linkedin, github=github, location=location, yoe=yoe,
-                            desired_salary=desired_salary, remote_only=remote_only, sponsorship_needed=sponsorship_needed)
+                            desired_salary=desired_salary, remote_only=remote_only, sponsorship_needed=sponsorship_needed, resume_url=resume_url)
     
     return job_seeker
 
@@ -76,11 +76,46 @@ def create_js_skill(job_seeker_id, skill_name):
 
     return js_skill
 
+def get_js_skill(job_seeker_id):
+    """Get a job seeker's skills."""
+    return JobSeekerSkill.query.filter(JobSeekerSkill.job_seeker_id == job_seeker_id).all()
+
 def create_js_roletype(job_seeker_id, role_type):
     """Create and return a new job seeker role type."""
     js_roletype = JobSeekerRoleType(job_seeker_id=job_seeker_id, role_type=role_type)
 
     return js_roletype
+
+def get_js_roletype(job_seeker_id):
+    """Get a job seeker's role type."""
+    return JobSeekerRoleType.query.filter(JobSeekerRoleType.job_seeker_id == job_seeker_id).all()
+
+def edit_js_profile(job_seeker_id, fname, lname, linkedin, github, location, yoe, desired_salary, remote_only, sponsorship_needed):
+    """Update a jobseeker's profile with the data they provide."""
+    user = JobSeeker.query.get(job_seeker_id)
+
+    if fname:
+        user.fname = fname
+    if lname:
+        user.lname = lname
+    if linkedin:
+        user.linkedin = linkedin
+    if github:
+        user.github = github
+    if location:
+        user.location = location
+    if yoe:
+        user.yoe = yoe
+    if desired_salary:
+        user.desired_salary = desired_salary
+    if remote_only:
+        user.remote_only = remote_only
+    if sponsorship_needed:
+        user.sponsorship_needed = sponsorship_needed
+
+    db.session.commit()  
+    
+        
 
 def js_request_connect(requestor_id, requested_id, accepted=False):
     """Create and return a connection request from a job seeker."""

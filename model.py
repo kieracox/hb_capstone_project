@@ -23,6 +23,7 @@ class JobSeeker(db.Model):
     desired_salary = db.Column(db.Integer)
     remote_only = db.Column(db.Boolean)
     sponsorship_needed = db.Column(db.Boolean)
+    resume_url = db.Column(db.String)
 
     connection_request = db.relationship("JobSeekerConnectionRequest", back_populates="sender")
     received_request = db.relationship("RecruiterConnectionRequest", back_populates="receiver")

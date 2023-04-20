@@ -1,9 +1,14 @@
+certifi==2022.12.7
 click==8.0.1
+cloudinary==1.32.0
 Flask==2.0.1
 Flask-SQLAlchemy==2.5.1
+greenlet==2.0.2
 itsdangerous==2.0.1
 Jinja2==3.0.1
 MarkupSafe==2.0.1
 psycopg2-binary==2.9.3
+six==1.16.0
 SQLAlchemy==1.4.18
+urllib3==1.26.15
 Werkzeug==2.0.1

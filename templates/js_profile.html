@@ -36,13 +36,21 @@
         <span class="profile_details" id="js_sponsorship">Sponsorship needed? {{user.sponsorship_needed}}</span>
     </li>
     <li>
-        <span class="profile_details" id="js_skills">Skill:</span>
+        <span class="profile_details" id="js_skills">Skill: 
+            {% for skill in skills %}
+            {{ skill.skill_name}},
+            {% endfor %}
+        </span>
     </li>
     <li>
-        <span class="profile_details" id="js_role_types">Desired role:</span>
+        <span class="profile_details" id="js_role_types">Desired role:
+            {% for role in roletypes %} 
+            {{ role.role_type }},
+            {% endfor %}
+        </span>
     </li>
  </ul>
-
+<br>
  <h2>Edit Profile</h2>
  
  <form action="/update_js_profile" id="#edit_profile" method="POST">
@@ -84,34 +92,44 @@
     <p>
         Select the skill you are most proficient in:
         <select name="skill" id="js_skill">
-            <option value="python">Python</option>
-            <option value="javascript">Javascript</option>
-            <option value="react">React</option>
-            <option value="flask">Flask</option>
-            <option value="aws">AWS</option>
-            <option value="kubernetes">Kubernetes</option>
-            <option value="agile">Agile Methodologies</option>
-            <option value="sql">SQL</option>
-            <option value="swift">Swift</option>
-            <option value="selenium">Selenium</option>
+            <option value="Python">Python</option>
+            <option value="Javascript">Javascript</option>
+            <option value="React">React</option>
+            <option value="Flask">Flask</option>
+            <option value="Aws">AWS</option>
+            <option value="Kubernetes">Kubernetes</option>
+            <option value="Agile">Agile Methodologies</option>
+            <option value="SQL">SQL</option>
+            <option value="Swift">Swift</option>
+            <option value="Selenium">Selenium</option>
         </select>
     </p>
     <p>Select the type of role you're most interested in:
         <select name="role_type" id="js_role_type">
-            <option value="backend">Backend</option>
-            <option value="frontend">Frontend</option>
-            <option value="fullstack">Fullstack</option>
-            <option value="devops">DevOps</option>
-            <option value="security">Security Engineering</option>
-            <option value="data">Data Engineering</option>
-            <option value="machine_learning">Machine Learning</option>
-            <option value="management">Engineering Management</option>
-            <option value="mobile">Mobile</option>
-            <option value="qa">QA</option>
+            <option value="Backend">Backend</option>
+            <option value="Frontend">Frontend</option>
+            <option value="Fullstack">Fullstack</option>
+            <option value="Devops">DevOps</option>
+            <option value="Security">Security Engineering</option>
+            <option value="Data">Data Engineering</option>
+            <option value="Machine Learning">Machine Learning</option>
+            <option value="Management">Engineering Management</option>
+            <option value="Mobile">Mobile</option>
+            <option value="Qa">QA</option>
         </select>
     </p>
     <input type="submit">
  </form>
+<br>
+<h2>Upload Your Resume</h2>
+ <form action="/upload_resume" method="post" enctype="multipart/form-data">
+    <input type="file" name="resume">
+    <br>
+    <input type="submit" value="Upload">
+ </form>
 
+ <br>
+ <h2>Your resume</h2>
+ <a href="{{ user.resume_url }}">View it here</a>
 
 {% endblock %}

@@ -6,7 +6,7 @@
 
 <h1>Welcome!</h1>
 
-{% with message = get_flashed_messages()[-1] %}
+{% with message = get_flashed_messages() %}
 {% if message %}
 <h2>{{ message }}</h2>
 {% endif %}
