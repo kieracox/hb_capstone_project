@@ -17,7 +17,7 @@
     {% for role in roles %} 
     <p>{{ role.name }}</p>
     <button class="show_details" id="{{ role.id }}">Show details</button>
-    <div class="details" id="{{ role.id }}_details">
+    <div class="details" id="show_{{ role.id }}" style= "display: none;">
         <ul>
             <li>Role Type: {{ role.role_type }}</li>
             <li>Min YOE: {{ role.min_yoe }}</li>
@@ -34,5 +34,7 @@
     <p>Your search returned no results.</p>
     {% endif %}
 </p>
+
+<script src="static/showDetails.js"></script>
 
 {% endblock %}

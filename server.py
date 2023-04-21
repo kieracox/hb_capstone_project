@@ -214,13 +214,11 @@ def run_search():
     remote = request.form.get("remote")
     sponsorship = request.form.get("sponsorship")
 
-    print(f"role_type={role_type}, level={level}, location={location}, yoe={yoe}, yoe_param={yoe_param}, salary={salary}, salary param = {salary_param}, remote={remote}, sponsorship={sponsorship}")
 
     roles = crud.js_role_search(role_type, level, location,
                                  yoe, yoe_param, salary,
                                  salary_param, remote, sponsorship).all()
     
-    print(f"roles={roles}")
     
     return render_template("js_search_results.html", roles=roles)
 
