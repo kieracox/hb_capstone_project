@@ -11,6 +11,82 @@
 
 <form action="/search" method="POST">
     <p>
+        I want to see this type of roles:
+        <br>
+        <select name="role_type" id="search_role_type">
+            <option value="All">All Types</option>
+            <option value="Backend">Backend</option>
+            <option value="Frontend">Frontend</option>
+            <option value="Fullstack">Fullstack</option>
+            <option value="Devops">DevOps</option>
+            <option value="Security">Security Engineering</option>
+            <option value="Data">Data Engineering</option>
+            <option value="Machine Learning">Machine Learning</option>
+            <option value="Management">Engineering Management</option>
+            <option value="Mobile">Mobile</option>
+            <option value="QA">QA</option>
+        </select>
+    </p>
+    <p>
+        At this level:
+        <br>
+        <select name="level" id="search_level">
+            <option value="All">All Levels</option>
+            <option value="Entry Level">Entry Level</option>
+            <option value="Mid Level">Mid Level</option>
+            <option value="Senior">Senior</option>
+            <option value="Staff">Staff</option>
+            <option value="Manager">Management</option>
+        </select>
+    </p>
+    <p>
+        In this location (leave blank if no desired location):
+        <br>
+        <input type="text" name="location">
+    </p>
+    <p>
+        With this YOE:
+        <br>
+        <input type="number" name="yoe" min="0" value="0">
+        <br>
+        Show me roles with this YOE or:
+        <br>
+        Higher<input type="radio" name="yoe_param" value="higher">
+        <br>
+        Lower<input type="radio" name="yoe_param" value="lower">
+        <br>
+        Exact match <input type="radio" name="yoe_param" value="exact">
+    </p>
+    <p>
+        With this minimum salary:
+        <br>
+        <input type="number" name="salary" min="0" value="0">
+        <br>
+        Show me roles with thi minimum salary or:
+        <br>
+        Higher<input type="radio" name="salary_param" value="higher">
+        <br>
+        Lower<input type="radio" name="salary_param" value="lower">
+        <br>
+        Exact match <input type="radio" name="salary_param" value="exact">
+    </p>
+    <p>
+        Should we only show you remote roles?
+        <br>
+        <select name="remote">
+            <option value="yes">Yes</option>
+            <option value="no">No</option>
+        </select>
+    </p>
+    <p>
+        Should we only show you roles offering visa sponsorship?
+        <br>
+        <select name="sponsorship">
+            <option value="yes">Yes</option>
+            <option value="no">No</option>
+        </select>
+    </p>
+    <p>
         <input type="submit" value="See results">
     </p>
 </form>

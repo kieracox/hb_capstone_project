@@ -40,7 +40,6 @@ with open('data/roles.json') as f:
         model.db.session.add(db_recruiter)
 
     for role in roles_data:
-        recruiter_id = db_recruiter.id
         name = role["name"]
         role_type = role["role_type"]
         min_yoe = role["min_yoe"]
@@ -50,7 +49,7 @@ with open('data/roles.json') as f:
         sponsorship_provided = role["sponsorship_provided"]
         salary = role["salary"]
 
-        db_role = crud.create_role(recruiter_id, name, role_type, min_yoe, level, location, salary, remote, sponsorship_provided)
+        db_role = crud.create_role(db_recruiter, name, role_type, min_yoe, level, location, salary, remote, sponsorship_provided)
         roles_in_db.append(db_role)
     
     model.db.session.add_all(roles_in_db)

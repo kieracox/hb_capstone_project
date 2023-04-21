@@ -44,13 +44,13 @@ def get_recruiter_by_email(email):
     """Get and return a job seeker by their email."""
     return Recruiter.query.filter(Recruiter.email == email).first()
 
-def create_role(recruiter_id, name='', role_type='', 
+def create_role(recruiter, name='', role_type='', 
                 min_yoe=0, level='', location='', salary=0,
                 remote=False, sponsorship_provided=False):
     
     """Create and return a new role."""
     
-    role = Role(recruiter_id=recruiter_id, name=name, role_type=role_type, 
+    role = Role(recruiter=recruiter, name=name, role_type=role_type, 
                 min_yoe=min_yoe, level=level, location=location, 
                 salary=salary, remote=remote, sponsorship_provided=sponsorship_provided)
     
@@ -114,6 +114,43 @@ def edit_js_profile(job_seeker_id, fname, lname, linkedin, github, location, yoe
         user.sponsorship_needed = sponsorship_needed
 
     db.session.commit()  
+
+
+def js_role_search(role_type, level, location, yoe, yoe_param, salary, salary_param, remote, sponsorship):
+    roles = db.session.query(Role)
+
+    if role_type != "All":
+        roles = roles.filter(Role.role_type == role_type)
+    
+    if level != "All":
+        roles = roles.filter(Role.level == level)
+
+    if location != "All":
+        roles = roles.filter(Role.location == location)
+    
+    if yoe != None and yoe_param == "exact":
+        roles = roles.filter(Role.min_yoe == yoe)
+    elif yoe != None and yoe_param == "higher":
+        roles = roles.filter(Role.min_yoe >= yoe)
+    elif yoe != None and yoe_param == "lower":
+        roles = roles.filter(Role.min_yoe <= yoe)
+
+    if salary != None and salary_param == "exact":
+        roles = roles.filter(Role.salary == salary)
+    elif salary != None and salary_param == "higher":
+        roles = roles.filter(Role.salary >= salary)
+    elif salary != None and salary_param == "lower":
+        roles = roles.filter(Role.salary <= salary)
+    
+    if remote == "yes":
+        roles = roles.filter(Role.remote == True)
+
+    if sponsorship == "yes":
+        roles = roles.filter(Role.sponsorship_provided == True)
+    
+    return roles
+
+
     
         
 

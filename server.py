@@ -3,6 +3,7 @@ from model import connect_to_db, db
 import crud
 import os
 import cloudinary.uploader
+from urllib.parse import urlencode
 
 from jinja2 import StrictUndefined
 
@@ -121,6 +122,7 @@ def update_js_profile():
     linkedin= request.form.get('linkedin')
     github = request.form.get('github')
     location = request.form.get('location')
+    
   
     yoe_str = request.form.get('yoe')
     if yoe_str:
@@ -198,23 +200,30 @@ def show_search():
 @app.route("/search", methods=['POST'])
 def run_search():
     """Run a new user search."""
-    #TODO: finish this function to take in form inputs
-    return redirect("/search_results")
-    
-@app.route("/search_results")
-def show_results():
-    """Display a user's search results."""
-    user_type = session.get("user_type")
-    user_email = session.get("user_email")
+    role_type = request.form.get("role_type")
+    level = request.form.get("level")
 
-    if user_type == "job_seeker":
-        user = crud.get_js_by_email(user_email)
-        return render_template("js_search_results.html", user=user)
-    else:
-        user = crud.get_recruiter_by_email(user_email)
-        return render_template("recruiter_search_results.html", user=user)
+    location = request.form.get("location")
+    if location == None or location == "":
+        location = "All"
 
+    yoe = request.form.get("yoe")
+    yoe_param = request.form.get("yoe_param")
+    salary = request.form.get("salary")
+    salary_param = request.form.get("salary_param")
+    remote = request.form.get("remote")
+    sponsorship = request.form.get("sponsorship")
+
+    print(f"role_type={role_type}, level={level}, location={location}, yoe={yoe}, yoe_param={yoe_param}, salary={salary}, salary param = {salary_param}, remote={remote}, sponsorship={sponsorship}")
+
+    roles = crud.js_role_search(role_type, level, location,
+                                 yoe, yoe_param, salary,
+                                 salary_param, remote, sponsorship).all()
     
+    print(f"roles={roles}")
+    
+    return render_template("js_search_results.html", roles=roles)
+
 
 
 if __name__ == "__main__":
