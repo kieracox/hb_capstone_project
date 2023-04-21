@@ -152,7 +152,6 @@ def update_js_profile():
     
     skill = request.form.get("skill")
     js_skill = crud.get_js_skill(user_id)
-    print(js_skill)
     if js_skill:
         js_skill[0].skill_name = skill
     else:
