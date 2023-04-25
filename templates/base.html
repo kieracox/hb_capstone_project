@@ -10,6 +10,13 @@
     {% block head %}{% endblock %}
   </head>
   <body>
+    {% block navbar %}
+    <div class="topnav">
+      <a href="/user_dashboard">Dashboard</a>
+      <a href="/user_profile">Profile</a>
+      <a href="/new_search">Search</a>
+    </div>
+    {% endblock %}
     {% with messages = get_flashed_messages() %}
 {% for message in messages %}
 <h2>{{ message }}</h2>

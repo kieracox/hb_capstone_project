@@ -27,6 +27,7 @@
             <li>Remote: {{ role.remote }}</li>
             <li>Sponsorship Provided: {{ role.sponsorship_provided }}</li>
             <li>Recruiter for this role: {{ role.recruiter.fname }} {{ role.recruiter.lname }}</li>
+            <li>Recruiter's Linkedin: <a href="https://{{ role.recruiter.linkedin }}">{{role.recruiter.linkedin }}</a></li>
         </ul>
     </div>
     {% endfor %}

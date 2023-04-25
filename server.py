@@ -67,6 +67,7 @@ def log_in_user():
     
     if not user or user.password != password:
         flash("The email or password you entered was incorrect. Please try again.")
+        return redirect("/")
     else:
         session["user_email"] = user.email
         session["user_type"] = user_type
@@ -168,6 +169,74 @@ def update_js_profile():
         js_roletype = crud.create_js_roletype(user_id, roletype)
         db.session.add(js_roletype)
 
+    db.session.commit()
+    return redirect("/user_profile")
+
+@app.route("/update_rec_profile", methods=["POST"])
+def update_rec_profile():
+    """Update a recruiter's profile."""
+    user_email = session.get("user_email")
+    user = crud.get_recruiter_by_email(user_email)
+    user_id = user.id
+
+    fname = request.form.get('fname')
+    lname = request.form.get('lname')
+    linkedin = request.form.get('linkedin')
+    company = request.form.get('company')
+
+
+    for role in user.roles:
+
+        role_id = role.id
+
+        role_name = request.form.get('role_name')
+        location = request.form.get('location')
+        role_type = request.form.get("role_type")
+        level = request.form.get('level')
+
+        print('sever.py 197',role_name)
+        print('server.py 198',location)
+    
+        yoe_str = request.form.get('yoe')
+        if yoe_str:
+            yoe = int(yoe_str)
+        else:
+            yoe = None
+    
+        min_salary_str = request.form.get('min_salary')
+        if min_salary_str:
+            min_salary = int(min_salary_str)
+        else:
+            min_salary = None
+
+        remote_str = request.form.get("remote")
+        if remote_str:
+            remote = bool(remote_str == 'True') 
+        else:
+            remote = None
+        
+        print('server.py 218', remote)
+        
+        sponsorship_provided_str = request.form.get('sponsorship_provided')
+        if sponsorship_provided_str:
+            sponsorship_provided = bool(sponsorship_provided_str == 'True') 
+        else:
+            sponsorship_provided = None 
+
+        print('server.py 226',sponsorship_provided)
+
+    crud.edit_rec_profile(user_id, fname, lname, company, linkedin)
+    crud.edit_role(role_id, role_name, role_type, location, yoe, level, min_salary, 
+                         remote, sponsorship_provided)
+    
+    skill = request.form.get("skill")
+    role_skill = crud.get_role_skill(role_id)
+    if role_skill:
+        role_skill[0].skill_name = skill
+    else:
+        role_skill = crud.create_role_skill(role_id, skill)
+        db.session.add(role_skill)
+    
     db.session.commit()
     return redirect("/user_profile")
 

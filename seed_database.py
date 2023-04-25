@@ -39,15 +39,14 @@ with open('data/roles.json') as f:
         db_recruiter = crud.create_recruiter(email, password, fname, lname, company, linkedin)
         model.db.session.add(db_recruiter)
 
-    for role in roles_data:
-        name = role["name"]
-        role_type = role["role_type"]
-        min_yoe = role["min_yoe"]
-        level = role["level"]
-        location = role["location"]
-        remote = role["remote"]
-        sponsorship_provided = role["sponsorship_provided"]
-        salary = role["salary"]
+        name = roles_data[n]["name"]
+        role_type = roles_data[n]["role_type"]
+        min_yoe = roles_data[n]["min_yoe"]
+        level = roles_data[n]["level"]
+        location = roles_data[n]["location"]
+        remote = roles_data[n]["remote"]
+        sponsorship_provided = roles_data[n]["sponsorship_provided"]
+        salary = roles_data[n]["salary"]
 
         db_role = crud.create_role(db_recruiter, name, role_type, min_yoe, level, location, salary, remote, sponsorship_provided)
         roles_in_db.append(db_role)

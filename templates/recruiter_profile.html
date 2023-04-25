@@ -3,7 +3,153 @@
 {% block title %} Profile {% endblock %} 
 
 {% block body %} 
-<h1>This is the recruiter profile page.</h1>
+<h1>Your Recruiter Profile</h1>
 
+<p>
+    Click <a href="/user_dashboard">here</a> to return to your dashboard.
+</p>
 
+<h2>Personal Information</h2>
+ <ul>
+    <li>
+        <span class="profile_details" id="rec_fname">First name: {{user.fname}}</span>
+    </li>
+    <li>
+        <span class="profile_details" id="rec_lname">Last name: {{user.lname}}</span>
+    </li>
+    <li>
+        <span class="profile_details" id="rec_company">Company: {{user.company}}</span>
+    </li>
+    <li>
+        <span class="profile_details" id="rec_linkedin">Linkedin: {{user.linkedin}}</span>
+    </li>
+    </ul>
+
+<h2>Role Information</h2>
+
+{% for role in user.roles %}
+<ul>
+<li>
+    <span class="profile_details" id="role_name">Role Name: {{role.name}}</span>
+</li>
+<li>
+    <span class="profile_details" id="role_type">Type: {{role.role_type}}</span>
+</li>
+<li>
+    <span class="profile_details" id="role_yoe">Min YOE: {{role.min_yoe}}</span>
+</li>
+<li>
+    <span class="profile_details" id="role_level">Level: {{role.level}}</span>
+</li>
+<li>
+    <span class="profile_details" id="role_location">Location: {{role.location}}</span>
+</li>
+<li>
+    <span class="profile_details" id="role_salary">Min Salary: {{role.salary}}</span>
+</li>
+<li>
+    <span class="profile_details" id="role_remote">Remote: {{role.remote}}</span>
+</li>
+<li>
+    <span class="profile_details" id="role_sponsorship">Sponsorship Provided: {{role.sponsorship_provided}}</span>
+</li>
+{%for skill in role.skills %} 
+<li>
+    <span class="profile_details" id="role_skill">Top Skill: {{skill.skill_name}}</span>
+</li>
+{% endfor %}
+</ul>
+{% endfor %}
+
+<h2>Edit Profile</h2>
+<form action="/update_rec_profile" id="#edit_rec_profile" method="POST">
+    <fieldset>
+        <legend>Edit Personal Information</legend>
+    <p>
+        First Name: <input type="text" name="fname">
+    </p>
+    <p>
+        Last Name: <input type="text" name="lname">
+    </p>
+    <p>
+        Company: <input type="text" name="company">
+    </p>
+    <p>
+        Linkedin URL: <input type="text" name="linkedin">
+    </p>
+</fieldset>
+{% for role in user.roles %} 
+<fieldset>
+    <legend>Edit {{role.name}} Role Information</legend>
+    
+    <p>
+        Role Name: <input type="text" name="role_name">
+    </p>
+    <p>
+        Location: <input type="text" name="location">
+    </p>
+    <p>
+        Minimum years of experience: <input type="number" id="yoe" name="yoe" min="0">
+    </p>
+    <p>
+        Minimum salary: <input type="number" id="min_salary" name="min_salary" min="0">
+    </p>
+    <p>
+        Level:
+        <select type="select" id="level">
+            <option value="Entry Level">Entry Level</option>
+            <option value="Mid Level">Mid Level</option>
+            <option value="Senior">Senior</option>
+            <option value="Staff">Staff</option>
+            <option value="Manager">Management</option>
+        </select>
+    </p>
+    <p>
+        Is this role eligible for full-time remote? 
+        <br>
+        Yes <input type="radio" id="yes" name="remote" value="True">
+        <br>
+        No <input type="radio" id="no" name="remote" value="False">
+    </p>
+    <p>
+        Are you providing visa sponsorship for this role?
+        <br>
+        Yes <input type="radio" id="yes" name="sponsorship_provided" value="True">
+        <br>
+        No <input type="radio" id="no" name="sponsorship_provided" value="False">
+    </p>
+    <p>
+        Select the skill that is most desired for this role:
+        <select name="skill" id="role_skill">
+            <option value="Python">Python</option>
+            <option value="Javascript">Javascript</option>
+            <option value="React">React</option>
+            <option value="Flask">Flask</option>
+            <option value="Aws">AWS</option>
+            <option value="Kubernetes">Kubernetes</option>
+            <option value="Agile">Agile Methodologies</option>
+            <option value="SQL">SQL</option>
+            <option value="Swift">Swift</option>
+            <option value="Selenium">Selenium</option>
+        </select>
+    </p>
+    <p>Select the type of role this is:
+        <select name="role_type" id="js_role_type">
+            <option value="Backend">Backend</option>
+            <option value="Frontend">Frontend</option>
+            <option value="Fullstack">Fullstack</option>
+            <option value="Devops">DevOps</option>
+            <option value="Security">Security Engineering</option>
+            <option value="Data">Data Engineering</option>
+            <option value="Machine Learning">Machine Learning</option>
+            <option value="Management">Engineering Management</option>
+            <option value="Mobile">Mobile</option>
+            <option value="QA">QA</option>
+        </select>
+    </p>
+</fieldset>
+    {% endfor %}
+    
+<input type="submit">
+</form>
 {% endblock %}

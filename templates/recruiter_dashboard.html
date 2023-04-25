@@ -3,5 +3,19 @@
 {% block title %} Dashboard {% endblock %} 
 
 {% block body %} 
-<h1>This is the recruiter dashboard.</h1>
+<h1>{{ user.fname }}, here's your dashboard.</h1>
+
+<p>
+    Click <a href ="/user_profile">here</a> to view/edit your profile.
+</p>
+
+<p>
+    Click <a href="/new_search">here</a> to start a new search.
+</p>
+
+<form action="/logout" method="POST">
+    <button id="logout">Log Out</button>
+</form>
+
+
 {% endblock %}

@@ -70,6 +70,49 @@ def create_role_skill(role_id, skill_name):
 
     return role_skill
 
+def get_role_skill(role_id):
+    """Get a role's skills."""
+    return RoleSkill.query.filter(RoleSkill.role_id == role_id).all()
+
+def edit_rec_profile(rec_id, fname, lname, company, linkedin):
+    """Update a recruiter's profile with the data they provide."""
+    user = Recruiter.query.get(rec_id)
+
+    if fname:
+        user.fname = fname
+    if lname:
+        user.lname = lname
+    if linkedin:
+        user.linkedin = linkedin
+
+    if company:
+        user.company = company
+    
+    db.session.commit() 
+
+def edit_role(role_id, role_name, role_type, location, yoe, level, min_salary, remote, sponsorship_provided ):
+    """Update a role's information."""
+    role = Role.query.get(role_id)
+    print('crud.py 96:', role_name)
+    if role_name:
+        role.name = role_name
+    if role_type:
+        role.role_type = role_type
+    if location:
+        role.location = location
+    if yoe:
+        role.yoe = yoe
+    if level:
+        role.level = level
+    if min_salary:
+        role.min_salary = min_salary
+    if remote is not None:
+        role.remote = remote
+    if sponsorship_provided is not None:
+        role.sponsorship_provided = sponsorship_provided
+    
+    db.session.commit()
+
 def create_js_skill(job_seeker_id, skill_name):
     """Create and return a new job seeker skill."""
     js_skill = JobSeekerSkill(job_seeker_id=job_seeker_id, skill_name=skill_name)
