@@ -3,5 +3,51 @@
 {% block title %} Search Results {% endblock %} 
 
 {% block body %} 
-<h1>This is the recruiter search results.</h1>
+<h1>Here are your results!</h1>
+
+
+<p>
+    Click <a href="/user_dashboard">here</a> to return to your dashboard.
+</p>
+
+<p>
+    Or click <a href="/new_search">here</a> to search again.
+
+</p>
+    {% if candidates %}
+    {% for candidate in candidates %} 
+    <p>{{ candidate.fname }} {{candidate.lname }}</p>
+    <button class="show_details" id="{{ candidate.id }}">Show details</button>
+    <div class="details" id="show_{{ candidate.id }}" style= "display: none;">
+        <ul>
+            <li>Role Types:
+                <span class="profile_details" id="cand_roles">
+                    {% for role_type in candidate.role_types %}
+                    {{ role_type.role_type}},
+                    {% endfor %}
+            <li>YOE: {{ candidate.yoe }}</li>
+            <li>Skills: 
+                <span class="profile_details" id="cand_skills"> 
+                    {% for skill in candidate.skills %}
+                    {{ skill.skill_name}},
+                    {% endfor %}
+                </span>
+            </li>
+            <li>Location: {{ candidate.location }}</li>
+            <li>Min Salary: {{ candidate.desired_salary }}</li>
+            <li>Remote Only: {{ candidate.remote_only }}</li>
+            <li>Sponsorship Needed: {{ candidate.sponsorship_needed }}</li>
+            <li>Linkedin: <a href="https://{{ candidate.linkedin }}">{{candidate.linkedin }}</a></li>
+            <li>Github <a href="https://{{candidate.github}}">{{candidate.github}}</a></li>
+            <li>Resume: <a href="{{ candidate.resume_url }}">Click to view</a></li>
+        </ul>
+    </div>
+    {% endfor %}
+    {% else %} 
+    <p>Your search returned no results.</p>
+    {% endif %}
+</p>
+
+<script src="static/showDetails.js"></script>
+
 {% endblock %}

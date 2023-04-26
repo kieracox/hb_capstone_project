@@ -253,6 +253,21 @@ def upload_resume():
     db.session.commit()
     return redirect("/user_profile")
 
+@app.route("/upload_jd", methods=['POST'])
+def upload_jd():
+    """Upload a recruiter's job description."""
+    jd = request.files['jd']
+    result = cloudinary.uploader.upload(jd, api_key=CLOUDINARY_KEY, api_secret=CLOUDINARY_SECRET, cloud_name=CLOUD_NAME)
+    jd_url = result['secure_url']
+
+    user_email = session.get("user_email")
+    user = crud.get_recruiter_by_email(user_email)
+    for role in user.roles:
+        if role.jd_url == "":
+            role.jd_url = jd_url
+    db.session.commit()
+    return redirect("/user_profile")
+
 @app.route("/new_search")
 def show_search():
     """Display the search page."""
@@ -269,27 +284,54 @@ def show_search():
 @app.route("/search", methods=['POST'])
 def run_search():
     """Run a new user search."""
-    role_type = request.form.get("role_type")
-    level = request.form.get("level")
 
-    location = request.form.get("location")
-    if location == None or location == "":
-        location = "All"
+    user_type = session.get("user_type")
+    user_email = session.get("user_email")
 
-    yoe = request.form.get("yoe")
-    yoe_param = request.form.get("yoe_param")
-    salary = request.form.get("salary")
-    salary_param = request.form.get("salary_param")
-    remote = request.form.get("remote")
-    sponsorship = request.form.get("sponsorship")
+    if user_type == "job_seeker":
+        role_type = request.form.get("role_type")
+        level = request.form.get("level")
+
+        location = request.form.get("location")
+        if location == None or location == "":
+            location = "All"
+
+        yoe = request.form.get("yoe")
+        yoe_param = request.form.get("yoe_param")
+        salary = request.form.get("salary")
+        salary_param = request.form.get("salary_param")
+        remote = request.form.get("remote")
+        sponsorship = request.form.get("sponsorship")
 
 
-    roles = crud.js_role_search(role_type, level, location,
-                                 yoe, yoe_param, salary,
-                                 salary_param, remote, sponsorship).all()
-    
-    
-    return render_template("js_search_results.html", roles=roles)
+        roles = crud.js_role_search(role_type, level, location,
+                                    yoe, yoe_param, salary,
+                                    salary_param, remote, sponsorship).all()
+        
+        
+        return render_template("js_search_results.html", roles=roles)
+    else:
+        
+        location = request.form.get("location")
+        if location == None or location == "":
+            location = "All"
+
+        yoe = request.form.get("yoe")
+        yoe_param = request.form.get("yoe_param")
+        skill = request.form.get("skill")
+        role_type = request.form.get("role_type")
+        salary = request.form.get("salary")
+        salary_param = request.form.get("salary_param")
+        remote = request.form.get("remote")
+        sponsorship = request.form.get("sponsorship")
+
+        candidates = crud.rec_candidate_search(location, yoe, 
+                                               yoe_param, skill, role_type, 
+                                               salary, salary_param, remote, sponsorship)
+        return render_template("recruiter_search_results.html", candidates=candidates)
+
+        
+
 
 
 

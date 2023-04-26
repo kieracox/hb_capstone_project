@@ -86,14 +86,17 @@ for n in range(10):
                                            linkedin, github, location, yoe, desired_salary, 
                                            remote_only, sponsorship_needed, resume_url)
     model.db.session.add(db_job_seeker)
-
-    for _ in range(10):
-        random_skill = choice(skills)
-        js_id = db_job_seeker.id
-        js_skill = crud.create_js_skill(js_id, random_skill)
-        model.db.session.add(js_skill)
-
-
     model.db.session.commit()
+
+    random_skill = choice(skills)
+    js_skill = crud.create_js_skill(job_seeker_id=db_job_seeker.id, skill_name=random_skill)
+
+    if js_skill:
+        db_job_seeker.skills.append(js_skill)
+        print(f'created job seeker with id={db_job_seeker.id} and skill with id={js_skill.id}')
+    else:
+        print(f'failed to create job seeker skill for job seeker with id={db_job_seeker.id}')
+
+
     
 

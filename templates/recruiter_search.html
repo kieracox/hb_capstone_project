@@ -3,5 +3,97 @@
 {% block title %} Search {% endblock %} 
 
 {% block body %} 
-<h1>This is the recruiter search.</h1>
+<h1>Search for Candidates</h1>
+
+<p>
+    Click <a href="/user_dashboard">here</a> to return to your dashboard.
+</p>
+<form action="/search" method="POST">
+  
+    <p>
+        Show me candidates in this location (leave blank if no desired location):
+        <br>
+        <input type="text" name="location">
+    </p>
+    <p>
+        With this YOE:
+        <br>
+        <input type="number" name="yoe" min="0" value="0">
+        <br>
+        Show me candidates with this YOE or:
+        <br>
+        Higher<input type="radio" name="yoe_param" value="higher">
+        <br>
+        Lower<input type="radio" name="yoe_param" value="lower">
+        <br>
+        Exact match <input type="radio" name="yoe_param" value="exact">
+    </p>
+    <p>
+        With this skill:
+        <br>
+        <select name="skill" id="cand_skill">
+            <option value="All">Any Skill</option>
+            <option value="Python">Python</option>
+            <option value="Javascript">Javascript</option>
+            <option value="React">React</option>
+            <option value="Flask">Flask</option>
+            <option value="Aws">AWS</option>
+            <option value="Kubernetes">Kubernetes</option>
+            <option value="Agile">Agile Methodologies</option>
+            <option value="SQL">SQL</option>
+            <option value="Swift">Swift</option>
+            <option value="Selenium">Selenium</option>
+        </select>
+        
+    </p>
+    <p>
+        Who are interested in this type of role:
+        <br>
+        <select name="role_type" id="cand_role_type">
+            <option value="All">Any Role</option>
+            <option value="Backend">Backend</option>
+            <option value="Frontend">Frontend</option>
+            <option value="Fullstack">Fullstack</option>
+            <option value="Devops">DevOps</option>
+            <option value="Security">Security Engineering</option>
+            <option value="Data">Data Engineering</option>
+            <option value="Machine Learning">Machine Learning</option>
+            <option value="Management">Engineering Management</option>
+            <option value="Mobile">Mobile</option>
+            <option value="QA">QA</option>
+        </select>
+    </p>
+    <p>
+        With this minimum desired salary:
+        <br>
+        <input type="number" name="salary" min="0" value="0">
+        <br>
+        Show me candidates with this minimum salary or:
+        <br>
+        Higher<input type="radio" name="salary_param" value="higher">
+        <br>
+        Lower<input type="radio" name="salary_param" value="lower">
+        <br>
+        Exact match <input type="radio" name="salary_param" value="exact">
+    </p>
+    <p>
+        Should we show you candidates who are remote only?
+        <br>
+        <select name="remote">
+            <option value="yes">Yes</option>
+            <option value="no">No</option>
+        </select>
+    </p>
+    <p>
+        Should we show you candidates who need visa sponsorship?
+        <br>
+        <select name="sponsorship">
+            <option value="yes">Yes</option>
+            <option value="no">No</option>
+        </select>
+    </p>
+    <p>
+        <input type="submit" value="See results">
+    </p>
+</form>
 {% endblock %}

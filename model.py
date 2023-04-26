@@ -66,6 +66,7 @@ class Role(db.Model):
     salary = db.Column(db.Integer)
     remote = db.Column(db.Boolean)
     sponsorship_provided = db.Column(db.Boolean)
+    jd_url = db.Column(db.String)
 
     recruiter = db.relationship("Recruiter", back_populates="roles")
     skills = db.relationship("RoleSkill", back_populates="role")

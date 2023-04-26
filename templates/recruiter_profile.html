@@ -152,4 +152,17 @@
     
 <input type="submit">
 </form>
+
+<h2>Upload Your Job Description</h2>
+ <form action="/upload_jd" method="post" enctype="multipart/form-data">
+    <input type="file" name="jd">
+    <br>
+    <input type="submit" value="Upload">
+ </form>
+
+ <br>
+ <h2>Your job description</h2>
+ {% for role in user.roles %}
+ <a href="{{ role.jd_url }}">View it here</a>
+ {% endfor %}
 {% endblock %}

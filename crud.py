@@ -46,13 +46,13 @@ def get_recruiter_by_email(email):
 
 def create_role(recruiter, name='', role_type='', 
                 min_yoe=0, level='', location='', salary=0,
-                remote=False, sponsorship_provided=False):
+                remote=False, sponsorship_provided=False, jd_url=''):
     
     """Create and return a new role."""
     
     role = Role(recruiter=recruiter, name=name, role_type=role_type, 
                 min_yoe=min_yoe, level=level, location=location, 
-                salary=salary, remote=remote, sponsorship_provided=sponsorship_provided)
+                salary=salary, remote=remote, sponsorship_provided=sponsorship_provided, jd_url=jd_url)
     
     return role
 
@@ -115,9 +115,17 @@ def edit_role(role_id, role_name, role_type, location, yoe, level, min_salary, r
 
 def create_js_skill(job_seeker_id, skill_name):
     """Create and return a new job seeker skill."""
-    js_skill = JobSeekerSkill(job_seeker_id=job_seeker_id, skill_name=skill_name)
+    job_seeker = JobSeeker.query.get(job_seeker_id)
+    js_skill = JobSeekerSkill(job_seeker=job_seeker, skill_name=skill_name)
 
     return js_skill
+
+def add_js_skill(jobseeker_id, skill_names):
+    """Add a new skill to a job seeker."""
+    jobseeker = JobSeeker.query.get(jobseeker_id)
+    for skill_name in skill_names:
+        jobseeker.skills.append(JobSeekerSkill(skill_name=skill_name))
+        
 
 def get_js_skill(job_seeker_id):
     """Get a job seeker's skills."""
@@ -160,6 +168,7 @@ def edit_js_profile(job_seeker_id, fname, lname, linkedin, github, location, yoe
 
 
 def js_role_search(role_type, level, location, yoe, yoe_param, salary, salary_param, remote, sponsorship):
+    """Run a jobseeker's search for matching roles."""
     roles = db.session.query(Role)
 
     if role_type != "All":
@@ -193,7 +202,40 @@ def js_role_search(role_type, level, location, yoe, yoe_param, salary, salary_pa
     
     return roles
 
+def rec_candidate_search(location, yoe, yoe_param, skill, role_type, salary, salary_param, remote, sponsorship):
+    """Run a recruiter's search for candidates."""
+    candidates = db.session.query(JobSeeker)
 
+    if location != "All":
+        candidates = candidates.filter(JobSeeker.location == location)
+
+    if yoe != None and yoe_param == "exact":
+        candidates = candidates.filter(JobSeeker.yoe == yoe)
+    elif yoe != None and yoe_param == "higher":
+        candidates = candidates.filter(JobSeeker.yoe >= yoe)
+    elif yoe != None and yoe_param == "lower":
+        candidates = candidates.filter(JobSeeker.min_yoe <= yoe)
+
+    if skill != "All":
+        candidates = candidates.filter(JobSeeker.skills.any(skill_name=skill))
+
+    if role_type != "All":
+        candidates = candidates.filter(JobSeeker.role_type == role_type)
+    
+    if salary != None and salary_param == "exact":
+        candidates = candidates.filter(JobSeeker.desired_salary == salary)
+    elif salary != None and salary_param == "higher":
+        candidates = candidates.filter(JobSeeker.desired_salary >= salary)
+    elif salary != None and salary_param == "lower":
+        candidates = candidates.filter(JobSeeker.desired_salary <= salary)
+    
+    if remote == "no":
+        candidates = candidates.filter(JobSeeker.remote_only == False)
+
+    if sponsorship == "no":
+        candidates = candidates.filter(JobSeeker.sponsorship_provided == False)
+    
+    return candidates
     
         
 

@@ -3,7 +3,7 @@
 {% block title %} Search Results {% endblock %} 
 
 {% block body %} 
-<h1>This is the job seeker search results.</h1>
+<h1>Here are your results!</h1>
 
 <p>
     Click <a href="/user_dashboard">here</a> to return to your dashboard.
@@ -20,6 +20,7 @@
     <div class="details" id="show_{{ role.id }}" style= "display: none;">
         <ul>
             <li>Role Type: {{ role.role_type }}</li>
+            <li>Job Description: <a href="{{role.jd_url}}">View it here</a></li>
             <li>Min YOE: {{ role.min_yoe }}</li>
             <li>Level: {{ role.level }}</li>
             <li>Location: {{ role.location }}</li>

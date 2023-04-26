@@ -31,12 +31,14 @@
     <li>
         <span class="profile_details" id="js_salary">Desired Salary: {{user.desired_salary}}</span>
     </li>
-        <span class="profile_details" id="js_remote">Remote only? {{user.remote_only}}</span>
+    <li>
+    <span class="profile_details" id="js_remote">Remote only? {{user.remote_only}}</span>
+    </li>
     <li>
         <span class="profile_details" id="js_sponsorship">Sponsorship needed? {{user.sponsorship_needed}}</span>
     </li>
     <li>
-        <span class="profile_details" id="js_skills">Skill: 
+        <span class="profile_details" id="js_skills">Skills: 
             {% for skill in skills %}
             {{ skill.skill_name}},
             {% endfor %}
