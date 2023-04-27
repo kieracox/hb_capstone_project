@@ -18,7 +18,6 @@ for (const form of requestForms) {
             console.log('Success div:', successDiv);
             form.style.display = 'none';
             if (data.success) {
-
                 successDiv.style.display = 'block';
             } else {
                 failureDiv.style.display = 'block';
