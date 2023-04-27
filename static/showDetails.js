@@ -2,7 +2,6 @@
 const detailButtons = document.querySelectorAll('.show_details');
 
 for (const button of detailButtons) {
-    console.log(button.id)
     button.addEventListener('click', () => {
         const detailsDiv = document.querySelector(`#show_${button.id}`);
         if (detailsDiv !== null && detailsDiv.style.display === 'none') {

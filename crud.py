@@ -205,7 +205,8 @@ def js_role_search(role_type, level, location, yoe, yoe_param, salary, salary_pa
 def rec_candidate_search(location, yoe, yoe_param, skill, role_type, salary, salary_param, remote, sponsorship):
     """Run a recruiter's search for candidates."""
     candidates = db.session.query(JobSeeker)
-
+    print(location, yoe, yoe_param, skill, role_type, salary, salary_param, remote, sponsorship)
+    print(candidates.statement)
     if location != "All":
         candidates = candidates.filter(JobSeeker.location == location)
 
@@ -220,7 +221,7 @@ def rec_candidate_search(location, yoe, yoe_param, skill, role_type, salary, sal
         candidates = candidates.filter(JobSeeker.skills.any(skill_name=skill))
 
     if role_type != "All":
-        candidates = candidates.filter(JobSeeker.role_type == role_type)
+        candidates = candidates.filter(JobSeeker.role_types.any(role_type=role_type))
     
     if salary != None and salary_param == "exact":
         candidates = candidates.filter(JobSeeker.desired_salary == salary)
@@ -235,24 +236,64 @@ def rec_candidate_search(location, yoe, yoe_param, skill, role_type, salary, sal
     if sponsorship == "no":
         candidates = candidates.filter(JobSeeker.sponsorship_provided == False)
     
-    return candidates
+    return candidates.all()
     
         
 
-def js_request_connect(requestor_id, requested_id, accepted=False):
+def js_request_connect(requestor_id, requested_id, status="pending"):
     """Create and return a connection request from a job seeker."""
     
-    return JobSeekerConnectionRequest(requestor_id=requestor_id, requested_id=requested_id, accepted=accepted)
+    return JobSeekerConnectionRequest(requestor_id=requestor_id, requested_id=requested_id, status=status)
 
     
 
-def rec_request_connect(requestor_id, requested_id, accepted=False):
+def rec_request_connect(requestor_id, requested_id, status="pending"):
     """Create and return a connection request from a recruiter."""
 
-    connection_request = RecruiterConnectionRequest(requestor_id=requestor_id, requested_id=requested_id, accepted=accepted)
+    connection_request = RecruiterConnectionRequest(requestor_id=requestor_id, requested_id=requested_id, status=status)
 
     return connection_request
 
+def get_js_request(request_id):
+    """Get and return a connection request sent by a jobseeker."""
+    return JobSeekerConnectionRequest.query.filter(JobSeekerConnectionRequest.id == request_id).first()
+
+def get_rec_request(request_id):
+    """Get and return a connection request sent by a recruiter."""
+    return RecruiterConnectionRequest.query.filter(RecruiterConnectionRequest.id == request_id).first()
+
+def get_all_js_requests(jobseeker_id):
+    """Return all requests sent by a jobseeker."""
+    return JobSeekerConnectionRequest.query.filter(JobSeekerConnectionRequest.requestor_id == jobseeker_id).all()
+
+def get_all_rec_requests(recruiter_id):
+    """Return all requests sent by a jobseeker."""
+    return RecruiterConnectionRequest.query.filter(RecruiterConnectionRequest.requestor_id == recruiter_id).all()
+
+def get_pending_js_requests(jobseeker_id):
+    """Get a jobseeker's pending connection requests they have received."""
+    return RecruiterConnectionRequest.query.filter(RecruiterConnectionRequest.requested_id == jobseeker_id and RecruiterConnectionRequest.status == "pending").all()
+
+def get_pending_rec_requests(recruiter_id):
+    """Get a jobseeker's pending connection requests they have received."""
+    return JobSeekerConnectionRequest.query.filter(JobSeekerConnectionRequest.requested_id == recruiter_id and RecruiterConnectionRequest.status == "pending").all()
+
+def get_js_connections(jobseeker_id):
+     """Get the recruiters whose connection requests a jobseeker has accepted."""
+     accepted_requests = RecruiterConnectionRequest.query.filter(RecruiterConnectionRequest.requested_id == jobseeker_id and RecruiterConnectionRequest.status == "accepted").all()
+     connections = []
+     for request in accepted_requests:
+         connections.append(request.sender)
+     return connections
+
+def get_rec_connections(recruiter_id):
+     """Get the recruiters whose connection requests a jobseeker has accepted."""
+     accepted_requests = JobSeekerConnectionRequest.query.filter(JobSeekerConnectionRequest.requested_id == recruiter_id and JobSeekerConnectionRequest.status == "accepted").all()
+     connections = []
+     for request in accepted_requests:
+         connections.append(request.sender)
+     return connections
+ 
 
 if __name__ == '__main__':
     from server import app

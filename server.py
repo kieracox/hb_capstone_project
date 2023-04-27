@@ -1,4 +1,4 @@
-from flask import (Flask, render_template, request, flash, session, redirect)
+from flask import (Flask, render_template, request, flash, session, redirect, jsonify, url_for)
 from model import connect_to_db, db 
 import crud
 import os
@@ -12,7 +12,7 @@ CLOUDINARY_SECRET = os.environ['CLOUDINARY_SECRET']
 CLOUD_NAME = "dmp5wclf8"
 
 
-app = Flask(__name__)
+app = Flask(__name__, static_folder='static')
 app.secret_key = "dev"
 app.jinja_env.undefined = StrictUndefined
 
@@ -82,10 +82,16 @@ def show_dashboard():
 
     if user_type == "job_seeker":
         user = crud.get_js_by_email(user_email)
-        return render_template("js_dashboard.html", user=user)
+        user_id = user.id
+        requests = crud.get_pending_js_requests(user_id)
+        connections = crud.get_js_connections(user_id)
+        return render_template("js_dashboard.html", user=user, requests=requests, connections=connections)
     else:
         user = crud.get_recruiter_by_email(user_email)
-        return render_template("recruiter_dashboard.html", user=user)
+        user_id = user.id
+        requests = crud.get_pending_rec_requests(user_id)
+        connections = crud.get_rec_connections(user_id)
+        return render_template("recruiter_dashboard.html", user=user, requests=requests, connections=connections)
 
 @app.route('/logout', methods=['POST'])
 def logout():
@@ -193,9 +199,6 @@ def update_rec_profile():
         location = request.form.get('location')
         role_type = request.form.get("role_type")
         level = request.form.get('level')
-
-        print('sever.py 197',role_name)
-        print('server.py 198',location)
     
         yoe_str = request.form.get('yoe')
         if yoe_str:
@@ -215,15 +218,11 @@ def update_rec_profile():
         else:
             remote = None
         
-        print('server.py 218', remote)
-        
         sponsorship_provided_str = request.form.get('sponsorship_provided')
         if sponsorship_provided_str:
             sponsorship_provided = bool(sponsorship_provided_str == 'True') 
         else:
             sponsorship_provided = None 
-
-        print('server.py 226',sponsorship_provided)
 
     crud.edit_rec_profile(user_id, fname, lname, company, linkedin)
     crud.edit_role(role_id, role_name, role_type, location, yoe, level, min_salary, 
@@ -244,7 +243,7 @@ def update_rec_profile():
 def upload_resume():
     """Upload a jobseeker's resume."""
     resume = request.files['resume']
-    result = cloudinary.uploader.upload(resume, api_key=CLOUDINARY_KEY, api_secret=CLOUDINARY_SECRET, cloud_name=CLOUD_NAME)
+    result = cloudinary.uploader.upload(file=resume, api_key=CLOUDINARY_KEY, api_secret=CLOUDINARY_SECRET, cloud_name=CLOUD_NAME)
     resume_url = result['secure_url']
 
     user_email = session.get("user_email")
@@ -257,7 +256,7 @@ def upload_resume():
 def upload_jd():
     """Upload a recruiter's job description."""
     jd = request.files['jd']
-    result = cloudinary.uploader.upload(jd, api_key=CLOUDINARY_KEY, api_secret=CLOUDINARY_SECRET, cloud_name=CLOUD_NAME)
+    result = cloudinary.uploader.upload(file=jd, api_key=CLOUDINARY_KEY, api_secret=CLOUDINARY_SECRET, cloud_name=CLOUD_NAME)
     jd_url = result['secure_url']
 
     user_email = session.get("user_email")
@@ -281,7 +280,7 @@ def show_search():
         user = crud.get_recruiter_by_email(user_email)
         return render_template("recruiter_search.html", user=user)
     
-@app.route("/search", methods=['POST'])
+@app.route("/search", methods=['GET', 'POST'])
 def run_search():
     """Run a new user search."""
 
@@ -291,6 +290,7 @@ def run_search():
     if user_type == "job_seeker":
         role_type = request.form.get("role_type")
         level = request.form.get("level")
+        user = crud.get_js_by_email(user_email)
 
         location = request.form.get("location")
         if location == None or location == "":
@@ -308,10 +308,24 @@ def run_search():
                                     yoe, yoe_param, salary,
                                     salary_param, remote, sponsorship).all()
         
+        search_params = {
+            "role_type": role_type,
+            "level": level,
+            "location": location,
+            "yoe": yoe,
+            "yoe_param": yoe_param,
+            "salary": salary,
+            "salary_param": salary_param,
+            "remote": remote,
+            "sponsorship": sponsorship
+        }
+
+        session["search_params"] = search_params
         
-        return render_template("js_search_results.html", roles=roles)
+        
+        return redirect(url_for("js_search_results", **search_params))
     else:
-        
+        user = crud.get_recruiter_by_email(user_email)
         location = request.form.get("location")
         if location == None or location == "":
             location = "All"
@@ -328,7 +342,132 @@ def run_search():
         candidates = crud.rec_candidate_search(location, yoe, 
                                                yoe_param, skill, role_type, 
                                                salary, salary_param, remote, sponsorship)
-        return render_template("recruiter_search_results.html", candidates=candidates)
+        
+        search_params = {
+            "location": location,
+            "yoe": yoe,
+            "yoe_param": yoe_param,
+            "skill": skill,
+            "role_type": role_type,
+            "salary": salary,
+            "salary_param": salary_param,
+            "remote": remote,
+            "sponsorship": sponsorship
+        }
+
+        session["search_params"] = search_params
+        return redirect(url_for("recruiter_search_results", **search_params))
+    
+@app.route("/search/results/js", methods=["GET"])
+def js_search_results():
+    user = crud.get_js_by_email(session["user_email"])
+
+    role_type = request.args.get("role_type")
+    level = request.args.get("level")
+    location = request.args.get("location")
+    yoe = request.args.get("yoe")
+    yoe_param = request.args.get("yoe_param")
+    salary = request.args.get("salary")
+    salary_param = request.args.get("salary_param")
+    remote = request.args.get("remote")
+    sponsorship = request.args.get("sponsorship")
+    
+    roles = crud.js_role_search(role_type, level, location,
+                                yoe, yoe_param, salary,
+                                salary_param, remote, sponsorship).all()
+    
+    return render_template("js_search_results.html", roles=roles, user=user, 
+                           search_params=request.args)
+
+@app.route("/search/results/rec", methods=["GET"])
+def recruiter_search_results():
+    user = crud.get_recruiter_by_email(session["user_email"])
+    
+    location = request.args.get("location")
+    yoe = request.args.get("yoe")
+    yoe_param = request.args.get("yoe_param")
+    skill = request.args.get("skill")
+    role_type = request.args.get("role_type")
+    salary = request.args.get("salary")
+    salary_param = request.args.get("salary_param")
+    remote = request.args.get("remote")
+    sponsorship = request.args.get("sponsorship")
+    
+    candidates = crud.rec_candidate_search(location, yoe, 
+                                           yoe_param, skill, role_type, 
+                                           salary, salary_param, remote, sponsorship)
+    
+    print(candidates)
+    print(f"Number of candidates found: {len(candidates)}")
+    
+    return render_template("recruiter_search_results.html", candidates=candidates, user=user, 
+                           search_params=request.args)
+
+@app.route("/send_connect", methods=["POST"])
+def send_request():
+    """Send a connection request."""
+    user_type = session.get("user_type")
+    requestor_id = request.form.get("requestor_id")
+    requested_id = request.form.get("requested_id")
+    status = "pending"
+
+    search_params = session.get("search_params")
+
+    if user_type == "job_seeker":
+        request_ = crud.js_request_connect(requestor_id, requested_id, status)
+        db.session.add(request_)
+        db.session.commit()
+        return redirect(url_for('js_search_results', **search_params))
+        
+    else:
+        request_ = crud.rec_request_connect(requestor_id, requested_id, status)
+        db.session.add(request_)
+        db.session.commit()
+        return redirect(url_for('recruiter_search_results', **search_params))
+    
+    
+
+
+@app.route("/accept_request", methods=["POST"])
+def accept_connection():
+    """Accept a connection request sent to the user."""
+    user_type = session.get("user_type")
+    request_id = request.form.get("request_id")
+    if request_id:
+        if user_type == "job_seeker":
+            req = crud.get_rec_request(request_id)
+            req.status = "accepted"
+            db.session.commit()
+            flash("Request accepted!")
+            return redirect("/user_dashboard")
+        else:
+            req = crud.get_js_request(request_id)
+            req.status = "accepted"
+            db.session.commit()
+            flash("Request accepted!")
+            return redirect("/user_dashboard")
+    else:
+      flash("Invalid request ID.")
+      return redirect("/user_dashboard")  
+
+@app.route("/reject_request", methods=["POST"])
+def reject_connection():
+     """Reject a connection request sent to the user."""
+     user_type = session.get("user_type")
+     request_id = request.form.get("request_id")
+     
+     if user_type == "job_seeker":
+        request = crud.get_rec_request(request_id)
+        request.status = "rejected"
+        db.session.commit()
+        flash("Request rejected.")
+        return redirect("/user_dashboard")
+     else:
+        request = crud.get_js_request(request_id)
+        request.status = "rejected"
+        db.session.commit()
+        flash("Request rejected.")
+        return redirect("/user_dashboard")
 
         
 

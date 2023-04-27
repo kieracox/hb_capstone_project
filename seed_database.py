@@ -21,7 +21,7 @@ skills = ['Python', 'Javascript', 'React', 'Flask', 'AWS', 'Kubernetes', 'Agile'
 
 levels = ['Entry Level', 'Mid Level', 'Senior', 'Staff', 'Manager']
 
-locations = ['San Francisco', 'Seattle', 'New York', '']
+locations = ['San Francisco', 'Seattle', 'New York', None]
 
 
 with open('data/roles.json') as f:
@@ -91,11 +91,19 @@ for n in range(10):
     random_skill = choice(skills)
     js_skill = crud.create_js_skill(job_seeker_id=db_job_seeker.id, skill_name=random_skill)
 
+    random_roletype = choice(role_types)
+    js_roletype = crud.create_js_roletype(job_seeker_id=db_job_seeker.id, role_type=random_roletype)
+
     if js_skill:
         db_job_seeker.skills.append(js_skill)
         print(f'created job seeker with id={db_job_seeker.id} and skill with id={js_skill.id}')
     else:
         print(f'failed to create job seeker skill for job seeker with id={db_job_seeker.id}')
+    
+    if js_roletype:
+        db_job_seeker.role_types.append(js_roletype)
+    else:
+        print(f'failed to create job seeker role type for job seeker with id={db_job_seeker.id}')
 
 
     

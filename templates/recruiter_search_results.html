@@ -41,6 +41,15 @@
             <li>Github <a href="https://{{candidate.github}}">{{candidate.github}}</a></li>
             <li>Resume: <a href="{{ candidate.resume_url }}">Click to view</a></li>
         </ul>
+        <form method="POST" action="\send_connect" id="{{candidate.id}}">
+            <input type="hidden" name="requestor_id" value="{{ user.id }}">
+            <input type="hidden" name="requested_id" value="{{candidate.id}}">
+            <p>Want to connect with this candidate?</p>
+            <input type="submit" value="Send Connection Request">
+        </form>
+    </div>
+    <div class="success_message" id="success_{{candidate.id}}" style="display:none;">
+        <p>Connection request sent!</p>
     </div>
     {% endfor %}
     {% else %} 
@@ -48,6 +57,7 @@
     {% endif %}
 </p>
 
-<script src="static/showDetails.js"></script>
+<script src="/static/showDetails.js"></script>
+<script src="/static/sendConnectRequest.js"></script>
 
 {% endblock %}

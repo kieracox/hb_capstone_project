@@ -25,8 +25,8 @@ class JobSeeker(db.Model):
     sponsorship_needed = db.Column(db.Boolean)
     resume_url = db.Column(db.String)
 
-    connection_request = db.relationship("JobSeekerConnectionRequest", back_populates="sender")
-    received_request = db.relationship("RecruiterConnectionRequest", back_populates="receiver")
+    connection_requests = db.relationship("JobSeekerConnectionRequest", back_populates="sender")
+    received_requests = db.relationship("RecruiterConnectionRequest", back_populates="receiver")
     skills = db.relationship("JobSeekerSkill", back_populates="job_seeker")
     role_types = db.relationship("JobSeekerRoleType", back_populates="job_seeker")
 
@@ -46,8 +46,8 @@ class Recruiter(db.Model):
     linkedin = db.Column(db.String)
 
     roles = db.relationship("Role", back_populates="recruiter")
-    connection_request = db.relationship("RecruiterConnectionRequest", back_populates="sender")
-    received_request = db.relationship("JobSeekerConnectionRequest", back_populates="receiver")
+    connection_requests = db.relationship("RecruiterConnectionRequest", back_populates="sender")
+    received_requests = db.relationship("JobSeekerConnectionRequest", back_populates="receiver")
 
     def __repr__(self):
         return f"<Recruiter id={self.id} email={self.email}>"
@@ -120,10 +120,10 @@ class JobSeekerConnectionRequest(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     requestor_id = db.Column(db.Integer, db.ForeignKey("job_seekers.id"))
     requested_id = db.Column(db.Integer, db.ForeignKey("recruiters.id"))
-    accepted = db.Column(db.Boolean, nullable=False)
+    status = db.Column(db.String, nullable=False)
 
-    sender = db.relationship("JobSeeker", back_populates="connection_request")
-    receiver = db.relationship("Recruiter", back_populates="received_request")
+    sender = db.relationship("JobSeeker", back_populates="connection_requests")
+    receiver = db.relationship("Recruiter", back_populates="received_requests")
 
     def __repr__(self):
         return f"<Connect Request requestor_id={self.requestor_id} requested_id={self.requested_id}>"
@@ -135,10 +135,10 @@ class RecruiterConnectionRequest(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     requestor_id = db.Column(db.Integer, db.ForeignKey("recruiters.id"))
     requested_id = db.Column(db.Integer, db.ForeignKey("job_seekers.id"))
-    accepted = db.Column(db.Boolean, nullable=False)
+    status = db.Column(db.String, nullable=False)
 
-    sender = db.relationship("Recruiter", back_populates="connection_request")
-    receiver = db.relationship("JobSeeker", back_populates="received_request")
+    sender = db.relationship("Recruiter", back_populates="connection_requests")
+    receiver = db.relationship("JobSeeker", back_populates="received_requests")
 
     def __repr__(self):
         return f"<Connect Request requestor_id={self.requestor_id} requested_id={self.requested_id}>"
