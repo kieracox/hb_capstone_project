@@ -45,11 +45,14 @@
             <input type="hidden" name="requestor_id" value="{{ user.id }}">
             <input type="hidden" name="requested_id" value="{{candidate.id}}">
             <p>Want to connect with this candidate?</p>
-            <input type="submit" value="Send Connection Request">
+            <input type="submit" id="submit_{{ candidate.id }}" value="Send Connection Request">
         </form>
     </div>
     <div class="success_message" id="success_{{candidate.id}}" style="display:none;">
         <p>Connection request sent!</p>
+    </div>
+    <div class="failure_message" id="failure_{{candidate.id}}" style="display:none;">
+        <p>Request failed: you already have a pending request for this user.</p>
     </div>
     {% endfor %}
     {% else %} 

@@ -258,6 +258,15 @@ def get_js_request(request_id):
     """Get and return a connection request sent by a jobseeker."""
     return JobSeekerConnectionRequest.query.filter(JobSeekerConnectionRequest.id == request_id).first()
 
+def get_js_request_by_id(requested_id, requestor_id):
+    """Find a request sent by a JS to a particular rec."""
+    return JobSeekerConnectionRequest.query.filter(JobSeekerConnectionRequest.requested_id == requested_id, JobSeekerConnectionRequest.requestor_id == requestor_id).first()
+
+def get_rec_request_by_id(requested_id, requestor_id):
+    """Find a request sent by a JS to a particular rec."""
+    return RecruiterConnectionRequest.query.filter(RecruiterConnectionRequest.requested_id == requested_id, RecruiterConnectionRequest.requestor_id == requestor_id).first()
+
+
 def get_rec_request(request_id):
     """Get and return a connection request sent by a recruiter."""
     return RecruiterConnectionRequest.query.filter(RecruiterConnectionRequest.id == request_id).first()

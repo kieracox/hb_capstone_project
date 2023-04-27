@@ -30,14 +30,17 @@
             <li>Recruiter for this role: {{ role.recruiter.fname }} {{ role.recruiter.lname }}</li>
             <li>Recruiter's Linkedin: <a href="https://{{ role.recruiter.linkedin }}">{{role.recruiter.linkedin }}</a></li>
         </ul>
-        <form method="POST" action="\send_connect" id="{{role.recruiter.id}}">
+        <form method="POST" action="\send_connect" class="connect_form" id="{{role.recruiter.id}}">
             <input type="hidden" name="requestor_id" value="{{ user.id }}">
             <input type="hidden" name="requested_id" value="{{role.recruiter.id}}">
             <p>Want to connect with the recruiter for this role?</p>
-            <input type="submit" value="Send Connection Request">
+            <input type="submit" id="submit_{{role.recruiter.id}}" value="Send Connection Request">
         </form>
         <div class="success_message" id="success_{{role.recruiter.id}}" style="display:none;">
             <p>Connection request sent!</p>
+        </div>
+        <div class="failure_message" id="failure_{{role.recruiter.id}}" style="display:none;">
+            <p>Request failed: you already have a pending request for this user.</p>
         </div>
     </div>
     {% endfor %}
@@ -46,7 +49,7 @@
     {% endif %}
 </p>
 
-<script src="static/showDetails.js"></script>
-<script src="static/sendConnectRequest.js"></script>
+<script src="/static/showDetails.js"></script>
+<script src="/static/sendConnectRequest.js"></script>
 
 {% endblock %}

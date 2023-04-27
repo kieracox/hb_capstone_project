@@ -1,5 +1,7 @@
-const requestForms = document.querySelectorAll(".connect_form");
 
+document.addEventListener('DOMContentLoaded', () => {
+const requestForms = document.querySelectorAll(".connect_form");
+console.log(requestForms)
 for (const form of requestForms) {
     form.addEventListener('submit', (event) => {
         event.preventDefault();
@@ -10,11 +12,18 @@ for (const form of requestForms) {
         })
         .then(response => response.json())
         .then(data => {
-            const successDiv = document.querySelector(`#success_${form.id}`);
+            console.log('Response from server:', data);
+            const successDiv = document.querySelector(`#success_${formData.get("requested_id")}`);
+            const failureDiv = document.querySelector(`#failure_${formData.get("requested_id")}`)
+            console.log('Success div:', successDiv);
             form.style.display = 'none';
-            successDiv.style.display = 'block';
-            window.location.href= '/search'
+            if (data.success) {
+
+                successDiv.style.display = 'block';
+            } else {
+                failureDiv.style.display = 'block';
+            }
         });
     })
-    .catch(error => console.error(error));
 }
+});

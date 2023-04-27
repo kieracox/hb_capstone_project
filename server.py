@@ -16,10 +16,12 @@ app = Flask(__name__, static_folder='static')
 app.secret_key = "dev"
 app.jinja_env.undefined = StrictUndefined
 
+
 @app.route('/')
 def show_homepage():
     """View homepage."""
     return render_template('homepage.html')
+
 
 @app.route('/register', methods=['POST'])
 def register_user():
@@ -52,7 +54,8 @@ def register_user():
         session["user_email"] = job_seeker.email
         session["user_type"] = user_type
         return redirect("/user_dashboard")
-    
+
+
 @app.route("/login", methods=["POST"])
 def log_in_user():
     """Log in a user."""
@@ -74,6 +77,7 @@ def log_in_user():
         flash(f"Welcome back, {user.fname}!")
     return redirect("/user_dashboard")
 
+
 @app.route("/user_dashboard")
 def show_dashboard():
     """Display a user dashboard."""
@@ -93,6 +97,7 @@ def show_dashboard():
         connections = crud.get_rec_connections(user_id)
         return render_template("recruiter_dashboard.html", user=user, requests=requests, connections=connections)
 
+
 @app.route('/logout', methods=['POST'])
 def logout():
     """Logs the user out."""
@@ -100,7 +105,8 @@ def logout():
     session.pop('user_type', None)
     flash('You have been logged out.')
     return redirect("/")
-    
+
+
 @app.route("/user_profile")
 def show_profile():
     """Display a user's profile page."""
@@ -116,6 +122,7 @@ def show_profile():
     else:
         user = crud.get_recruiter_by_email(user_email)
         return render_template("recruiter_profile.html", user=user)
+
 
 @app.route("/update_js_profile", methods=['POST'])
 def update_js_profile():
@@ -178,6 +185,7 @@ def update_js_profile():
     db.session.commit()
     return redirect("/user_profile")
 
+
 @app.route("/update_rec_profile", methods=["POST"])
 def update_rec_profile():
     """Update a recruiter's profile."""
@@ -239,6 +247,7 @@ def update_rec_profile():
     db.session.commit()
     return redirect("/user_profile")
 
+
 @app.route("/upload_resume", methods=["POST"])
 def upload_resume():
     """Upload a jobseeker's resume."""
@@ -251,6 +260,7 @@ def upload_resume():
     user.resume_url = resume_url
     db.session.commit()
     return redirect("/user_profile")
+
 
 @app.route("/upload_jd", methods=['POST'])
 def upload_jd():
@@ -267,6 +277,7 @@ def upload_jd():
     db.session.commit()
     return redirect("/user_profile")
 
+
 @app.route("/new_search")
 def show_search():
     """Display the search page."""
@@ -279,11 +290,11 @@ def show_search():
     else:
         user = crud.get_recruiter_by_email(user_email)
         return render_template("recruiter_search.html", user=user)
-    
+
+
 @app.route("/search", methods=['GET', 'POST'])
 def run_search():
     """Run a new user search."""
-
     user_type = session.get("user_type")
     user_email = session.get("user_email")
 
@@ -357,7 +368,8 @@ def run_search():
 
         session["search_params"] = search_params
         return redirect(url_for("recruiter_search_results", **search_params))
-    
+
+
 @app.route("/search/results/js", methods=["GET"])
 def js_search_results():
     user = crud.get_js_by_email(session["user_email"])
@@ -379,6 +391,7 @@ def js_search_results():
     return render_template("js_search_results.html", roles=roles, user=user, 
                            search_params=request.args)
 
+
 @app.route("/search/results/rec", methods=["GET"])
 def recruiter_search_results():
     user = crud.get_recruiter_by_email(session["user_email"])
@@ -397,11 +410,9 @@ def recruiter_search_results():
                                            yoe_param, skill, role_type, 
                                            salary, salary_param, remote, sponsorship)
     
-    print(candidates)
-    print(f"Number of candidates found: {len(candidates)}")
-    
     return render_template("recruiter_search_results.html", candidates=candidates, user=user, 
                            search_params=request.args)
+
 
 @app.route("/send_connect", methods=["POST"])
 def send_request():
@@ -409,25 +420,35 @@ def send_request():
     user_type = session.get("user_type")
     requestor_id = request.form.get("requestor_id")
     requested_id = request.form.get("requested_id")
+    print("requestor id", requestor_id, "requested id", requested_id)
     status = "pending"
 
-    search_params = session.get("search_params")
-
     if user_type == "job_seeker":
-        request_ = crud.js_request_connect(requestor_id, requested_id, status)
-        db.session.add(request_)
-        db.session.commit()
-        return redirect(url_for('js_search_results', **search_params))
+        existing_request = crud.get_js_request_by_id(requested_id, requestor_id)
+        if existing_request and existing_request.status == "pending":
+            response_data = {"success": False}
+            return jsonify(response_data)
+        else:
+            new_request = crud.js_request_connect(requestor_id, requested_id, status)
+            db.session.add(new_request)
+            db.session.commit()
+            response_data = {"success": True}
+            return jsonify(response_data)
         
     else:
-        request_ = crud.rec_request_connect(requestor_id, requested_id, status)
-        db.session.add(request_)
-        db.session.commit()
-        return redirect(url_for('recruiter_search_results', **search_params))
+        existing_request = crud.get_rec_request_by_id(requested_id, requestor_id)
+        if existing_request and existing_request.status == "pending":
+            flash("You've already sent a request to this user.")
+            response_data = {"success": False}
+            return jsonify(response_data)
+        else:
+            new_request = crud.rec_request_connect(requestor_id, requested_id, status)
+            db.session.add(new_request)
+            db.session.commit()
+            response_data = {"success": True}
+            return jsonify(response_data)
     
     
-
-
 @app.route("/accept_request", methods=["POST"])
 def accept_connection():
     """Accept a connection request sent to the user."""
@@ -449,6 +470,7 @@ def accept_connection():
     else:
       flash("Invalid request ID.")
       return redirect("/user_dashboard")  
+    
 
 @app.route("/reject_request", methods=["POST"])
 def reject_connection():
