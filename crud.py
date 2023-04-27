@@ -281,15 +281,16 @@ def get_all_rec_requests(recruiter_id):
 
 def get_pending_js_requests(jobseeker_id):
     """Get a jobseeker's pending connection requests they have received."""
-    return RecruiterConnectionRequest.query.filter(RecruiterConnectionRequest.requested_id == jobseeker_id and RecruiterConnectionRequest.status == "pending").all()
+    return RecruiterConnectionRequest.query.filter(RecruiterConnectionRequest.requested_id == jobseeker_id, RecruiterConnectionRequest.status == "pending").all()
 
 def get_pending_rec_requests(recruiter_id):
     """Get a jobseeker's pending connection requests they have received."""
-    return JobSeekerConnectionRequest.query.filter(JobSeekerConnectionRequest.requested_id == recruiter_id and RecruiterConnectionRequest.status == "pending").all()
+    return JobSeekerConnectionRequest.query.filter(JobSeekerConnectionRequest.requested_id == recruiter_id, RecruiterConnectionRequest.status == "pending").all()
 
 def get_js_connections(jobseeker_id):
      """Get the recruiters whose connection requests a jobseeker has accepted."""
-     accepted_requests = RecruiterConnectionRequest.query.filter(RecruiterConnectionRequest.requested_id == jobseeker_id and RecruiterConnectionRequest.status == "accepted").all()
+     accepted_requests = RecruiterConnectionRequest.query.filter(RecruiterConnectionRequest.requested_id == jobseeker_id, RecruiterConnectionRequest.status == "accepted").all()
+     print(accepted_requests)
      connections = []
      for request in accepted_requests:
          connections.append(request.sender)
@@ -297,7 +298,8 @@ def get_js_connections(jobseeker_id):
 
 def get_rec_connections(recruiter_id):
      """Get the recruiters whose connection requests a jobseeker has accepted."""
-     accepted_requests = JobSeekerConnectionRequest.query.filter(JobSeekerConnectionRequest.requested_id == recruiter_id and JobSeekerConnectionRequest.status == "accepted").all()
+     accepted_requests = JobSeekerConnectionRequest.query.filter(JobSeekerConnectionRequest.requested_id == recruiter_id, JobSeekerConnectionRequest.status == "accepted").all()
+     print(accepted_requests)
      connections = []
      for request in accepted_requests:
          connections.append(request.sender)

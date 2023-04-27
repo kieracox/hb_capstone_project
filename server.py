@@ -87,15 +87,15 @@ def show_dashboard():
     if user_type == "job_seeker":
         user = crud.get_js_by_email(user_email)
         user_id = user.id
-        requests = crud.get_pending_js_requests(user_id)
+        pending_requests = crud.get_pending_js_requests(user_id)
         connections = crud.get_js_connections(user_id)
-        return render_template("js_dashboard.html", user=user, requests=requests, connections=connections)
+        return render_template("js_dashboard.html", user=user, requests=pending_requests, connections=connections)
     else:
         user = crud.get_recruiter_by_email(user_email)
         user_id = user.id
-        requests = crud.get_pending_rec_requests(user_id)
+        pending_requests = crud.get_pending_rec_requests(user_id)
         connections = crud.get_rec_connections(user_id)
-        return render_template("recruiter_dashboard.html", user=user, requests=requests, connections=connections)
+        return render_template("recruiter_dashboard.html", user=user, requests=pending_requests, connections=connections)
 
 
 @app.route('/logout', methods=['POST'])
@@ -387,8 +387,10 @@ def js_search_results():
     roles = crud.js_role_search(role_type, level, location,
                                 yoe, yoe_param, salary,
                                 salary_param, remote, sponsorship).all()
+
+    existing_connections = crud.get_js_connections(user.id)
     
-    return render_template("js_search_results.html", roles=roles, user=user, 
+    return render_template("js_search_results.html", roles=roles, user=user, connections=existing_connections, 
                            search_params=request.args)
 
 
@@ -410,7 +412,9 @@ def recruiter_search_results():
                                            yoe_param, skill, role_type, 
                                            salary, salary_param, remote, sponsorship)
     
-    return render_template("recruiter_search_results.html", candidates=candidates, user=user, 
+    existing_connections = crud.get_rec_connections(user.id)
+    
+    return render_template("recruiter_search_results.html", candidates=candidates, user=user, connections=existing_connections, 
                            search_params=request.args)
 
 
@@ -458,12 +462,14 @@ def accept_connection():
         if user_type == "job_seeker":
             req = crud.get_rec_request(request_id)
             req.status = "accepted"
+            print(req.status)
             db.session.commit()
             flash("Request accepted!")
             return redirect("/user_dashboard")
         else:
             req = crud.get_js_request(request_id)
             req.status = "accepted"
+            print(req.status)
             db.session.commit()
             flash("Request accepted!")
             return redirect("/user_dashboard")

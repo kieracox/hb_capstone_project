@@ -30,6 +30,9 @@
             <li>Recruiter for this role: {{ role.recruiter.fname }} {{ role.recruiter.lname }}</li>
             <li>Recruiter's Linkedin: <a href="https://{{ role.recruiter.linkedin }}">{{role.recruiter.linkedin }}</a></li>
         </ul>
+        {% if role.recruiter in connections %} 
+        <p>You are already connected with this user.</p>
+        {% else %}
         <form method="POST" action="/send_connect" class="connect_form" id="{{role.recruiter.id}}">
             <input type="hidden" name="requestor_id" value="{{ user.id }}">
             <input type="hidden" name="requested_id" value="{{role.recruiter.id}}">
@@ -43,6 +46,7 @@
             <p>Request failed: you already have a pending request for this user.</p>
         </div>
     </div>
+    {% endif %}
     {% endfor %}
     {% else %} 
     <p>Your search returned no results.</p>
