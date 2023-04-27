@@ -41,7 +41,7 @@
             <li>Github <a href="https://{{candidate.github}}">{{candidate.github}}</a></li>
             <li>Resume: <a href="{{ candidate.resume_url }}">Click to view</a></li>
         </ul>
-        <form method="POST" action="\send_connect" id="{{candidate.id}}">
+        <form method="POST" action="/send_connect" class="connect_form" id="{{candidate.id}}">
             <input type="hidden" name="requestor_id" value="{{ user.id }}">
             <input type="hidden" name="requested_id" value="{{candidate.id}}">
             <p>Want to connect with this candidate?</p>

@@ -30,7 +30,7 @@
             <li>Recruiter for this role: {{ role.recruiter.fname }} {{ role.recruiter.lname }}</li>
             <li>Recruiter's Linkedin: <a href="https://{{ role.recruiter.linkedin }}">{{role.recruiter.linkedin }}</a></li>
         </ul>
-        <form method="POST" action="\send_connect" class="connect_form" id="{{role.recruiter.id}}">
+        <form method="POST" action="/send_connect" class="connect_form" id="{{role.recruiter.id}}">
             <input type="hidden" name="requestor_id" value="{{ user.id }}">
             <input type="hidden" name="requested_id" value="{{role.recruiter.id}}">
             <p>Want to connect with the recruiter for this role?</p>

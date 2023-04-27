@@ -423,6 +423,7 @@ def send_request():
     print("requestor id", requestor_id, "requested id", requested_id)
     status = "pending"
 
+
     if user_type == "job_seeker":
         existing_request = crud.get_js_request_by_id(requested_id, requestor_id)
         if existing_request and existing_request.status == "pending":
@@ -438,7 +439,6 @@ def send_request():
     else:
         existing_request = crud.get_rec_request_by_id(requested_id, requestor_id)
         if existing_request and existing_request.status == "pending":
-            flash("You've already sent a request to this user.")
             response_data = {"success": False}
             return jsonify(response_data)
         else:
@@ -479,14 +479,14 @@ def reject_connection():
      request_id = request.form.get("request_id")
      
      if user_type == "job_seeker":
-        request = crud.get_rec_request(request_id)
-        request.status = "rejected"
+        req = crud.get_rec_request(request_id)
+        req.status = "rejected"
         db.session.commit()
         flash("Request rejected.")
         return redirect("/user_dashboard")
      else:
-        request = crud.get_js_request(request_id)
-        request.status = "rejected"
+        req = crud.get_js_request(request_id)
+        req.status = "rejected"
         db.session.commit()
         flash("Request rejected.")
         return redirect("/user_dashboard")

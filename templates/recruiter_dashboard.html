@@ -16,17 +16,19 @@
 <h2>Your Pending Connection Requests</h2>
 {% if requests %}
 {% for request in requests %} 
+{% if request.status == 'pending' %}
 <div class="pending_request">
-    <p>{{ request.sender.fname }} from {{request.sender.company}} wants to connect with you!</p>
-    <form action ="/accept_request" method="POST" class="connect_form" id="{{accept_request_request.id}}">
+    <p>{{ request.sender.fname }} wants to connect with you!</p>
+    <form action ="/accept_request" method="POST" class="handle_request" id="{{request.id}}">
         <input type="hidden" name="request_id" value="{{request.id}}">
         <input type="submit" value="Accept">
     </form>
-    <form action="/reject_request" method="POST" class="connect_form" id="{{accept_request_request.id}}">
+    <form action="/reject_request" method="POST" class="handle_request" id="{{request.id}}">
         <input type="hidden" name="request_id" value="{{request.id}}">
         <input type="submit" value="Reject">
     </form>
 </div>
+{% endif %}
 {% endfor %}
 {% else %} 
 <p>You have no pending requests right now.</p>
@@ -36,7 +38,7 @@
 {% if connections %}
 {% for connection in connections %} 
 <div class="connection">
-    <p>Name: {connection.fname} {connection.lname}</p>
+    <p>Name: {{ connection.fname }} {{ connection.lname }}</p>
 </div>
 {% endfor %}
 {% else %} 
