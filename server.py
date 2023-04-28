@@ -387,6 +387,8 @@ def js_search_results():
     roles = crud.js_role_search(role_type, level, location,
                                 yoe, yoe_param, salary,
                                 salary_param, remote, sponsorship).all()
+    
+    print(roles)
 
     existing_connections = crud.get_js_connections(user.id)
     

@@ -45,8 +45,8 @@
         <div class="failure_message" id="failure_{{role.recruiter.id}}" style="display:none;">
             <p>Request failed: you already have a pending request for this user.</p>
         </div>
+        {% endif %}
     </div>
-    {% endif %}
     {% endfor %}
     {% else %} 
     <p>Your search returned no results.</p>

@@ -12,8 +12,8 @@
 <p>
     Click <a href="/new_search">here</a> to start a new search.
 </p>
-
-<h2>Your Pending Connection Requests</h2>
+<div class="row connections">
+<h4>Your Pending Connection Requests</h4>
 {% if requests %}
 {% for request in requests %} 
 {% if request.status == 'pending' %}
@@ -33,8 +33,9 @@
 {% else %} 
 <p>You have no pending requests right now.</p>
 {% endif %}
+</div>
 
-<h2>Your Connections</h2>
+<h4>Your Connections</h4>
 {% if connections %}
 {% for connection in connections %} 
 <div class="connection">

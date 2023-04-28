@@ -5,18 +5,24 @@
 {% block navbar %}{% endblock %}
 
 {% block body %} 
-
 <h1>Welcome!</h1>
-
-
+<div class="row">
+    <div class="col">
+<p>Insert text about website here.</p> 
+</div>
+<div class="col">
+<p>Insert image here.</p>
+</div>
+ </div>   
 
 {% if "user_email" in session %} 
 <p>
     You're already logged in! Click <a href="/user_dashboard">here</a> to go to your dashboard.
 </p>
 {% endif %}
-<h2>Create an account</h2>
-<form action="/register" method="POST">
+<div class="row auth-forms-wrapper">
+    <form action="/register" method="POST" class="auth_forms" id="signup">
+    <h4>Create an account</h4>
     <p>
         Email <input type="text" name="email">
     </p>
@@ -34,9 +40,8 @@
         <input type="submit" value="Create my account">
     </p>
 </form>
-
-<h2>Log In</h2>
-<form action="/login" method="POST">
+<form action="/login" method="POST" class="auth_forms" id="login">
+    <h4>Log In</h4>
     <p>
         Email <input type="text" name="email">
     </p>
@@ -54,4 +59,5 @@
         <input type="submit" value="Log In">
     </p>
 </form>
+</div>
 {% endblock %}
