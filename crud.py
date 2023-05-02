@@ -1,18 +1,15 @@
 """CRUD operations."""
 
-from model import db, JobSeeker, Recruiter, Role, RoleSkill, JobSeekerSkill, JobSeekerRoleType, JobSeekerConnectionRequest, RecruiterConnectionRequest, connect_to_db
+from model import db, JobSeeker, Recruiter, Role, RoleSkill, JobSeekerSkill, JobSeekerRoleType, JobSeekerConnectionRequest, RecruiterConnectionRequest, JobSeekerNotificaton, RecruiterNotification, connect_to_db
+from datetime import datetime
 
 def create_job_seeker(email, password, fname='', lname='',  
                       linkedin='', github='', location='', yoe=0, desired_salary=0,
                       remote_only=False, sponsorship_needed=False, resume_url=''):
-   
     """Create and return a new job seeker."""
-
-    job_seeker = JobSeeker(email=email, password=password, fname=fname, lname=lname,
+    return JobSeeker(email=email, password=password, fname=fname, lname=lname,
                             linkedin=linkedin, github=github, location=location, yoe=yoe,
-                            desired_salary=desired_salary, remote_only=remote_only, sponsorship_needed=sponsorship_needed, resume_url=resume_url)
-    
-    return job_seeker
+                            desired_salary=desired_salary, remote_only=remote_only, sponsorship_needed=sponsorship_needed, resume_url=resume_url) 
 
 def return_all_job_seekers():
     """Return all job seekers."""
@@ -28,10 +25,8 @@ def get_js_by_email(email):
 
 def create_recruiter(email, password, fname='', lname='', company='', linkedin=''):
     """Create and return a new recruiter."""
-    recruiter = Recruiter(fname=fname, lname=lname, email=email, password=password, company=company, linkedin=linkedin)
+    return Recruiter(fname=fname, lname=lname, email=email, password=password, company=company, linkedin=linkedin)
     
-    return recruiter
-
 def return_all_recruiters():
     """Return all recruiters."""
     return Recruiter.query.all()
@@ -47,15 +42,11 @@ def get_recruiter_by_email(email):
 def create_role(recruiter, name='', role_type='', 
                 min_yoe=0, level='', location='', salary=0,
                 remote=False, sponsorship_provided=False, jd_url=''):
-    
     """Create and return a new role."""
-    
-    role = Role(recruiter=recruiter, name=name, role_type=role_type, 
+    return Role(recruiter=recruiter, name=name, role_type=role_type, 
                 min_yoe=min_yoe, level=level, location=location, 
                 salary=salary, remote=remote, sponsorship_provided=sponsorship_provided, jd_url=jd_url)
     
-    return role
-
 def return_all_roles():
     """Return all roles."""
     return Role.query.all()
@@ -66,9 +57,7 @@ def get_role_by_id(id):
 
 def create_role_skill(role_id, skill_name):
     """Create and return a new role skill."""
-    role_skill = RoleSkill(role_id=role_id, skill_name=skill_name)
-
-    return role_skill
+    return RoleSkill(role_id=role_id, skill_name=skill_name)
 
 def get_role_skill(role_id):
     """Get a role's skills."""
@@ -93,7 +82,7 @@ def edit_rec_profile(rec_id, fname, lname, company, linkedin):
 def edit_role(role_id, role_name, role_type, location, yoe, level, min_salary, remote, sponsorship_provided ):
     """Update a role's information."""
     role = Role.query.get(role_id)
-    print('crud.py 96:', role_name)
+
     if role_name:
         role.name = role_name
     if role_type:
@@ -123,19 +112,19 @@ def create_js_skill(job_seeker_id, skill_name):
 def add_js_skill(jobseeker_id, skill_names):
     """Add a new skill to a job seeker."""
     jobseeker = JobSeeker.query.get(jobseeker_id)
+
     for skill_name in skill_names:
         jobseeker.skills.append(JobSeekerSkill(skill_name=skill_name))
+    
+    db.session.commit()
         
-
 def get_js_skill(job_seeker_id):
     """Get a job seeker's skills."""
     return JobSeekerSkill.query.filter(JobSeekerSkill.job_seeker_id == job_seeker_id).all()
 
 def create_js_roletype(job_seeker_id, role_type):
     """Create and return a new job seeker role type."""
-    js_roletype = JobSeekerRoleType(job_seeker_id=job_seeker_id, role_type=role_type)
-
-    return js_roletype
+    return JobSeekerRoleType(job_seeker_id=job_seeker_id, role_type=role_type)
 
 def get_js_roletype(job_seeker_id):
     """Get a job seeker's role type."""
@@ -200,13 +189,12 @@ def js_role_search(role_type, level, location, yoe, yoe_param, salary, salary_pa
     if sponsorship == "yes":
         roles = roles.filter(Role.sponsorship_provided == True)
     
-    return roles
+    return roles.all()
 
 def rec_candidate_search(location, yoe, yoe_param, skill, role_type, salary, salary_param, remote, sponsorship):
     """Run a recruiter's search for candidates."""
     candidates = db.session.query(JobSeeker)
-    print(location, yoe, yoe_param, skill, role_type, salary, salary_param, remote, sponsorship)
-    print(candidates.statement)
+
     if location != "All":
         candidates = candidates.filter(JobSeeker.location == location)
 
@@ -236,23 +224,17 @@ def rec_candidate_search(location, yoe, yoe_param, skill, role_type, salary, sal
     if sponsorship == "no":
         candidates = candidates.filter(JobSeeker.sponsorship_provided == False)
     
-    return candidates.all()
-    
-        
+    return candidates.all()      
 
 def js_request_connect(requestor_id, requested_id, status="pending"):
     """Create and return a connection request from a job seeker."""
     
     return JobSeekerConnectionRequest(requestor_id=requestor_id, requested_id=requested_id, status=status)
 
-    
-
 def rec_request_connect(requestor_id, requested_id, status="pending"):
     """Create and return a connection request from a recruiter."""
 
-    connection_request = RecruiterConnectionRequest(requestor_id=requestor_id, requested_id=requested_id, status=status)
-
-    return connection_request
+    return RecruiterConnectionRequest(requestor_id=requestor_id, requested_id=requested_id, status=status)
 
 def get_js_request(request_id):
     """Get and return a connection request sent by a jobseeker."""
@@ -265,7 +247,6 @@ def get_js_request_by_id(requested_id, requestor_id):
 def get_rec_request_by_id(requested_id, requestor_id):
     """Find a request sent by a JS to a particular rec."""
     return RecruiterConnectionRequest.query.filter(RecruiterConnectionRequest.requested_id == requested_id, RecruiterConnectionRequest.requestor_id == requestor_id).first()
-
 
 def get_rec_request(request_id):
     """Get and return a connection request sent by a recruiter."""
@@ -290,7 +271,6 @@ def get_pending_rec_requests(recruiter_id):
 def get_js_connections(jobseeker_id):
      """Get the recruiters whose connection requests a jobseeker has accepted."""
      accepted_requests = RecruiterConnectionRequest.query.filter(RecruiterConnectionRequest.requested_id == jobseeker_id, RecruiterConnectionRequest.status == "accepted").all()
-     print(accepted_requests)
      connections = []
      for request in accepted_requests:
          connections.append(request.sender)
@@ -299,12 +279,37 @@ def get_js_connections(jobseeker_id):
 def get_rec_connections(recruiter_id):
      """Get the recruiters whose connection requests a jobseeker has accepted."""
      accepted_requests = JobSeekerConnectionRequest.query.filter(JobSeekerConnectionRequest.requested_id == recruiter_id, JobSeekerConnectionRequest.status == "accepted").all()
-     print(accepted_requests)
      connections = []
      for request in accepted_requests:
          connections.append(request.sender)
      return connections
  
+def create_js_notification(jobseeker_id, received_request=None, sent_request=None, created_at=None, message=None, read_status=None):
+    """Create a new job-seeker notification."""
+    new_notification = JobSeekerNotificaton(js_id=jobseeker_id, received_request=received_request,
+                                 sent_request=sent_request, created_at=created_at or datetime.utcnow(), 
+                                 message=message, read_status=read_status)
+    db.session.add(new_notification)
+    db.session.commit()
+    return new_notification
+
+def create_rec_notification(recruiter_id, received_request=None, sent_request=None, created_at=None, message=None, read_status=None):
+    """Create a new job-seeker notification."""
+    new_notification = RecruiterNotification(rec_id=recruiter_id, received_request=received_request,
+                                 sent_request=sent_request, created_at=created_at or datetime.utcnow(), 
+                                 message=message, read_status=read_status)
+    db.session.add(new_notification)
+    db.session.commit()
+    return new_notification
+
+def get_js_notification(notification_id):
+    """Get a jobseeker's notification by its id."""
+    return JobSeekerNotificaton.query.get(notification_id)
+
+def get_rec_notification(notification_id):
+    """Get a recruiter's notification by its id."""
+    return RecruiterNotification.query.get(notification_id)
+
 
 if __name__ == '__main__':
     from server import app

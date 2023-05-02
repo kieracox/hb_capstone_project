@@ -1,0 +1,17 @@
+{% extends 'base.html' %} 
+
+{% block title %} Notifications {% endblock %} 
+
+{% block body %}
+<h1>All Notifications</h1>
+<ul>
+    {% for notification in user.notifications %} 
+    <li> {% if not notification.read_status %}
+        <a class="notifications notifications_page {% if notification.read_status %}read{% endif %}" href="/user_dashboard" data-id="{{ notification.id }}">{{ notification.message }}</a>
+        {% else %} 
+        <span class="notifications notifications_page {% if notification.read_status %}read{% endif %}" data-id="{{ notification.id }}">{{ notification.message }}</span>
+        {% endif %}
+    </li>
+    {% endfor %}
+</ul>
+{% endblock %}

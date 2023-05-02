@@ -106,6 +106,36 @@ def logout():
     flash('You have been logged out.')
     return redirect("/")
 
+@app.route('/mark_notification_read/<int:notification_id>')
+def mark_notification_read(notification_id):
+    user_type = session.get("user_type")
+    if user_type == "job_seeker":
+        notification = crud.get_js_notification(notification_id)
+        if notification:
+            notification.read_status = True
+            db.session.commit()
+            return jsonify({'success': True})
+        else:
+            return jsonify({'success': False, 'error': 'Notification not found.'})
+    else:
+        notification = crud.get_rec_notification(notification_id)
+        if notification:
+            notification.read_status = True
+            db.session.commit()
+            return jsonify({'success': True})
+        else:
+            return jsonify({'success': False, 'error': 'Notification not found.'})
+        
+@app.route("/notifications")
+def show_notifications():
+    """Display a user's notifications."""
+    user_type = session.get("user_type")
+    if user_type == "job_seeker":
+        user = crud.get_js_by_email(session["user_email"])
+        return render_template("notifications.html", user=user)
+    else:
+        user = crud.get_recruiter_by_email(session["user_email"])
+        return render_template("notifications.html", user=user)
 
 @app.route("/user_profile")
 def show_profile():
@@ -387,8 +417,6 @@ def js_search_results():
     roles = crud.js_role_search(role_type, level, location,
                                 yoe, yoe_param, salary,
                                 salary_param, remote, sponsorship).all()
-    
-    print(roles)
 
     existing_connections = crud.get_js_connections(user.id)
     
@@ -426,11 +454,10 @@ def send_request():
     user_type = session.get("user_type")
     requestor_id = request.form.get("requestor_id")
     requested_id = request.form.get("requested_id")
-    print("requestor id", requestor_id, "requested id", requested_id)
     status = "pending"
 
-
     if user_type == "job_seeker":
+        user = crud.get_js_by_email(session["user_email"])
         existing_request = crud.get_js_request_by_id(requested_id, requestor_id)
         if existing_request and existing_request.status == "pending":
             response_data = {"success": False}
@@ -439,10 +466,17 @@ def send_request():
             new_request = crud.js_request_connect(requestor_id, requested_id, status)
             db.session.add(new_request)
             db.session.commit()
+            
+            notification = crud.create_rec_notification(recruiter_id=requested_id, received_request=new_request.id,
+                                                         message=f"{user.fname} {user.lname} wants to connect with you!", read_status=False)
+            db.session.add(notification)
+            db.session.commit()
+
             response_data = {"success": True}
             return jsonify(response_data)
         
     else:
+        user = crud.get_recruiter_by_email(session["user_email"])
         existing_request = crud.get_rec_request_by_id(requested_id, requestor_id)
         if existing_request and existing_request.status == "pending":
             response_data = {"success": False}
@@ -451,6 +485,12 @@ def send_request():
             new_request = crud.rec_request_connect(requestor_id, requested_id, status)
             db.session.add(new_request)
             db.session.commit()
+
+            notification = crud.create_js_notification(jobseeker_id=requested_id, received_request=new_request.id,
+                                                         message=f"{user.fname} {user.lname} wants to connect with you!", read_status=False)
+            db.session.add(notification)
+            db.session.commit()
+
             response_data = {"success": True}
             return jsonify(response_data)
     

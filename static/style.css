@@ -1,3 +1,4 @@
+
 .auth-forms-wrapper {
     display: flex;
     flex-direction: column;
@@ -16,6 +17,7 @@
     margin-left:auto;
   }
 
+
   .navbar {
     background-color: lightskyblue;
     
@@ -27,4 +29,12 @@
 
   .connections {
     margin-bottom: 20px;
+  }
+
+  .notifications {
+    color: blue;
+  }
+
+  .read {
+   color: gray;
   }

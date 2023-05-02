@@ -18,9 +18,32 @@
     {% block navbar %}
     <nav class="navbar navbar-expand-lg">
       <div class="container-fluid">
-      <a href="/user_dashboard">Dashboard</a>
-      <a href="/user_profile">Profile</a>
-      <a href="/new_search">Search</a>
+        <ul class="navbar-nav">
+      <li class="nav-item">
+        <a class="nav-link active" href="/user_dashboard">Dashboard</a>
+        </li>
+      <li class="nav-item">
+        <a class="nav-link active" href="/user_profile">Profile</a>
+      </li>
+      <li class="nav-item">     
+        <a href="/new_search">Search</a>
+      </li>
+      <li class="nav-item dropdown">  
+        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">Notifications</a>
+        <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+          {% for notification in user.notifications %} 
+          {% if not notification.read_status %}
+          <li>
+            <a class="dropdown-item notifications" href="/user_dashboard" data-id="{{ notification.id }}">{{ notification.message }}</a>
+          </li>
+          {% endif %}
+          {% endfor %}
+          <li>
+            <a href="/notifications">View all notifications</a>
+          </li>
+        </ul>
+      </li>
+      </ul>
       </div>
     </nav>
     {% endblock %}
@@ -36,6 +59,7 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js"
      integrity="sha384-gtEjrD/SeCtmISkJkNUaaKMoLD0//ElJ19smozuHV6z3Iehds+3Ulb9Bn9Plx0x4"
       crossorigin="anonymous"></script>
+      <script src="/static/markNotificationRead.js"></script>
     </div>
   </body>
 </html>
