@@ -1,0 +1,33 @@
+{% extends 'base.html' %} 
+
+{% block title %} User Settings {% endblock %} 
+
+{% block body %}
+<h1>Settings</h1>
+
+<h3>Notification Preferences</h3>
+{% if user.notifications_enabled %} 
+<form id="disable_notifications" method="POST" action="/set_notifications">
+    <p>You currently have notifications enabled. Do you want to disable them?</p>
+    <input type="submit" name="disable_notifications" value="Disable Notifications">
+</form>
+{% else %}
+<form id="enable_notifications"  method="POST" action="/set_notifications">
+    <p>You currently have notifications disabled. Do you want to enable them?</p>
+    <input type="submit" name="enable_notifications" value="Enable Notifications">
+</form>
+{% endif %}
+<h3>Change Password</h3>
+<form id="change_password" method="POST" action="/change_password">
+    Enter your current password: <input type="password" name="current_password">
+    <br>
+    Enter your new password: <input type="password" name="new_password">
+    <br>
+    <input type="submit">
+</form>
+
+<h3>Log Out</h3>
+<form action="/logout" method="POST">
+    <button id="logout">Log Out</button>
+</form>
+{% endblock %}

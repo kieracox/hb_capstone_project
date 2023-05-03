@@ -25,6 +25,7 @@ class JobSeeker(db.Model):
     remote_only = db.Column(db.Boolean)
     sponsorship_needed = db.Column(db.Boolean)
     resume_url = db.Column(db.String)
+    notifications_enabled = db.Column(db.Boolean, default=True)
 
     connection_requests = db.relationship("JobSeekerConnectionRequest", back_populates="sender")
     received_requests = db.relationship("RecruiterConnectionRequest", back_populates="receiver")
@@ -47,6 +48,7 @@ class Recruiter(db.Model):
     lname = db.Column(db.String)
     company = db.Column(db.String)
     linkedin = db.Column(db.String)
+    notifications_enabled = db.Column(db.Boolean, default=True)
 
     roles = db.relationship("Role", back_populates="recruiter")
     connection_requests = db.relationship("RecruiterConnectionRequest", back_populates="sender")

@@ -189,7 +189,7 @@ def js_role_search(role_type, level, location, yoe, yoe_param, salary, salary_pa
     if sponsorship == "yes":
         roles = roles.filter(Role.sponsorship_provided == True)
     
-    return roles.all()
+    return roles
 
 def rec_candidate_search(location, yoe, yoe_param, skill, role_type, salary, salary_param, remote, sponsorship):
     """Run a recruiter's search for candidates."""
@@ -224,7 +224,7 @@ def rec_candidate_search(location, yoe, yoe_param, skill, role_type, salary, sal
     if sponsorship == "no":
         candidates = candidates.filter(JobSeeker.sponsorship_provided == False)
     
-    return candidates.all()      
+    return candidates      
 
 def js_request_connect(requestor_id, requested_id, status="pending"):
     """Create and return a connection request from a job seeker."""
@@ -265,8 +265,8 @@ def get_pending_js_requests(jobseeker_id):
     return RecruiterConnectionRequest.query.filter(RecruiterConnectionRequest.requested_id == jobseeker_id, RecruiterConnectionRequest.status == "pending").all()
 
 def get_pending_rec_requests(recruiter_id):
-    """Get a jobseeker's pending connection requests they have received."""
-    return JobSeekerConnectionRequest.query.filter(JobSeekerConnectionRequest.requested_id == recruiter_id, RecruiterConnectionRequest.status == "pending").all()
+    """Get a recruiter's pending connection requests they have received."""
+    return JobSeekerConnectionRequest.query.filter(JobSeekerConnectionRequest.requested_id == recruiter_id, JobSeekerConnectionRequest.status == "pending").all()
 
 def get_js_connections(jobseeker_id):
      """Get the recruiters whose connection requests a jobseeker has accepted."""

@@ -137,6 +137,55 @@ def show_notifications():
         user = crud.get_recruiter_by_email(session["user_email"])
         return render_template("notifications.html", user=user)
 
+@app.route("/settings")
+def show_settings():
+    """Display the user settings page."""
+    user_type = session.get("user_type")
+    if user_type == "job_seeker":
+        user = crud.get_js_by_email(session["user_email"])
+        return render_template("settings.html", user=user)
+    else:
+        user = crud.get_recruiter_by_email(session["user_email"])
+        return render_template("settings.html", user=user)
+
+@app.route("/set_notifications", methods=["GET", "POST"])
+def update_notifications():
+    """Update a user's notifications preferences."""
+    user_type = session.get("user_type")
+    if user_type == "job_seeker":
+        user = crud.get_js_by_email(session["user_email"])
+    else:
+        user = crud.get_recruiter_by_email(session["user_email"])
+    if request.method == 'POST':
+        if request.form.get('enable_notifications'):
+            user.notifications_enabled = True
+            db.session.commit()
+            flash('Notifications have been enabled.')
+        elif request.form.get('disable_notifications'):
+            user.notifications_enabled = False
+            db.session.commit()
+            flash('Notifications have been disabled.')
+    return render_template('settings.html', user=user)
+
+@app.route("/change_password", methods=["POST"])
+def change_password():
+    """Change a user's password."""
+    user_type = session.get("user_type")
+    if user_type == "job_seeker":
+        user = crud.get_js_by_email(session["user_email"])
+    else:
+        user = crud.get_recruiter_by_email(session["user_email"]) 
+
+    current_password = request.form.get("current_password")
+    new_password = request.form.get("new_password")
+
+    if current_password != user.password:
+        flash("Incorrect current password. Please try again.")
+    else:
+        user.password = new_password
+        db.session.commit()
+        flash("Your password has been updated.")    
+
 @app.route("/user_profile")
 def show_profile():
     """Display a user's profile page."""

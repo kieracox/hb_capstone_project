@@ -4,6 +4,7 @@
 
 {% block body %}
 <h1>All Notifications</h1>
+{% if user.notifications_enabled %}
 <ul>
     {% for notification in user.notifications %} 
     <li> {% if not notification.read_status %}
@@ -14,4 +15,9 @@
     </li>
     {% endfor %}
 </ul>
+{% endif %}
+
+{% if not user.notifications_enabled %} 
+<p>You have notifications turned off. To enable notifications, go to your <a href="/settings">settings.</a></p>
+{% endif %}
 {% endblock %}
