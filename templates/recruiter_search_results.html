@@ -1,7 +1,7 @@
 {% extends 'base.html' %} 
 
 {% block title %} Search Results {% endblock %} 
-
+<script src="static/RecSearchResults.jsx"></script>
 {% block body %} 
 <h1>Here are your results!</h1>
 
@@ -14,53 +14,10 @@
     Or click <a href="/new_search">here</a> to search again.
 
 </p>
-    {% if candidates %}
-    {% for candidate in candidates %} 
-    <p>{{ candidate.fname }} {{candidate.lname }}</p>
-    <button class="show_details" id="{{ candidate.id }}">Show details</button>
-    <div class="details" id="show_{{ candidate.id }}" style= "display: none;">
-        <ul>
-            <li>Role Types:
-                <span class="profile_details" id="cand_roles">
-                    {% for role_type in candidate.role_types %}
-                    {{ role_type.role_type}},
-                    {% endfor %}
-            <li>YOE: {{ candidate.yoe }}</li>
-            <li>Skills: 
-                <span class="profile_details" id="cand_skills"> 
-                    {% for skill in candidate.skills %}
-                    {{ skill.skill_name}},
-                    {% endfor %}
-                </span>
-            </li>
-            <li>Location: {{ candidate.location }}</li>
-            <li>Min Salary: {{ candidate.desired_salary }}</li>
-            <li>Remote Only: {{ candidate.remote_only }}</li>
-            <li>Sponsorship Needed: {{ candidate.sponsorship_needed }}</li>
-            <li>Linkedin: <a href="https://{{ candidate.linkedin }}">{{candidate.linkedin }}</a></li>
-            <li>Github <a href="https://{{candidate.github}}">{{candidate.github}}</a></li>
-            <li>Resume: <a href="{{ candidate.resume_url }}">Click to view</a></li>
-        </ul>
-        <form method="POST" action="/send_connect" class="connect_form" id="{{candidate.id}}">
-            <input type="hidden" name="requestor_id" value="{{ user.id }}">
-            <input type="hidden" name="requested_id" value="{{candidate.id}}">
-            <p>Want to connect with this candidate?</p>
-            <input type="submit" id="submit_{{ candidate.id }}" value="Send Connection Request">
-        </form>
-    </div>
-    <div class="success_message" id="success_{{candidate.id}}" style="display:none;">
-        <p>Connection request sent!</p>
-    </div>
-    <div class="failure_message" id="failure_{{candidate.id}}" style="display:none;">
-        <p>Request failed: you already have a pending request for this user.</p>
-    </div>
-    {% endfor %}
-    {% else %} 
-    <p>Your search returned no results.</p>
-    {% endif %}
-</p>
-
-<script src="/static/showDetails.js"></script>
-<script src="/static/sendConnectRequest.js"></script>
-
+<input type="hidden" id="user_id" value="{{ user.id }}">
+<input type="hidden" id="search_params" value="{{search_params}}"/>
+<div id="rec_search_results">
+    
+</div>
+<script src="/static/RecSearchResults.jsx" type="text/jsx"></script>
 {% endblock %}

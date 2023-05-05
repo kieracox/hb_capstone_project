@@ -3,6 +3,7 @@ from model import connect_to_db, db
 import crud
 import os
 import cloudinary.uploader
+import json
 from urllib.parse import urlencode
 
 from jinja2 import StrictUndefined
@@ -392,11 +393,6 @@ def run_search():
         salary_param = request.form.get("salary_param")
         remote = request.form.get("remote")
         sponsorship = request.form.get("sponsorship")
-
-
-        roles = crud.js_role_search(role_type, level, location,
-                                    yoe, yoe_param, salary,
-                                    salary_param, remote, sponsorship).all()
         
         search_params = {
             "role_type": role_type,
@@ -413,7 +409,7 @@ def run_search():
         session["search_params"] = search_params
         
         
-        return redirect(url_for("js_search_results", **search_params))
+        return render_template("js_search_results.html", search_params=json.dumps(search_params), user=user)
     else:
         user = crud.get_recruiter_by_email(user_email)
         location = request.form.get("location")
@@ -429,10 +425,6 @@ def run_search():
         remote = request.form.get("remote")
         sponsorship = request.form.get("sponsorship")
 
-        candidates = crud.rec_candidate_search(location, yoe, 
-                                               yoe_param, skill, role_type, 
-                                               salary, salary_param, remote, sponsorship)
-        
         search_params = {
             "location": location,
             "yoe": yoe,
@@ -446,12 +438,12 @@ def run_search():
         }
 
         session["search_params"] = search_params
-        return redirect(url_for("recruiter_search_results", **search_params))
-
+        return render_template("recruiter_search_results.html", search_params=json.dumps(search_params), user=user)
 
 @app.route("/search/results/js", methods=["GET"])
 def js_search_results():
     user = crud.get_js_by_email(session["user_email"])
+    user_dict = user.to_dict()
 
     role_type = request.args.get("role_type")
     level = request.args.get("level")
@@ -466,16 +458,33 @@ def js_search_results():
     roles = crud.js_role_search(role_type, level, location,
                                 yoe, yoe_param, salary,
                                 salary_param, remote, sponsorship).all()
-
-    existing_connections = crud.get_js_connections(user.id)
+    result = []
+    for role in roles:
+        role_dict = role.to_dict()
+        role_skills = role.skills
+        role_dict["skills"] = []
+        role_dict["recruiter"] = role.recruiter.to_dict()
+        for skill in role_skills:
+            skill_dict = skill.to_dict()
+            role_dict["skills"].append(skill_dict)
+        result.append(role_dict)
     
-    return render_template("js_search_results.html", roles=roles, user=user, connections=existing_connections, 
-                           search_params=request.args)
+    existing_connections = crud.get_js_connections(user.id)
+    connections_list = []
+    for connection in existing_connections:
+        connections_list.append(connection.to_dict())
+
+    return jsonify({
+        "roles": result,
+        "user": user_dict,
+        "search_params": request.args,
+        "connections": connections_list})
 
 
 @app.route("/search/results/rec", methods=["GET"])
 def recruiter_search_results():
     user = crud.get_recruiter_by_email(session["user_email"])
+    user_dict = user.to_dict()
     
     location = request.args.get("location")
     yoe = request.args.get("yoe")
@@ -491,18 +500,40 @@ def recruiter_search_results():
                                            yoe_param, skill, role_type, 
                                            salary, salary_param, remote, sponsorship)
     
-    existing_connections = crud.get_rec_connections(user.id)
-    
-    return render_template("recruiter_search_results.html", candidates=candidates, user=user, connections=existing_connections, 
-                           search_params=request.args)
+    result = []
+    for candidate in candidates:
+        cand_dict = candidate.to_dict()
+        skills = candidate.skills
+        cand_dict["skills"] = []
+        for skill in skills:
+            skill_dict = skill.to_dict()
+            cand_dict["skills"].append(skill_dict)
+        role_types = candidate.role_types
+        cand_dict["role_types"] = []
 
+        for role_type in role_types:
+            type_dict = role_type.to_dict()
+            cand_dict["role_types"].append(type_dict)
+        
+        result.append(cand_dict)
+    
+    existing_connections = crud.get_js_connections(user.id)
+    connections_list = []
+    for connection in existing_connections:
+        connections_list.append(connection.to_dict())
+
+    return jsonify({
+        "candidates": result,
+        "user": user_dict,
+        "search_params": request.args,
+        "connections": connections_list})
 
 @app.route("/send_connect", methods=["POST"])
 def send_request():
     """Send a connection request."""
     user_type = session.get("user_type")
-    requestor_id = request.form.get("requestor_id")
-    requested_id = request.form.get("requested_id")
+    requestor_id = request.json["requesting_user"]
+    requested_id = request.json["requested_user"]
     status = "pending"
 
     if user_type == "job_seeker":
@@ -531,6 +562,7 @@ def send_request():
             response_data = {"success": False}
             return jsonify(response_data)
         else:
+            print(f"From Flask: requestor_id: {requestor_id}, requested_id: {requested_id}")
             new_request = crud.rec_request_connect(requestor_id, requested_id, status)
             db.session.add(new_request)
             db.session.commit()

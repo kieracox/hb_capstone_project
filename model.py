@@ -34,6 +34,24 @@ class JobSeeker(db.Model):
     notifications = db.relationship("JobSeekerNotificaton", back_populates="user_notified")
     saved_searches = db.relationship("JobSeekerSavedSearch", back_populates="user")
 
+    def to_dict(self):
+        result =  {
+            'id': self.id,
+            'fname': self.fname,
+            'lname': self.lname,
+            'linkedin': self.linkedin,
+            'github': self.github,
+            'location': self.location,
+            'yoe': self.yoe,
+            'salary': self.desired_salary,
+            'remote': self.remote_only,
+            'sponsorship': self.sponsorship_needed,
+            'resume_url': self.resume_url   
+        }
+        return result
+    
+    
+
     def __repr__(self):
         return f"<JobSeeker id={self.id} email={self.email}>"
 
@@ -58,6 +76,15 @@ class Recruiter(db.Model):
 
     def __repr__(self):
         return f"<Recruiter id={self.id} email={self.email}>"
+    
+    def to_dict(self):
+      result = {'id': self.id,
+        'fname': self.fname,
+        'lname': self.lname,
+        'company': self.company,
+        'linkedin': self.linkedin,
+      }
+      return result
 
 
 class Role(db.Model):
@@ -78,6 +105,23 @@ class Role(db.Model):
     recruiter = db.relationship("Recruiter", back_populates="roles")
     skills = db.relationship("RoleSkill", back_populates="role")
 
+    def to_dict(self):
+        result =  {
+            'id': self.id,
+            'recruiter_id': self.recruiter_id,
+            'name': self.name,
+            'role_type': self.role_type,
+            'min_yoe': self.min_yoe,
+            'level': self.level,
+            'location': self.location,
+            'salary': self.salary,
+            'remote': self.remote,
+            'sponsorship_provided': self.sponsorship_provided,
+            'jd_url': self.jd_url
+        }
+
+        return result
+
     def __repr__(self):
         return f"<Role id={self.id} name={self.name}>"
 
@@ -90,6 +134,13 @@ class RoleSkill(db.Model):
     skill_name = db.Column(db.String)
 
     role = db.relationship("Role", back_populates="skills")
+
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'role_id': self.id,
+            'skill_name': self.skill_name,
+        }
 
     def __repr__(self):
         return f"<Skill id={self.id} name={self.skill_name}>"
@@ -104,6 +155,13 @@ class JobSeekerSkill(db.Model):
 
     job_seeker = db.relationship("JobSeeker", back_populates="skills")
 
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'job_seeker_id': self.job_seeker_id,
+            'skill_name': self.skill_name,
+        }
+
     def __repr__(self):
         return f"<Skill id={self.id} name={self.skill_name}>"
 
@@ -116,6 +174,13 @@ class JobSeekerRoleType(db.Model):
     role_type = db.Column(db.String)
 
     job_seeker = db.relationship("JobSeeker", back_populates="role_types")
+
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'job_seeker_id': self.job_seeker_id,
+            'role_type': self.role_type,
+        }
 
     def __repr__(self):
         return f"<Role type id={self.id} Type={self.role_type}>"

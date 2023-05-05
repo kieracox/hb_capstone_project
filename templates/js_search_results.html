@@ -11,49 +11,13 @@
 
 <p>
     Or click <a href="/new_search">here</a> to search again.
-
+    
 </p>
-    {% if roles %}
-    {% for role in roles %} 
-    <p>{{ role.name }}</p>
-    <button class="show_details" id="{{ role.id }}">Show details</button>
-    <div class="details" id="show_{{ role.id }}" style= "display: none;">
-        <ul>
-            <li>Role Type: {{ role.role_type }}</li>
-            <li>Job Description: <a href="{{role.jd_url}}">View it here</a></li>
-            <li>Min YOE: {{ role.min_yoe }}</li>
-            <li>Level: {{ role.level }}</li>
-            <li>Location: {{ role.location }}</li>
-            <li>Min Salary: {{ role.salary }}</li>
-            <li>Remote: {{ role.remote }}</li>
-            <li>Sponsorship Provided: {{ role.sponsorship_provided }}</li>
-            <li>Recruiter for this role: {{ role.recruiter.fname }} {{ role.recruiter.lname }}</li>
-            <li>Recruiter's Linkedin: <a href="https://{{ role.recruiter.linkedin }}">{{role.recruiter.linkedin }}</a></li>
-        </ul>
-        {% if role.recruiter in connections %} 
-        <p>You are already connected with this user.</p>
-        {% else %}
-        <form method="POST" action="/send_connect" class="connect_form" id="{{role.recruiter.id}}">
-            <input type="hidden" name="requestor_id" value="{{ user.id }}">
-            <input type="hidden" name="requested_id" value="{{role.recruiter.id}}">
-            <p>Want to connect with the recruiter for this role?</p>
-            <input type="submit" id="submit_{{role.recruiter.id}}" value="Send Connection Request">
-        </form>
-        <div class="success_message" id="success_{{role.recruiter.id}}" style="display:none;">
-            <p>Connection request sent!</p>
-        </div>
-        <div class="failure_message" id="failure_{{role.recruiter.id}}" style="display:none;">
-            <p>Request failed: you already have a pending request for this user.</p>
-        </div>
-        {% endif %}
-    </div>
-    {% endfor %}
-    {% else %} 
-    <p>Your search returned no results.</p>
-    {% endif %}
-</p>
+<input type="hidden" id="user_id" value="{{ user.id }}">
+<input type="hidden" id="search_params" value="{{search_params}}"/>
+<div id="js_search_results">
+    
+</div>
 
-<script src="/static/showDetails.js"></script>
-<script src="/static/sendConnectRequest.js"></script>
-
+<script src="/static/JSSearchResults.jsx" type="text/jsx"></script>
 {% endblock %}

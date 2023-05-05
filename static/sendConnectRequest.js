@@ -1,7 +1,6 @@
 
 document.addEventListener('DOMContentLoaded', () => {
 const requestForms = document.querySelectorAll(".connect_form");
-console.log(requestForms)
 for (const form of requestForms) {
     form.addEventListener('submit', (event) => {
         event.preventDefault();

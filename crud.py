@@ -228,7 +228,7 @@ def rec_candidate_search(location, yoe, yoe_param, skill, role_type, salary, sal
 
 def js_request_connect(requestor_id, requested_id, status="pending"):
     """Create and return a connection request from a job seeker."""
-    
+    print(f"requestor_id: {requestor_id}, requested_id: {requested_id}, status: {status}")
     return JobSeekerConnectionRequest(requestor_id=requestor_id, requested_id=requested_id, status=status)
 
 def rec_request_connect(requestor_id, requested_id, status="pending"):
