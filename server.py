@@ -486,6 +486,7 @@ def recruiter_search_results():
     user = crud.get_recruiter_by_email(session["user_email"])
     user_dict = user.to_dict()
     
+    
     location = request.args.get("location")
     yoe = request.args.get("yoe")
     yoe_param = request.args.get("yoe_param")
@@ -517,7 +518,7 @@ def recruiter_search_results():
         
         result.append(cand_dict)
     
-    existing_connections = crud.get_js_connections(user.id)
+    existing_connections = crud.get_rec_connections(user.id)
     connections_list = []
     for connection in existing_connections:
         connections_list.append(connection.to_dict())
@@ -562,7 +563,6 @@ def send_request():
             response_data = {"success": False}
             return jsonify(response_data)
         else:
-            print(f"From Flask: requestor_id: {requestor_id}, requested_id: {requested_id}")
             new_request = crud.rec_request_connect(requestor_id, requested_id, status)
             db.session.add(new_request)
             db.session.commit()

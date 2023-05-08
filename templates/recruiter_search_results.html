@@ -11,9 +11,12 @@
 </p>
 
 <p>
-    Or click <a href="/new_search">here</a> to search again.
-
+    Or click <a href="/new_search">here</a> to search again
 </p>
+<form action ="/save_search" method="POST">
+    <input type="submit"value="Save This Search"/>
+    </form>
+<br>
 <input type="hidden" id="user_id" value="{{ user.id }}">
 <input type="hidden" id="search_params" value="{{search_params}}"/>
 <div id="rec_search_results">

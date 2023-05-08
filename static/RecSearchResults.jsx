@@ -3,8 +3,8 @@ function RecruiterSearchResults() {
     const [showDetails, setShowDetails] = React.useState({});
     const [connectionRequestResult, setConnectionRequestResult] = React.useState({});
     const [existingConnections, setExistingConnections] = React.useState([]);
-
-    function handleConnect(requestedID) {
+    function handleConnect(event, requestedID) {
+      event.preventDefault()
       const requestorID = document.querySelector('#user_id').value;
       const requestedIDValue = document.querySelector(`#rqst_id_${requestedID}`).value
       const formData = {'requested_user': requestedIDValue, 'requesting_user': requestorID};
@@ -30,13 +30,12 @@ function RecruiterSearchResults() {
 
     React.useEffect(() => {
       const searchParams = document.querySelector('#search_params').value;
-        console.log(searchParams)
         const paramsDict = JSON.parse(searchParams)
-        console.log(paramsDict)
         const queryString = new URLSearchParams(paramsDict).toString();
         fetch(`/search/results/rec?${queryString}`)
         .then(response => response.json())
         .then(data => { setCandidates(data.candidates);
+          setExistingConnections(data.connections);
         })
         
 
@@ -81,18 +80,18 @@ function RecruiterSearchResults() {
                         <li>Github: <a href={`https://${candidate.github}`}>{candidate.github}</a></li>
                         <li>Resume: <a href={candidate.resume_url}>View it here.</a></li>
                     </ul>
-                    {existingConnections.includes(candidate.id) ? (
-                <p>You are already connected with this user.</p>
+                    {existingConnections.some((connection) => connection.id === candidate.id) ? (
+                    <p>You are already connected with this user.</p>
                 ) : (
                 <div>
                  <p>Want to connect with this candidate?</p>
-                 <input type="hidden" id={`rqst_id_${candidate.id}`} value={candidate.id}></input>
-                 <button id={`id_${candidate.id}`} onClick={() => handleConnect(candidate.id)}>Send Connection Request</button>
+                 <input type="hidden" id={`rqst_id_${candidate.id}`} value={candidate.id}/>
+                 <button id={`id_${candidate.id}`} onClick={(event) => handleConnect(event, candidate.id)}>Send Connection Request</button>
                 {connectionRequestResult[candidate.id] === 'success' && (
                   <p id={`success_${candidate.id}`}>Connection request sent!</p>
                 )}
                 {connectionRequestResult[candidate.id] === 'failure' && (
-                <p id={`failure_${role.recruiter.id}`}>Request failed: you already have a pending request for this user.</p>
+                <p id={`failure_${candidate.id}`}>Request failed: you already have a pending request for this user.</p>
                 )}
                 </div>
                 )}

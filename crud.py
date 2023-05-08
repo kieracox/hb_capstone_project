@@ -269,19 +269,25 @@ def get_pending_rec_requests(recruiter_id):
     return JobSeekerConnectionRequest.query.filter(JobSeekerConnectionRequest.requested_id == recruiter_id, JobSeekerConnectionRequest.status == "pending").all()
 
 def get_js_connections(jobseeker_id):
-     """Get the recruiters whose connection requests a jobseeker has accepted."""
-     accepted_requests = RecruiterConnectionRequest.query.filter(RecruiterConnectionRequest.requested_id == jobseeker_id, RecruiterConnectionRequest.status == "accepted").all()
+     """Get the recruiters a jobseeker is connected to."""
+     received_requests = RecruiterConnectionRequest.query.filter(RecruiterConnectionRequest.requested_id == jobseeker_id, RecruiterConnectionRequest.status == "accepted").all()
+     sent_requests = JobSeekerConnectionRequest.query.filter(JobSeekerConnectionRequest.requestor_id == jobseeker_id, JobSeekerConnectionRequest.status == "accepted").all()
      connections = []
-     for request in accepted_requests:
+     for request in received_requests:
          connections.append(request.sender)
+     for request in sent_requests:
+         connections.append(request.receiver)
      return connections
 
 def get_rec_connections(recruiter_id):
-     """Get the recruiters whose connection requests a jobseeker has accepted."""
-     accepted_requests = JobSeekerConnectionRequest.query.filter(JobSeekerConnectionRequest.requested_id == recruiter_id, JobSeekerConnectionRequest.status == "accepted").all()
+     """Get the jobseekers a recruiter is connected to."""
+     received_requests = JobSeekerConnectionRequest.query.filter(JobSeekerConnectionRequest.requested_id == recruiter_id, JobSeekerConnectionRequest.status == "accepted").all()
+     sent_requests = RecruiterConnectionRequest.query.filter(RecruiterConnectionRequest.requestor_id == recruiter_id, RecruiterConnectionRequest.status == "accepted").all()
      connections = []
-     for request in accepted_requests:
+     for request in received_requests:
          connections.append(request.sender)
+     for request in sent_requests:
+         connections.append(request.receiver)
      return connections
  
 def create_js_notification(jobseeker_id, received_request=None, sent_request=None, created_at=None, message=None, read_status=None):
