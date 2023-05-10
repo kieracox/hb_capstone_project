@@ -1,6 +1,6 @@
 """CRUD operations."""
 
-from model import db, JobSeeker, Recruiter, Role, RoleSkill, JobSeekerSkill, JobSeekerRoleType, JobSeekerConnectionRequest, RecruiterConnectionRequest, JobSeekerNotificaton, RecruiterNotification, connect_to_db
+from model import db, JobSeeker, Recruiter, Role, RoleSkill, JobSeekerSkill, JobSeekerRoleType, JobSeekerConnectionRequest, RecruiterConnectionRequest, JobSeekerNotificaton, RecruiterNotification, JobSeekerSavedSearch, RecruiterSavedSearch, connect_to_db
 from datetime import datetime
 
 def create_job_seeker(email, password, fname='', lname='',  
@@ -315,6 +315,27 @@ def get_js_notification(notification_id):
 def get_rec_notification(notification_id):
     """Get a recruiter's notification by its id."""
     return RecruiterNotification.query.get(notification_id)
+
+def create_saved_search(user_type, id, nickname=None, params=None):
+    """Create a new saved search for a user."""
+    if user_type == "job_seeker":
+        return JobSeekerSavedSearch(js_id=id, search_nickname=nickname, search_params=params)
+    else:
+        return RecruiterSavedSearch(rec_id=id, search_nickname=nickname, search_params=params)
+
+def get_saved_searches(user_type, user_id):
+    """Get a user's saved searches."""
+    if user_type == "job_seeker":
+        return JobSeekerSavedSearch.query.filter(JobSeekerSavedSearch.js_id == user_id).all()
+    else:
+        return RecruiterSavedSearch.query.filter(RecruiterSavedSearch.rec_id == user_id).all()
+
+def get_search_by_name(user_type, user_id, nickname):
+    """Get a user's saved searches by their nickname."""
+    if user_type == "job_seeker":
+        return JobSeekerSavedSearch.query.filter(JobSeekerSavedSearch.search_nickname == nickname, JobSeekerSavedSearch.js_id == user_id).first()
+    else:
+        return RecruiterSavedSearch.query.filter(RecruiterSavedSearch.search_nickname == nickname, RecruiterSavedSearch.rec_id == user_id).first()
 
 
 if __name__ == '__main__':

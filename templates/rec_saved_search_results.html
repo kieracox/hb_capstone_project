@@ -1,0 +1,20 @@
+{% extends 'base.html' %} 
+
+{% block title %} Search Results {% endblock %} 
+
+{% block body %} 
+<h1>Here are your results!</h1>
+
+
+<p>
+    Click <a href="/user_dashboard">here</a> to return to your dashboard.
+</p>
+
+<p>
+    Or click <a href="/new_search">here</a> to search again
+</p>
+<input type="hidden" id="user_id" value="{{ user.id }}">
+<input type="hidden" id="search_params" value="{{search_params}}"/>
+<div id="rec_saved_search_results">
+    
+</div>

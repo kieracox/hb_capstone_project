@@ -13,9 +13,17 @@
 <p>
     Or click <a href="/new_search">here</a> to search again
 </p>
-<form action ="/save_search" method="POST">
+<form action ="/run_saved_search" class="save_search" method="POST">
+    <p>Want to save this search?</p>
+    <input type="text" name="search_nickname" placeholder="Search Nickname" required>
     <input type="submit"value="Save This Search"/>
-    </form>
+</form>
+<div class="success" style="display: none;">
+    <p>Search saved!</p>
+</div>
+<div class="failure" style="display: none;">
+    <p>You've already used that nickname. Please try again.</p>
+    </div>
 <br>
 <input type="hidden" id="user_id" value="{{ user.id }}">
 <input type="hidden" id="search_params" value="{{search_params}}"/>
@@ -23,4 +31,5 @@
     
 </div>
 <script src="/static/RecSearchResults.jsx" type="text/jsx"></script>
+<script src="/static/saveSearch.js"></script>
 {% endblock %}

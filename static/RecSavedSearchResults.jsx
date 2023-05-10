@@ -42,10 +42,29 @@ function RecruiterSearchResults() {
 
     }, []);
 
-    return (
+    if (roles.length === 0) {
+        return <p>Your search returned no results.</p>;
+      }
+      return (
         <React.Fragment>
-        {candidates.map((candidate) => (
-            <div key={candidate.id}>
+            {candidates.map((candidate => {
+                <SearchResult
+                key={candidate.id}
+                candidate={candidate}
+                showDetails={showDetails[candidate.id]}
+                setShowDetails={setShowDetails}
+                existingConnections={existingConnections}
+                handleConnect={handleConnect}
+                connectionRequestResult={connectionRequestResult}
+          />
+            }))}
+        </React.Fragment>
+      );
+        }
+
+        function SearchResult({candidate, showDetails, setShowDetails, existingConnections, handleConnect, connectionRequestResult}) {
+            return (
+                <div key={candidate.id}>
                 <p>{candidate.fname}{candidate.lname}</p>
                 <button onClick={() => setShowDetails((prev) => ({ ...prev, [candidate.id]: !prev[candidate.id] }))}>
               {showDetails[candidate.id] ? 'Hide details' : 'Show details'}
@@ -100,10 +119,6 @@ function RecruiterSearchResults() {
             )}
 
             </div>
-        ))}
-        </React.Fragment>
-    )
-};
-  
-
-  ReactDOM.render(<RecruiterSearchResults />, document.querySelector("#rec_search_results"))
+            );
+        }
+        ReactDOM.render(<RecruiterSearchResults/>, document.querySelector("#rec_saved_search_results"));

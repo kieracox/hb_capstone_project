@@ -260,15 +260,15 @@ class JobSeekerSavedSearch(db.Model):
     def __repr__(self):
         return f"Saved search id={self.id} for user {self.js_id}"
     
-    class RecruiterSavedSearch(db.Model):
-        __tablename__ = "rec_saved_searches"
+class RecruiterSavedSearch(db.Model):
+    __tablename__ = "rec_saved_searches"
 
-        id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-        js_id = db.Column(db.Integer, db.ForeignKey("recruiters.id"))
-        search_nickname = db.Column(db.String)
-        search_params = db.Column(db.JSON)
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    rec_id = db.Column(db.Integer, db.ForeignKey("recruiters.id"))
+    search_nickname = db.Column(db.String)
+    search_params = db.Column(db.JSON)
 
-        user = db.relationship("Recruiter", back_populates="saved_searches")
+    user = db.relationship("Recruiter", back_populates="saved_searches")
     
     def __repr__(self):
         return f"Saved search id={self.id} for user {self.js_id}"

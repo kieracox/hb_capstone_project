@@ -366,10 +366,12 @@ def show_search():
 
     if user_type == "job_seeker":
         user = crud.get_js_by_email(user_email)
-        return render_template("js_search.html", user=user)
+        saved_searches = crud.get_saved_searches(user_type, user.id)
+        return render_template("js_search.html", user=user, saved_searches=saved_searches)
     else:
         user = crud.get_recruiter_by_email(user_email)
-        return render_template("recruiter_search.html", user=user)
+        saved_searches = crud.get_saved_searches(user_type, user.id)
+        return render_template("recruiter_search.html", user=user, saved_searches=saved_searches)
 
 
 @app.route("/search", methods=['GET', 'POST'])
@@ -379,39 +381,41 @@ def run_search():
     user_email = session.get("user_email")
 
     if user_type == "job_seeker":
-        role_type = request.form.get("role_type")
-        level = request.form.get("level")
-        user = crud.get_js_by_email(user_email)
+            user = crud.get_js_by_email(user_email)
+            role_type = request.form.get("role_type")
+            level = request.form.get("level")
 
-        location = request.form.get("location")
-        if location == None or location == "":
-            location = "All"
+            location = request.form.get("location")
+            if location == None or location == "":
+                location = "All"
 
-        yoe = request.form.get("yoe")
-        yoe_param = request.form.get("yoe_param")
-        salary = request.form.get("salary")
-        salary_param = request.form.get("salary_param")
-        remote = request.form.get("remote")
-        sponsorship = request.form.get("sponsorship")
-        
-        search_params = {
-            "role_type": role_type,
-            "level": level,
-            "location": location,
-            "yoe": yoe,
-            "yoe_param": yoe_param,
-            "salary": salary,
-            "salary_param": salary_param,
-            "remote": remote,
-            "sponsorship": sponsorship
-        }
+            yoe = request.form.get("yoe")
+            yoe_param = request.form.get("yoe_param")
+            salary = request.form.get("salary")
+            salary_param = request.form.get("salary_param")
+            remote = request.form.get("remote")
+            sponsorship = request.form.get("sponsorship")
+            
+            search_params = {
+                "role_type": role_type,
+                "level": level,
+                "location": location,
+                "yoe": yoe,
+                "yoe_param": yoe_param,
+                "salary": salary,
+                "salary_param": salary_param,
+                "remote": remote,
+                "sponsorship": sponsorship
+            }
 
-        session["search_params"] = search_params
-        
-        
-        return render_template("js_search_results.html", search_params=json.dumps(search_params), user=user)
+            session["search_params"] = search_params
+            
+            return render_template("js_search_results.html", search_params=json.dumps(search_params), user=user)
+       
+            
     else:
         user = crud.get_recruiter_by_email(user_email)
+        
         location = request.form.get("location")
         if location == None or location == "":
             location = "All"
@@ -439,12 +443,15 @@ def run_search():
 
         session["search_params"] = search_params
         return render_template("recruiter_search_results.html", search_params=json.dumps(search_params), user=user)
+        
 
 @app.route("/search/results/js", methods=["GET"])
 def js_search_results():
     user = crud.get_js_by_email(session["user_email"])
     user_dict = user.to_dict()
 
+    print("SEARCH PARAMS:", request.args)
+    
     role_type = request.args.get("role_type")
     level = request.args.get("level")
     location = request.args.get("location")
@@ -528,6 +535,66 @@ def recruiter_search_results():
         "user": user_dict,
         "search_params": request.args,
         "connections": connections_list})
+
+@app.route("/save_search", methods=["POST"])
+def save_search():
+    """Save a search."""
+    user_type = session.get("user_type")
+    search_nickname = request.form.get("search_nickname")
+    search_params = session.get("search_params")
+
+    if user_type == "job_seeker":
+        user = crud.get_js_by_email(session["user_email"])
+        already_saved = crud.get_search_by_name(user_type, user.id, search_nickname)
+        if already_saved is not None:
+            response_data = {"success": False}
+            return jsonify(response_data)
+        else:
+            saved_search = crud.create_saved_search("job_seeker", user.id, search_nickname, search_params)
+            db.session.add(saved_search)
+            db.session.commit()
+            response_data = {"success": True}
+            return jsonify(response_data)
+    else:
+        user = crud.get_recruiter_by_email(session["user_email"])
+        already_saved = crud.get_search_by_name(user_type, user.id, search_nickname)
+        if already_saved is not None:
+            response_data = {"success": False}
+            return jsonify(response_data)
+        else:
+            saved_search = crud.create_saved_search("recruiter", user.id, search_nickname, search_params)
+            db.session.add(saved_search)
+            db.session.commit()
+            response_data = {"success": True}
+            return jsonify(response_data)
+        
+@app.route("/run_saved_search", methods=["GET"])
+def run_saved_search():
+        """Run a saved search."""
+        user_type = session.get("user_type")
+        user_email = session.get("user_email")
+
+        if user_type == "job_seeker":
+            user = crud.get_js_by_email(user_email)
+            print(user.id)
+            saved_search_name = request.args.get("saved_searches")
+            print("Request Args:", request.args)
+            print("Saved Search Name:", saved_search_name)
+            saved_search = crud.get_search_by_name("job_seeker", user.id, saved_search_name)
+            print("SAVED SEARCH", saved_search)
+            search_params = saved_search.search_params
+            print("Search Parameters:", search_params)
+            session["search_params"] = search_params
+            print("Session:", session)
+            return render_template("js_saved_search_results.html", search_params=json.dumps(search_params), user=user)
+        else:
+            user = crud.get_recruiter_by_email(user_email)
+            saved_search_name = request.args.get("saved_searches")
+            saved_search = crud.get_search_by_name("recruiter", user.id, saved_search_name)
+            search_params = saved_search.search_params
+            session["search_params"] = search_params
+            return render_template("rec_saved_search_results.html", search_params=json.dumps(search_params), user=user)
+    
 
 @app.route("/send_connect", methods=["POST"])
 def send_request():

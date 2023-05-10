@@ -8,8 +8,18 @@
 <p>
     Click <a href="/user_dashboard">here</a> to return to your dashboard.
 </p>
-<form action="/search" method="POST">
-  
+<form action="/run_saved_search" class="saved_search_form" method="GET">
+    <p>Use one of your saved searches:</p>
+    <select id="rec_saved_searches" name="saved_searches" class="saved_search_select">
+        <option value="None">None</option>
+        {% for search in saved_searches %} 
+        <option value="{{search.search_nickname}}" data-params="{{search.search_params}}">{{search.search_nickname}}</option>
+        {% endfor %}
+    </select>
+    <input type="submit" value="Search Again">
+</form>
+<form action="/search" class="new_search_form" method="POST">
+    <p>Or start a new search:</p>
     <p>
         Show me candidates in this location (leave blank if no desired location):
         <br>
