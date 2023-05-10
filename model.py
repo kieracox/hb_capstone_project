@@ -193,6 +193,7 @@ class JobSeekerConnectionRequest(db.Model):
     requestor_id = db.Column(db.Integer, db.ForeignKey("job_seekers.id"))
     requested_id = db.Column(db.Integer, db.ForeignKey("recruiters.id"))
     status = db.Column(db.String, nullable=False)
+    message = db.Column(db.String)
 
     sender = db.relationship("JobSeeker", back_populates="connection_requests")
     receiver = db.relationship("Recruiter", back_populates="received_requests")
@@ -208,6 +209,7 @@ class RecruiterConnectionRequest(db.Model):
     requestor_id = db.Column(db.Integer, db.ForeignKey("recruiters.id"))
     requested_id = db.Column(db.Integer, db.ForeignKey("job_seekers.id"))
     status = db.Column(db.String, nullable=False)
+    message = db.Column(db.String)
 
     sender = db.relationship("Recruiter", back_populates="connection_requests")
     receiver = db.relationship("JobSeeker", back_populates="received_requests")

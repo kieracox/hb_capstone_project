@@ -226,15 +226,15 @@ def rec_candidate_search(location, yoe, yoe_param, skill, role_type, salary, sal
     
     return candidates      
 
-def js_request_connect(requestor_id, requested_id, status="pending"):
+def js_request_connect(requestor_id, requested_id, status="pending", message=""):
     """Create and return a connection request from a job seeker."""
     print(f"requestor_id: {requestor_id}, requested_id: {requested_id}, status: {status}")
-    return JobSeekerConnectionRequest(requestor_id=requestor_id, requested_id=requested_id, status=status)
+    return JobSeekerConnectionRequest(requestor_id=requestor_id, requested_id=requested_id, status=status, message=message)
 
-def rec_request_connect(requestor_id, requested_id, status="pending"):
+def rec_request_connect(requestor_id, requested_id, status="pending", message=""):
     """Create and return a connection request from a recruiter."""
 
-    return RecruiterConnectionRequest(requestor_id=requestor_id, requested_id=requested_id, status=status)
+    return RecruiterConnectionRequest(requestor_id=requestor_id, requested_id=requested_id, status=status, message=message)
 
 def get_js_request(request_id):
     """Get and return a connection request sent by a jobseeker."""
