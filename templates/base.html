@@ -53,7 +53,7 @@
           {% for notification in user.notifications %} 
           {% if not notification.read_status %}
           <li>
-            <a class="dropdown-item notifications" href="/user_dashboard" data-id="{{ notification.id }}">{{ notification.message }}</a>
+            <a class="dropdown-item notifications" href="#" data-id="{{ notification.id }}">{{ notification.message }}</a>
           </li>
           {% endif %}
           {% endfor %}

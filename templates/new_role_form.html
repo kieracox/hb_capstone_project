@@ -1,0 +1,79 @@
+{% extends 'base.html' %} 
+
+{% block title %} Add Role {% endblock %} 
+
+{% block body %} 
+
+<h2>Add a New Role</h2>
+<p>Please enter in the details on your new role.</p>
+<p>You can upload a job description on your <a href="/user_profile">profile page.</a></p>
+<form action="/add_role" method="POST">
+    <p>
+        Role Name: <input type="text" name="role_name">
+    </p>
+    <p>
+        Location: <input type="text" name="location">
+    </p>
+    <p>
+        Minimum years of experience: <input type="number" id="yoe" name="yoe" min="0">
+    </p>
+    <p>
+        Minimum salary: <input type="number" id="min_salary" name="min_salary" min="0">
+    </p>
+    <p>
+        Level:
+        <select type="select" id="level">
+            <option value="Entry Level">Entry Level</option>
+            <option value="Mid Level">Mid Level</option>
+            <option value="Senior">Senior</option>
+            <option value="Staff">Staff</option>
+            <option value="Manager">Management</option>
+        </select>
+    </p>
+    <p>
+        Is this role eligible for full-time remote? 
+        <br>
+        Yes <input type="radio" id="yes" name="remote" value="True">
+        <br>
+        No <input type="radio" id="no" name="remote" value="False">
+    </p>
+    <p>
+        Are you providing visa sponsorship for this role?
+        <br>
+        Yes <input type="radio" id="yes" name="sponsorship_provided" value="True">
+        <br>
+        No <input type="radio" id="no" name="sponsorship_provided" value="False">
+    </p>
+    <p>
+        Select the skill that is most desired for this role:
+        <select name="skill" id="role_skill">
+            <option value="Python">Python</option>
+            <option value="Javascript">Javascript</option>
+            <option value="React">React</option>
+            <option value="Flask">Flask</option>
+            <option value="Aws">AWS</option>
+            <option value="Kubernetes">Kubernetes</option>
+            <option value="Agile">Agile Methodologies</option>
+            <option value="SQL">SQL</option>
+            <option value="Swift">Swift</option>
+            <option value="Selenium">Selenium</option>
+        </select>
+    </p>
+    <p>Select the type of role this is:
+        <select name="role_type" id="js_role_type">
+            <option value="Backend">Backend</option>
+            <option value="Frontend">Frontend</option>
+            <option value="Fullstack">Fullstack</option>
+            <option value="Devops">DevOps</option>
+            <option value="Security">Security Engineering</option>
+            <option value="Data">Data Engineering</option>
+            <option value="Machine Learning">Machine Learning</option>
+            <option value="Management">Engineering Management</option>
+            <option value="Mobile">Mobile</option>
+            <option value="QA">QA</option>
+        </select>
+    </p>
+    <input type="submit">
+</form>
+
+{% endblock %}

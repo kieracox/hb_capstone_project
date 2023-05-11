@@ -19,6 +19,9 @@
 {% if request.status == 'pending' %}
 <div class="pending_request">
     <p>{{ request.sender.fname }} wants to connect with you!</p>
+    {% if request.message %} 
+    <p>Request message:<br>{{request.message}}</p>
+    {% endif %}
     <form action ="/accept_request" method="POST" class="handle_request" id="{{request.id}}">
         <input type="hidden" name="request_id" value="{{request.id}}">
         <input type="submit" value="Accept">

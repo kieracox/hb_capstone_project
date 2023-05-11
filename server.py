@@ -331,7 +331,16 @@ def update_rec_profile():
 @app.route("/upload_resume", methods=["POST"])
 def upload_resume():
     """Upload a jobseeker's resume."""
+    if 'resume' not in request.files:
+        flash("Please select a file to upload.", 'error')
+        return redirect("/user_profile")
     resume = request.files['resume']
+    if not resume:
+        flash("Please select a file to upload.")
+        return redirect("/user_profile")
+    if resume.filename == '':
+         flash("Please select a file to upload.")
+         return redirect("/user_profile")
     result = cloudinary.uploader.upload(file=resume, api_key=CLOUDINARY_KEY, api_secret=CLOUDINARY_SECRET, cloud_name=CLOUD_NAME)
     resume_url = result['secure_url']
 
@@ -340,22 +349,84 @@ def upload_resume():
     user.resume_url = resume_url
     db.session.commit()
     return redirect("/user_profile")
+    
 
 
 @app.route("/upload_jd", methods=['POST'])
 def upload_jd():
     """Upload a recruiter's job description."""
+    if 'jd' not in request.files:
+        flash("Please select a file to upload.", 'error')
+        return redirect("/user_profile")
     jd = request.files['jd']
+    if jd.filename == '':
+         flash("Please select a file to upload.")
+         return redirect("/user_profile")
     result = cloudinary.uploader.upload(file=jd, api_key=CLOUDINARY_KEY, api_secret=CLOUDINARY_SECRET, cloud_name=CLOUD_NAME)
     jd_url = result['secure_url']
-
-    user_email = session.get("user_email")
-    user = crud.get_recruiter_by_email(user_email)
-    for role in user.roles:
-        if role.jd_url == "":
-            role.jd_url = jd_url
+    role_id = int(request.form.get("role_id"))
+    role = crud.get_role_by_id(role_id)
+    role.jd_url = jd_url
     db.session.commit()
     return redirect("/user_profile")
+
+@app.route("/new_role")
+def show_add_role():
+    """Display the add new role page."""
+    user_email = session.get("user_email")
+    user = crud.get_recruiter_by_email(user_email)
+    return render_template("new_role_form.html")
+
+@app.route("/add_role", methods=["POST"])
+def add_new_role():
+    """Add a new role to a recruiter's profile."""
+    user_email = session.get("user_email")
+    user = crud.get_recruiter_by_email(user_email)
+
+    role_name = request.form.get('role_name')
+    location = request.form.get('location')
+    role_type = request.form.get("role_type")
+    level = request.form.get('level')
+    
+    yoe_str = request.form.get('yoe')
+    if yoe_str:
+        yoe = int(yoe_str)
+    else:
+        yoe = None
+    
+    min_salary_str = request.form.get('min_salary')
+    if min_salary_str:
+        min_salary = int(min_salary_str)
+    else:
+        min_salary = None
+
+    remote_str = request.form.get("remote")
+    if remote_str:
+        remote = bool(remote_str == 'True') 
+    else:
+        remote = None
+    
+    sponsorship_provided_str = request.form.get('sponsorship_provided')
+    if sponsorship_provided_str:
+        sponsorship_provided = bool(sponsorship_provided_str == 'True') 
+    else:
+        sponsorship_provided = None 
+
+    new_role = crud.create_role(user, role_name, role_type, yoe, location, level, min_salary, 
+                         remote, sponsorship_provided)
+    db.session.add(new_role)
+    
+    skill = request.form.get("skill")
+    role_skill = crud.get_role_skill(new_role.id)
+    if role_skill:
+        role_skill[0].skill_name = skill
+    else:
+        role_skill = crud.create_role_skill(new_role.id, skill)
+        db.session.add(role_skill)
+    
+    db.session.commit()
+    flash(f"{role_name} created!")
+    return redirect("/new_role")
 
 
 @app.route("/new_search")
@@ -603,6 +674,7 @@ def send_request():
     requestor_id = request.json["requesting_user"]
     requested_id = request.json["requested_user"]
     status = "pending"
+    message = request.json.get("connect_message")
 
     if user_type == "job_seeker":
         user = crud.get_js_by_email(session["user_email"])
@@ -611,7 +683,7 @@ def send_request():
             response_data = {"success": False}
             return jsonify(response_data)
         else:
-            new_request = crud.js_request_connect(requestor_id, requested_id, status)
+            new_request = crud.js_request_connect(requestor_id, requested_id, status, message)
             db.session.add(new_request)
             db.session.commit()
             
@@ -630,7 +702,7 @@ def send_request():
             response_data = {"success": False}
             return jsonify(response_data)
         else:
-            new_request = crud.rec_request_connect(requestor_id, requested_id, status)
+            new_request = crud.rec_request_connect(requestor_id, requested_id, status, message)
             db.session.add(new_request)
             db.session.commit()
 

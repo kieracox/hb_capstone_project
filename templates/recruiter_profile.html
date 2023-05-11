@@ -8,6 +8,9 @@
 <p>
     Click <a href="/user_dashboard">here</a> to return to your dashboard.
 </p>
+<p>
+    Click <a href="/new_role">here</a> to add a new role. 
+</p>
 
 <h2>Personal Information</h2>
  <ul>
@@ -26,8 +29,10 @@
     </ul>
 
 <h2>Role Information</h2>
-
+{% if user.roles %}
 {% for role in user.roles %}
+<h4>{{role.name}}</h4>
+<div id="show_{{ role.id }}" style="display: none;">
 <ul>
 <li>
     <span class="profile_details" id="role_name">Role Name: {{role.name}}</span>
@@ -59,8 +64,12 @@
 </li>
 {% endfor %}
 </ul>
+</div>
+<button class="show_details" id="show_details_{{ role.id }}">Show Details</button>
 {% endfor %}
-
+{% else %} 
+<p>You don't have any roles yet!</p>
+{% endif %}
 <h2>Edit Profile</h2>
 <form action="/update_rec_profile" id="#edit_rec_profile" method="POST">
     <fieldset>
@@ -81,7 +90,7 @@
 {% for role in user.roles %} 
 <fieldset>
     <legend>Edit {{role.name}} Role Information</legend>
-    
+    <div id="edit_{{ role.id }}" style="display: none;">
     <p>
         Role Name: <input type="text" name="role_name">
     </p>
@@ -147,22 +156,36 @@
             <option value="QA">QA</option>
         </select>
     </p>
+    </div>
+    <button class="show_edit" id="edit_details_{{ role.id }}">Show Edit Form</button>
 </fieldset>
-    {% endfor %}
-    
 <input type="submit">
+{% endfor %}
 </form>
-
-<h2>Upload Your Job Description</h2>
- <form action="/upload_jd" method="post" enctype="multipart/form-data">
-    <input type="file" name="jd">
-    <br>
-    <input type="submit" value="Upload">
- </form>
+{% for role in user.roles %}
+<h4>Upload Your Job Description: {{role.name}}</h2>
+    <!-- <button onclick="showUploadWidget()">Upload File</button> -->
+    <form action="/upload_jd" method="post" enctype="multipart/form-data">
+       <input type="hidden" name="role_id" value="{{ role.id }}">
+       <input type="file" name="jd">
+       <br>
+       <input type="submit" value="Upload">
+    </form>
+{% endfor %}
 
  <br>
- <h2>Your job description</h2>
+ <h2>Your job descriptions</h2>
  {% for role in user.roles %}
- <a href="{{ role.jd_url }}">View it here</a>
+    {%if role.jd_url %}
+ <a href="{{ role.jd_url }}">{{role.name}}</a> <br>
+ {% else %} 
+ <p>You don't have a job description for {{role.name}}. Would you like to add one?</p>
+    {% endif %}
  {% endfor %}
+
+
+ <script src="/static/showDetails.js"></script>
+ <!-- <script src="https://widget.cloudinary.com/v2.0/global/all.js" type="text/javascript"></script>
+
+ <script src="/static/fileUpload.js"></script> -->
 {% endblock %}

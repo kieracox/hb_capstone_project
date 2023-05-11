@@ -1,7 +1,8 @@
 document.addEventListener('DOMContentLoaded', () => {
     const notifications = document.querySelectorAll('.notifications');
     for (const notification of notifications) {
-        notification.addEventListener('click', () => {
+        notification.addEventListener('click', (event) => {
+        event.preventDefault();
         const notificationID = notification.getAttribute('data-id');
         fetch(`mark_notification_read/${notificationID}`)
         .then(response => response.json())

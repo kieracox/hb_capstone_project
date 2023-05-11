@@ -3,12 +3,14 @@ function JobSeekerSearchResults() {
   const [showDetails, setShowDetails] = React.useState({});
   const [connectionRequestResult, setConnectionRequestResult] = React.useState({});
   const [existingConnections, setExistingConnections] = React.useState([]);
+  const [connectMessage, setConnectMessage] = React.useState("");
 
   function handleConnect(event, requestedID) {
       event.preventDefault()
       const requestorID = document.querySelector('#user_id').value;
       const requestedIDValue = document.querySelector(`#rqst_id_${requestedID}`).value
-      const formData = {'requested_user': requestedIDValue, 'requesting_user': requestorID};
+      const connectMessage = document.querySelector(`#connect_message_${requestedID}`).value;
+      const formData = {'requested_user': requestedIDValue, 'requesting_user': requestorID, 'connect_message': connectMessage};
       console.log(`requestor ID: ${requestorID}, requested ID: ${requestedIDValue}, formData: ${formData}`)
     
       fetch('/send_connect', {
@@ -78,6 +80,7 @@ function JobSeekerSearchResults() {
               <div>
                <p>Want to connect with the recruiter for this role?</p>
                <input type="hidden" id={`rqst_id_${role.recruiter.id}`} value={role.recruiter.id}></input>
+               <input type="text" id={`connect_message_${role.recruiter.id}`} placeholder="Optional: Enter a message" />
                <button id={`id_${role.recruiter.id}`} onClick={(event) => handleConnect(event, role.recruiter.id)}>Send Connection Request</button>
               {connectionRequestResult[role.recruiter.id] === 'success' && (
                 <p id={`success_${role.recruiter.id}`}>Connection request sent!</p>
