@@ -273,7 +273,7 @@ class RecruiterSavedSearch(db.Model):
     user = db.relationship("Recruiter", back_populates="saved_searches")
     
     def __repr__(self):
-        return f"Saved search id={self.id} for user {self.js_id}"
+        return f"Saved search id={self.id} for user {self.rec_id}"
 
 def connect_to_db(flask_app, db_uri="postgresql:///jobs", echo=False):
     flask_app.config["SQLALCHEMY_DATABASE_URI"] = db_uri

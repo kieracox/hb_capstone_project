@@ -37,19 +37,20 @@ function RecruiterSearchResults() {
         const queryString = new URLSearchParams(paramsDict).toString();
         fetch(`/search/results/rec?${queryString}`)
         .then(response => response.json())
-        .then(data => { setCandidates(data.candidates);
+        .then(data => { 
+          setCandidates(data.candidates);
           setExistingConnections(data.connections);
         })
         
 
     }, []);
 
-    if (roles.length === 0) {
+    if (candidates.length === 0) {
         return <p>Your search returned no results.</p>;
       }
       return (
         <React.Fragment>
-            {candidates.map((candidate => {
+            {candidates.map((candidate) => (
                 <SearchResult
                 key={candidate.id}
                 candidate={candidate}
@@ -59,7 +60,7 @@ function RecruiterSearchResults() {
                 handleConnect={handleConnect}
                 connectionRequestResult={connectionRequestResult}
           />
-            }))}
+            ))}
         </React.Fragment>
       );
         }
@@ -69,9 +70,9 @@ function RecruiterSearchResults() {
                 <div key={candidate.id}>
                 <p>{candidate.fname}{candidate.lname}</p>
                 <button onClick={() => setShowDetails((prev) => ({ ...prev, [candidate.id]: !prev[candidate.id] }))}>
-              {showDetails[candidate.id] ? 'Hide details' : 'Show details'}
+              {showDetails ? 'Hide details' : 'Show details'}
             </button>
-            {showDetails[candidate.id] && (
+            {showDetails && (
                 <div className="details">
                     <ul>
                         <li>Role Types:

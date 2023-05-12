@@ -144,10 +144,12 @@ def show_settings():
     user_type = session.get("user_type")
     if user_type == "job_seeker":
         user = crud.get_js_by_email(session["user_email"])
-        return render_template("settings.html", user=user)
+        saved_searches = crud.get_saved_searches(user_type, user.id)
+        return render_template("settings.html", user=user, saved_searches=saved_searches)
     else:
         user = crud.get_recruiter_by_email(session["user_email"])
-        return render_template("settings.html", user=user)
+        saved_searches = crud.get_saved_searches(user_type, user.id)
+        return render_template("settings.html", user=user, saved_searches=saved_searches)
 
 @app.route("/set_notifications", methods=["GET", "POST"])
 def update_notifications():
@@ -155,8 +157,10 @@ def update_notifications():
     user_type = session.get("user_type")
     if user_type == "job_seeker":
         user = crud.get_js_by_email(session["user_email"])
+        saved_searches = crud.get_saved_searches(user_type, user.id)
     else:
         user = crud.get_recruiter_by_email(session["user_email"])
+        saved_searches = crud.get_saved_searches(user_type, user.id)
     if request.method == 'POST':
         if request.form.get('enable_notifications'):
             user.notifications_enabled = True
@@ -166,7 +170,7 @@ def update_notifications():
             user.notifications_enabled = False
             db.session.commit()
             flash('Notifications have been disabled.')
-    return render_template('settings.html', user=user)
+    return render_template('settings.html', user=user, saved_searches=saved_searches)
 
 @app.route("/change_password", methods=["POST"])
 def change_password():
@@ -520,8 +524,6 @@ def run_search():
 def js_search_results():
     user = crud.get_js_by_email(session["user_email"])
     user_dict = user.to_dict()
-
-    print("SEARCH PARAMS:", request.args)
     
     role_type = request.args.get("role_type")
     level = request.args.get("level")
@@ -644,27 +646,48 @@ def run_saved_search():
         """Run a saved search."""
         user_type = session.get("user_type")
         user_email = session.get("user_email")
+        saved_search_name = request.args.get("saved_searches")
+
+        if saved_search_name == "None":
+            flash("Please select a saved search.")
+            return redirect("/new_search")
 
         if user_type == "job_seeker":
             user = crud.get_js_by_email(user_email)
-            print(user.id)
-            saved_search_name = request.args.get("saved_searches")
-            print("Request Args:", request.args)
-            print("Saved Search Name:", saved_search_name)
             saved_search = crud.get_search_by_name("job_seeker", user.id, saved_search_name)
-            print("SAVED SEARCH", saved_search)
             search_params = saved_search.search_params
-            print("Search Parameters:", search_params)
             session["search_params"] = search_params
-            print("Session:", session)
             return render_template("js_saved_search_results.html", search_params=json.dumps(search_params), user=user)
         else:
             user = crud.get_recruiter_by_email(user_email)
-            saved_search_name = request.args.get("saved_searches")
             saved_search = crud.get_search_by_name("recruiter", user.id, saved_search_name)
             search_params = saved_search.search_params
             session["search_params"] = search_params
             return render_template("rec_saved_search_results.html", search_params=json.dumps(search_params), user=user)
+        
+@app.route("/edit_saved_search/<int:search_id>", methods=["PUT"])
+def edit_search(search_id):
+    """Edit a saved search."""
+    new_name = request.json.get("newNickname")
+    user_type = session.get("user_type")
+    search = crud.get_search_by_id(user_type, search_id)
+
+    crud.edit_saved_search(search, new_name)
+    db.session.commit()
+    response = {"success": True}
+    return jsonify(response)
+
+@app.route("/delete_saved_search/<int:search_id>", methods=["DELETE"])
+def delete_search(search_id):
+    """Delete a saved search."""
+    print(f"deleting search with id {search_id}")
+    user_type = session.get("user_type")
+    crud.delete_saved_search(user_type, search_id)
+    db.session.commit()
+    response = {"success": True}
+    return jsonify(response)
+
+    
     
 
 @app.route("/send_connect", methods=["POST"])

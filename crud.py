@@ -2,6 +2,7 @@
 
 from model import db, JobSeeker, Recruiter, Role, RoleSkill, JobSeekerSkill, JobSeekerRoleType, JobSeekerConnectionRequest, RecruiterConnectionRequest, JobSeekerNotificaton, RecruiterNotification, JobSeekerSavedSearch, RecruiterSavedSearch, connect_to_db
 from datetime import datetime
+from sqlalchemy import asc
 
 def create_job_seeker(email, password, fname='', lname='',  
                       linkedin='', github='', location='', yoe=0, desired_salary=0,
@@ -326,9 +327,9 @@ def create_saved_search(user_type, id, nickname=None, params=None):
 def get_saved_searches(user_type, user_id):
     """Get a user's saved searches."""
     if user_type == "job_seeker":
-        return JobSeekerSavedSearch.query.filter(JobSeekerSavedSearch.js_id == user_id).all()
+        return JobSeekerSavedSearch.query.filter(JobSeekerSavedSearch.js_id == user_id).order_by(asc(JobSeekerSavedSearch.id)).all()
     else:
-        return RecruiterSavedSearch.query.filter(RecruiterSavedSearch.rec_id == user_id).all()
+        return RecruiterSavedSearch.query.filter(RecruiterSavedSearch.rec_id == user_id).order_by(asc(RecruiterSavedSearch.id)).all()
 
 def get_search_by_name(user_type, user_id, nickname):
     """Get a user's saved searches by their nickname."""
@@ -336,6 +337,25 @@ def get_search_by_name(user_type, user_id, nickname):
         return JobSeekerSavedSearch.query.filter(JobSeekerSavedSearch.search_nickname == nickname, JobSeekerSavedSearch.js_id == user_id).first()
     else:
         return RecruiterSavedSearch.query.filter(RecruiterSavedSearch.search_nickname == nickname, RecruiterSavedSearch.rec_id == user_id).first()
+    
+def get_search_by_id(user_type, search_id):
+    """Get a user's saved searches by their id."""
+    if user_type == "job_seeker":
+        return JobSeekerSavedSearch.query.filter(JobSeekerSavedSearch.id == search_id).first()
+    else:
+        return RecruiterSavedSearch.query.filter(RecruiterSavedSearch.id == search_id).first()
+
+def edit_saved_search(search, new_search_name):
+    """Edit a saved search."""
+    search.search_nickname = new_search_name
+    db.session.commit()
+
+def delete_saved_search(user_type, search_id):
+    """Delete a saved search."""
+    search = get_search_by_id(user_type, search_id)
+    db.session.delete(search)
+    db.session.commit()
+
 
 
 if __name__ == '__main__':

@@ -17,6 +17,7 @@
     <input type="submit" name="enable_notifications" value="Enable Notifications">
 </form>
 {% endif %}
+
 <h3>Change Password</h3>
 <form id="change_password" method="POST" action="/change_password">
     Enter your current password: <input type="password" name="current_password">
@@ -26,8 +27,34 @@
     <input type="submit">
 </form>
 
+<h3>Manage Saved Searches</h3>
+{% if saved_searches %}
+<ul>
+{% for search in saved_searches %}
+<li class="parent_li" id="list_item_{{search.id}}"><span class="search_name_display">{{search.search_nickname}}</span>
+    <input type="hidden" id="hidden_search_name_{{search.id}}" value="{{search.search_nickname}}">
+    <ul>
+        <li class="child_li">Edit your search name: <input type="text" class="search_name_input" data-search-id="{{ search.id }}" name="new_nickname">
+    
+    <button class="edit_saved_search">Save</button>
+    <div id="successMessage_{{search.id}}" class="successMessage"></div></li>
+    
+       <li class="child_li"> Or delete this search:
+        <button data-search-id="{{ search.id }}" class="delete_saved_search">Delete</button>
+        <div id="deleteSuccessMessage_{{search.id}}" class="deleteSuccessMessage"></div></li>
+</ul>
+</li>
+{% endfor %}
+</ul>
+{% else %} 
+<p>You don't have any saved searches yet!</p>
+{%endif%}
+
+<h3>Privacy Settings</h3>
+
 <h3>Log Out</h3>
 <form action="/logout" method="POST">
     <button id="logout">Log Out</button>
 </form>
+<script src="/static/updateSavedSearch.js"></script>
 {% endblock %}
