@@ -275,6 +275,28 @@ class RecruiterSavedSearch(db.Model):
     def __repr__(self):
         return f"Saved search id={self.id} for user {self.rec_id}"
 
+def example_data():
+    """Create some sample data."""
+
+    Recruiter.query.delete()
+    JobSeeker.query.delete()
+    Role.query.delete()
+
+    rob = Recruiter(fname="Rob", lname="Recruiter", email="rob@test.com", password="test")
+    ronda = Recruiter(fname="Ronda", lname="Recruiter", email="ronda@test.com", password="test")
+    judy = JobSeeker(fname="Judy", lname="JobSeeker", email="judy@test.com", password="test")
+    jerry = JobSeeker(fname="Jerry", lname="JobSeeker", email="jerry@test.com", password="test")
+
+    swe1 = Role(name="SWE 1")
+    swe2 = Role(name="SWE 2")
+    senior = Role(name="Senior")
+
+    db.session.add_all([rob, ronda])
+    db.session.add_all([judy, jerry])
+    db.session.add_all([swe1, swe2, senior])
+    db.session.commit()
+
+
 def connect_to_db(flask_app, db_uri="postgresql:///jobs", echo=False):
     flask_app.config["SQLALCHEMY_DATABASE_URI"] = db_uri
     flask_app.config["SQLALCHEMY_ECHO"] = False
