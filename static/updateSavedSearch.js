@@ -32,6 +32,9 @@ for (const button of editButtons) {
 for (const button of deleteButtons) {
     button.addEventListener('click', () => {
         const searchId = button.dataset.searchId;
+        const confirmDelete = confirm("Are you sure you want to delete this search?");
+
+        if (confirmDelete) {
         fetch(`/delete_saved_search/${searchId}`, {
             method: 'DELETE'
         })
@@ -45,6 +48,6 @@ for (const button of deleteButtons) {
 
             }
         })
-
+    }
     })
 }

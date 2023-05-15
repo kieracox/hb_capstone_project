@@ -37,15 +37,18 @@
 </div>
 
 <h4>Your Connections</h4>
-{% if connections %}
+{% if connections %} 
 {% for connection in connections %} 
+{% if connection is defined %}
 <div class="connection">
     <p>Name: {{ connection.fname }} {{ connection.lname }}</p>
+    {% endif %}
 </div>
 {% endfor %}
 {% else %}
 <p>You have no connections at the moment.</p>
 {% endif %}
+<p><a href="/connections">Manage Your Connections</a></p>
 
 <form action="/logout" method="POST">
     <button id="logout">Log Out</button>

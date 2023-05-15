@@ -16,7 +16,7 @@ def return_all_job_seekers():
     """Return all job seekers."""
     return JobSeeker.query.all()
 
-def get_js_by_id(id):
+def conn_js_by_id(id):
     """Get and return a job seeker by their id."""
     return JobSeeker.query.get(id)
 
@@ -246,7 +246,7 @@ def get_js_request_by_id(requested_id, requestor_id):
     return JobSeekerConnectionRequest.query.filter(JobSeekerConnectionRequest.requested_id == requested_id, JobSeekerConnectionRequest.requestor_id == requestor_id).first()
 
 def get_rec_request_by_id(requested_id, requestor_id):
-    """Find a request sent by a JS to a particular rec."""
+    """Find a request sent by a rec to a particular js."""
     return RecruiterConnectionRequest.query.filter(RecruiterConnectionRequest.requested_id == requested_id, RecruiterConnectionRequest.requestor_id == requestor_id).first()
 
 def get_rec_request(request_id):
@@ -275,9 +275,11 @@ def get_js_connections(jobseeker_id):
      sent_requests = JobSeekerConnectionRequest.query.filter(JobSeekerConnectionRequest.requestor_id == jobseeker_id, JobSeekerConnectionRequest.status == "accepted").all()
      connections = []
      for request in received_requests:
-         connections.append(request.sender)
+         if request.sender is not None:
+            connections.append(request.sender)
      for request in sent_requests:
-         connections.append(request.receiver)
+         if request.receiver is not None:
+            connections.append(request.receiver)
      return connections
 
 def get_rec_connections(recruiter_id):
@@ -286,10 +288,42 @@ def get_rec_connections(recruiter_id):
      sent_requests = RecruiterConnectionRequest.query.filter(RecruiterConnectionRequest.requestor_id == recruiter_id, RecruiterConnectionRequest.status == "accepted").all()
      connections = []
      for request in received_requests:
-         connections.append(request.sender)
+         if request.sender is not None:
+            connections.append(request.sender)
      for request in sent_requests:
-         connections.append(request.receiver)
+         if request.receiver is not None:
+            connections.append(request.receiver)
      return connections
+
+def remove_connection(user_type, user_id, remove_id):
+    """Remove a user's connection with another user."""
+    if user_type == "job_seeker":
+        sent_requests = get_all_js_requests(user_id)
+        received_requests = get_rec_request_by_id(user_id, remove_id)
+        requests = []
+        if received_requests is not None:
+            requests += received_requests
+        if sent_requests is not None:
+            requests += sent_requests
+    else:
+        sent_requests = get_all_rec_requests(user_id)
+        received_requests = get_js_request_by_id(user_id, remove_id)
+        requests = []
+        if received_requests is not None:
+            requests += received_requests
+        if sent_requests is not None:
+            requests += sent_requests
+    for request in requests:
+        if request.id == remove_id:
+            request.status = "disconnected"
+            db.session.commit()
+            break
+
+                
+    
+                
+
+    
  
 def create_js_notification(jobseeker_id, received_request=None, sent_request=None, created_at=None, message=None, read_status=None):
     """Create a new job-seeker notification."""

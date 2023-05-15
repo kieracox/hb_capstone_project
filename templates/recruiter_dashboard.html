@@ -39,15 +39,18 @@
 </div>
 
 <h4>Your Connections</h4>
-{% if connections %}
+{% if connections is not none and connections %} 
 {% for connection in connections %} 
 <div class="connection">
+    {% if connection is not none %}
     <p>Name: {{ connection.fname }} {{ connection.lname }}</p>
+    {% endif %}
 </div>
 {% endfor %}
 {% else %} 
 <p>You have no connections at the moment.</p>
 {% endif %}
+<p><a href="/connections">Manage Your Connections</a></p>
 
 <form action="/logout" method="POST">
     <button id="logout">Log Out</button>

@@ -138,6 +138,37 @@ def show_notifications():
         user = crud.get_recruiter_by_email(session["user_email"])
         return render_template("notifications.html", user=user)
 
+@app.route("/connections")
+def show_connections():
+    """Display the user's connections."""
+    
+    user_type = session.get("user_type")
+
+    if user_type == "job_seeker":
+        user = crud.get_js_by_email(session["user_email"])
+        connections = crud.get_js_connections(user.id)
+        print("Connections are:", connections)
+        return render_template("js_connections.html", user=user, connections=connections)
+    else:
+        user = crud.get_recruiter_by_email(session["user_email"])
+        connections = crud.get_rec_connections(user.id)
+        return render_template("rec_connections.html", user=user, connections=connections)
+
+@app.route("/remove_connection/<int:remove_id>", methods=["DELETE"])
+def remove_connection(remove_id):
+    """Remove a user's connection."""
+    user_type = session.get("user_type")
+
+    if user_type == "job_seeker":
+         user = crud.get_js_by_email(session["user_email"])
+         crud.remove_connection("job_seeker", user.id, remove_id)
+    else:
+        user = crud.get_recruiter_by_email(session["user_email"])
+        crud.remove_connection("recruiter", user.id, remove_id)
+    db.session.commit()
+    response = {"success": True}
+    return jsonify(response)
+
 @app.route("/settings")
 def show_settings():
     """Display the user settings page."""
@@ -680,7 +711,6 @@ def edit_search(search_id):
 @app.route("/delete_saved_search/<int:search_id>", methods=["DELETE"])
 def delete_search(search_id):
     """Delete a saved search."""
-    print(f"deleting search with id {search_id}")
     user_type = session.get("user_type")
     crud.delete_saved_search(user_type, search_id)
     db.session.commit()
