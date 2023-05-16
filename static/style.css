@@ -1,40 +1,97 @@
-
 .auth-forms-wrapper {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-end;
-    width: 100%;
-    box-sizing: border-box;
-    position: absolute;
-    right: 0;
-  }
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  width: 25%;
+  box-sizing: border-box;
+  position: absolute;
+  right: 0;
+  top: 300px;
   
-  .auth_forms {
-    width: 100%;
-    max-width: 400px;
-    margin-bottom: 20px;
-    margin-right: 0;
-    margin-left:auto;
-  }
+}
+
+.auth_forms {
+  background-color: lightgray;
+  width: 100%;
+  max-width: 400px;
+  margin-bottom: 20px;
+  margin-right: 20px;
+  margin-left:auto;
+  text-align: center;
+  border: 2px solid gray;
+  border-radius: 8px;
+  padding: 20px;
+}
+
+.auth-content {
+  right: 0;
+  margin-right: 0;
+}
+
+.content-wrapper {
+  padding-top: 60px;
+}
+
+.page-content {
+  margin-top: 30px; /* Adjust the value to create enough space for the navbar */
+}
+
+.navbar-wrapper {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  width: 100%;
+}
+
+#navbar-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  background-color: lightskyblue;
+  z-index: 1000;
+}
+
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-left: 15px;
+  padding-right: 15px;
+}
+
+.navbar-nav {
+  display: flex;
+  justify-content: center;
+align-items: center;
+  flex-grow: 1;
+}
+
+.nav-item {
+  flex-grow: 1;
+  text-align: center;
+}
 
 
-  .navbar {
-    background-color: lightskyblue;
-    
-  }
+.navbar-nav li {
+  flex: 1;
+  text-align: center;
+}
 
-  .navbar a {
-    text-decoration: none;
-  }
+.navbar a {
+  text-decoration: none;
+}
 
-  .connections {
-    margin-bottom: 20px;
-  }
+.connections {
+  margin-bottom: 20px;
+}
 
-  .notifications {
-    color: blue;
-  }
+.notifications {
+  color: blue;
+}
 
-  .read {
-   color: gray;
-  }
+.read {
+ color: gray;
+}
