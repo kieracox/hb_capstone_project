@@ -3,15 +3,17 @@
 {% block title %} Profile {% endblock %} 
 
 {% block body %} 
+<div class="page-intro">
 <h1>Your Candidate Profile</h1>
 <p>
     Click <a href="/user_dashboard">here</a> to return to your dashboard.
 </p>
+</div>
 <div class="container">
-    <div class="row your-info">
-        <div class="col personal-info">
-            <div class="card" id="personal-info">
-<h2 class="card-title" style="text-align: center;">Your Profile</h2>
+    <div class="row your-info d-flex">
+        <div class="col personal-info align-items-stretch">
+            <div class="card text-center px-4 card-equal-height" id="personal-info">
+<h3 class="card-title" style="text-align: center;">Your Profile</h3>
  <ul class="list-group">
     <li class="list-group-item">
         <span class="profile_details" id="js_fname">First name: {{user.fname}}</span>
@@ -57,11 +59,11 @@
  </ul>
 </div>
 </div>
+</div>
 <hr>
-<div class="row edit-info">
-    <div class="card">
- <h2 class="card-title">Edit Profile</h2>
- 
+<div class="row edit-info d-flex">
+    <div class="card text-center px-4 mb-4 card-equal-height">
+ <h3 class="card-title">Edit Profile</h3>
  <form action="/update_js_profile" id="#edit_profile" method="POST" style="width: 300px;">
     <ul class="list-group">
         <li class="list-group-item">
@@ -135,9 +137,10 @@
  </form>
 </div>
 </div>
+<hr>
 <div class="row upload">
     <div class="col upload-form">
-<h2>Upload Your Resume</h2>
+<h4>Upload Your Resume</h4>
  <form action="/upload_resume" method="post" enctype="multipart/form-data" style="width:300px;">
     <input type="file" name="resume" class="form-control form-control-rounded form-control-sm focus-state" >
     <br>
@@ -145,8 +148,10 @@
  </form>
 
  <hr>
- <h2>Your resume</h2>
+ <div class="row files">
+ <h3>Your resume</h3>
  <a href="{{ user.resume_url }}">View it here</a>
+ </div>
 </div>
 </div>
 

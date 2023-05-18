@@ -1,6 +1,11 @@
 body {
   background-color: #F0F4EF;
-  color: #0A2463
+  color: #0A2463;
+  font-family: "Raleway", sans-serif;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: "Ubuntu", serif;
 }
 
 a {
@@ -56,7 +61,7 @@ a {
 }
 
 #rec_intro, #js_intro {
-  background-color: #BFBFC0;
+  background-color: #F0F4EF;;
   border-radius: 5px;
   bottom: 0;
   position: relative;
@@ -107,17 +112,31 @@ a {
   margin-top: 30px; /* Adjust the value to create enough space for the navbar */
 }
 
+.flash-banner {
+  background-color: #BFBFC0;
+  padding: 10px;
+  text-align: center;
+  color: #F0F4EF;
+  position: relative;
+  z-index: 101; 
+}
+
+.page-intro {
+  position: relative;
+  bottom: 50px;
+}
+
 .navbar-wrapper {
-  position: fixed;
+  position: relative;
   top: 0;
   left: 0;
   right: 0;
-  z-index: 1000;
+  z-index: 100;
   width: 100%;
 }
 
 #navbar-container {
-  position: fixed;
+  position: relative;
   top: 0;
   left: 0;
   right: 0;
@@ -133,6 +152,7 @@ a {
   border-radius: 8px;
   background-color: #0A2463;
   z-index: 1000;
+  width: 100%;
 }
 
 .navbar-nav {
@@ -193,30 +213,49 @@ align-items: center;
   width: 500px;
 }
 
+#profile-container {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.card-wrapper {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;}
+
+.your-info, .edit-info {
+  flex: 0 0 50%;
+}
 
 .personal-info, .role-info {
   display: flex;
   
 }
 
-.personal-info .card {
-  height: 100%;
+.card-body {
+  height: 305px;
+  overflow: auto !important;
 }
 
-#personal-info, #role-info {
-  padding: 10px; 
+
+
+#role-info h3.card-title::after {
+  content: "";
+  display: block;
+  border-top: 1px solid #ccc;
+  margin-top: 10px;
 }
 
 .personal-info .card,
-.role-info .card{
-  width: 100%;
-}
-.edit-personal .card {
+.role-info .card,
+.edit-personal .card,
+.edit-role .card {
+  height: 100%;
   width: 100% !important;
   display: flex;
-  align-items: center;
-  justify-content: center;
 }
+
+
 
 .show_details {
   margin-bottom: 10px;
@@ -226,15 +265,18 @@ align-items: center;
   display: flex;
   flex-direction: column;
   height: 100%;
-}
-
-.card-equal-height .card-body {
-  flex-grow: 1;
+  padding: 10px;
 }
 
 .card .btn {
   margin-bottom: 10px;
 }
+
+.new_search_form,
+.saved_search_form {
+  margin: 0 auto;
+}
+
 
 #search-results-list {
   width: 25%;

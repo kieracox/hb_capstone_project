@@ -7,6 +7,8 @@
     rel="stylesheet" integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" 
     crossorigin="anonymous">
     <link rel="stylesheet" href="/static/style.css" >
+    <link rel="stylesheet"
+ href="https://fonts.googleapis.com/css?family=Raleway|Ubuntu:700">
     <title>
       {% block title %}{% endblock %}
     </title>
@@ -22,6 +24,24 @@
     {% block head %}{% endblock %}
   </head>
   <body {% block body_id %}{% endblock %}>
+    {% block flashbanner %}
+    {% with messages = get_flashed_messages() %}
+  {% if messages %}
+    <div class="flash-banner">
+      <div class="container">
+        <div class="row">
+          <div class="col-12">
+            {% for message in messages %}
+              <h3>{{ message }}</h3>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+    </div>
+  {% endif %}
+{% endwith %}
+
+    {% endblock %}
     {% block navbar %}
     <div class="navbar-wrapper">
     <div class="container-fluid" id="navbar-container">
@@ -76,11 +96,6 @@
     </div>
     </div>
     {% endblock %}
-    {% with messages = get_flashed_messages() %}
-{% for message in messages %}
-<h2>{{ message }}</h2>
-{% endfor %}
-{% endwith %}
 </div>
 <div class="content-wrapper">
   <div class="page-content">

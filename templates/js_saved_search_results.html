@@ -3,6 +3,7 @@
 {% block title %} Search Results {% endblock %} 
 
 {% block body %} 
+<div class="page-intro">
 <h1>Here are your results!</h1>
 
 <p>
@@ -11,6 +12,7 @@
 <p>
     Or click <a href="/new_search">here</a> to search again.
 </p>
+</div>
 
 <input type="hidden" id="user_id" value="{{ user.id }}"/>
 <input type="hidden" id="search_params" value="{{search_params}}"/>

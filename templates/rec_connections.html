@@ -3,10 +3,11 @@
 {% block title %} Connections {% endblock %} 
 
 {% block body %}
-
+<div class="page-intro">
 <h1>Your Connections</h1>
-
+</div>
 {% if connections %} 
+<div class="container">
 <ul>
     {% for connection in connections %} 
     {% if connection is not none %}
@@ -24,7 +25,7 @@
             <li class="child_li">
                 <a href="{{connection.resume_url}}">Resume</a>
             </li>
-            <button data-id="{{connection.id}}" class="remove_connection">Remove Connection</button>
+            <button data-id="{{connection.id}}" class="remove_connection btn btn-secondary rounded focus-state">Remove Connection</button>
             <div id="removeSuccessMessage_{{connection.id}}" class="removeSuccessMessage"></div>
         </ul>
     </li>
@@ -34,5 +35,6 @@
 {% else %} 
 <p>You don't have any connections yet.</p>
 {% endif %}
+</div>
 <script src="/static/removeConnection.js"></script>
 {% endblock %}

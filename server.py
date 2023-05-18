@@ -217,10 +217,12 @@ def change_password():
 
     if current_password != user.password:
         flash("Incorrect current password. Please try again.")
+        return redirect("/settings")
     else:
         user.password = new_password
         db.session.commit()
-        flash("Your password has been updated.")    
+        flash("Your password has been updated.")  
+        return redirect("/settings")  
 
 @app.route("/user_profile")
 def show_profile():
@@ -313,51 +315,51 @@ def update_rec_profile():
     linkedin = request.form.get('linkedin')
     company = request.form.get('company')
 
+    if user.roles:
+        for role in user.roles:
 
-    for role in user.roles:
+            role_id = role.id
 
-        role_id = role.id
-
-        role_name = request.form.get('role_name')
-        location = request.form.get('location')
-        role_type = request.form.get("role_type")
-        level = request.form.get('level')
-    
-        yoe_str = request.form.get('yoe')
-        if yoe_str:
-            yoe = int(yoe_str)
-        else:
-            yoe = None
-    
-        min_salary_str = request.form.get('min_salary')
-        if min_salary_str:
-            min_salary = int(min_salary_str)
-        else:
-            min_salary = None
-
-        remote_str = request.form.get("remote")
-        if remote_str:
-            remote = bool(remote_str == 'True') 
-        else:
-            remote = None
+            role_name = request.form.get('role_name')
+            location = request.form.get('location')
+            role_type = request.form.get("role_type")
+            level = request.form.get('level')
         
-        sponsorship_provided_str = request.form.get('sponsorship_provided')
-        if sponsorship_provided_str:
-            sponsorship_provided = bool(sponsorship_provided_str == 'True') 
-        else:
-            sponsorship_provided = None 
+            yoe_str = request.form.get('yoe')
+            if yoe_str:
+                yoe = int(yoe_str)
+            else:
+                yoe = None
+        
+            min_salary_str = request.form.get('min_salary')
+            if min_salary_str:
+                min_salary = int(min_salary_str)
+            else:
+                min_salary = None
 
-    crud.edit_rec_profile(user_id, fname, lname, company, linkedin)
-    crud.edit_role(role_id, role_name, role_type, location, yoe, level, min_salary, 
+            remote_str = request.form.get("remote")
+            if remote_str:
+                remote = bool(remote_str == 'True') 
+            else:
+                remote = None
+            
+            sponsorship_provided_str = request.form.get('sponsorship_provided')
+            if sponsorship_provided_str:
+                sponsorship_provided = bool(sponsorship_provided_str == 'True') 
+            else:
+                sponsorship_provided = None 
+
+        crud.edit_role(role_id, role_name, role_type, location, yoe, level, min_salary, 
                          remote, sponsorship_provided)
-    
-    skill = request.form.get("skill")
-    role_skill = crud.get_role_skill(role_id)
-    if role_skill:
-        role_skill[0].skill_name = skill
-    else:
-        role_skill = crud.create_role_skill(role_id, skill)
-        db.session.add(role_skill)
+    crud.edit_rec_profile(user_id, fname, lname, company, linkedin)
+    if user.roles:
+        skill = request.form.get("skill")
+        role_skill = crud.get_role_skill(role_id)
+        if role_skill:
+            role_skill[0].skill_name = skill
+        else:
+            role_skill = crud.create_role_skill(role_id, skill)
+            db.session.add(role_skill)
     
     db.session.commit()
     return redirect("/user_profile")

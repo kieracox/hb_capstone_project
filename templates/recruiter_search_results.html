@@ -3,8 +3,8 @@
 {% block title %} Search Results {% endblock %} 
 <script src="static/RecSearchResults.jsx"></script>
 {% block body %} 
+<div class="page-intro">
 <h1>Here are your results!</h1>
-
 
 <p>
     Click <a href="/user_dashboard">here</a> to return to your dashboard.
@@ -13,6 +13,7 @@
 <p>
     Or click <a href="/new_search">here</a> to search again
 </p>
+</div>
 <div class="container">
 <form action ="/run_saved_search" class="save_search" method="POST" style="width: 300px;">
     <h5>Want to save this search?</h5>

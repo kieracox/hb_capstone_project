@@ -3,6 +3,7 @@
 {% block title %} Profile {% endblock %} 
 
 {% block body %} 
+<div class="page-intro">
 <h1>Your Recruiter Profile</h1>
 <p>
     Click <a href="/user_dashboard">here</a> to return to your dashboard.
@@ -10,11 +11,13 @@
 <p>
     Click <a href="/new_role">here</a> to add a new role. 
 </p>
+</div>
 <div class="container">
 <div class="row your-info d-flex">
     <div class="col personal-info align-items-stretch">
         <div class="card text-center px-4 card-equal-height" id="personal-info">
-<h2 class="card-title" style="text-align: center;">Personal Information</h2>
+            <div class="card-body">
+<h3 class="card-title" style="text-align: center;">Personal Information</h3>
  <ul class="list-group">
     <li class="list-group-item">
         <span class="profile_details" id="rec_fname">First name: {{user.fname}}</span>
@@ -31,9 +34,10 @@
     </ul>
 </div>
 </div>
+</div>
 <div class="col role-info align-items-stretch">
     <div class="card text-center px-4 card-equal-height" id="role-info">
-<h2 class="card-title" style="text-align: center;">Role Information</h2>
+<h3 class="card-title" style="text-align: center;">Role Information</h3>
 <hr>
 {% if user.roles %}
 {% for role in user.roles %}
@@ -83,11 +87,13 @@
 </div>
 <hr>
 <div class="row edit-info d-flex">
-<div class="col edit-personal align-items-stretch">
-    <div class="card text-center px-4 mb-4 card-equal-height" id="edit-personal" style="width: 75%">
+<div class="col edit-personal">
+    <div class="card text-center px-4 card-equal-height" id="edit-personal" style="width: 75%">
+        <div class="card-body">
     <form action="/update_rec_profile" id="#edit_rec_profile" method="POST" style="width: 300px;">
     <fieldset>
-        <legend class="card-title" style="text-align: center;">Edit Personal Info</legend>
+        <h3 class="card-title" style="text-align: center;">Edit Personal Info</h3>
+        <hr>
         <ul class="list-group">
             <li class="list-group-item">
         First Name: <input type="text" name="fname" class="form-control form-control-rounded form-control-sm focus-state" >
@@ -105,11 +111,17 @@
 </fieldset>
 </div>
 </div>
+</div>
 <div class="col edit-role">
+    <div class="row role-cards">
+        {% if user.roles %}
 {% for role in user.roles %} 
-<div class="card text-center px-4 mb-4">
+<div class="col">
+    <div class="card-wrapper">
+<div class="card text-center px-4">
 <fieldset>
-    <legend>Edit {{role.name}} Role Info</legend>
+    <h3 class="card-title" style="text-align: center; margin-top: 10px;">Edit {{role.name}} Info</h3>
+    <hr>
     <div id="edit_{{ role.id }}" style="display: none;">
         <ul class="list-group">
     <li class="list-group-item">
@@ -178,20 +190,25 @@
         </select>
     </li>
 </ul>
+</div>
+<button class="btn btn-secondary rounded show_edit focus-state" id="edit_details_{{ role.id }}">Show Edit Form</button>
     </div>
-    <button class="btn btn-secondary rounded show_edit focus-state" id="edit_details_{{ role.id }}">Show Edit Form</button>
+</div>
+    </div>
 </fieldset>
 </div>
 <br>
 {% endfor %}
-</form>
+{% endif %}
 </div>
-<input class="btn btn-secondary rounded focus-state" type="submit" style="margin-top: 20px;" value="Submit All">
+</div>
+<input class="btn btn-secondary rounded focus-state" type="submit" style="margin-top: 20px; margin-left: 515px;" value="Submit All">
+</form>
 <hr>
 <div class="row upload">
 {% for role in user.roles %}
 <div class="col upload-form">
-<h4>Upload Your Job Description: {{role.name}}</h2>
+<h4>Upload Your Job Description: {{role.name}}</h4>
     <!-- <button onclick="showUploadWidget()">Upload File</button> -->
     <form action="/upload_jd" method="post" enctype="multipart/form-data" style="width:300px;">
        <input type="hidden" class="btn btn-secondary rounded" name="role_id" value="{{ role.id }}">
@@ -202,10 +219,9 @@
 </div>
 {% endfor %}
 </div>
-</div>
  <hr>
- <div class="row files">
- <h2>Your job descriptions</h2>
+ <div class="row files text-center">
+ <h3>Your job descriptions</h3>
  {% for role in user.roles %}
     {%if role.jd_url %}
  <a href="{{ role.jd_url }}">{{role.name}}</a> <br>
