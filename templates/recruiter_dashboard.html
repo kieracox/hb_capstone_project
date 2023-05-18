@@ -3,17 +3,21 @@
 {% block title %} Dashboard {% endblock %} 
 
 {% block body %} 
-<h1>{{ user.fname }}, here's your dashboard.</h1>
+<h1 id="welcome-message">Welcome back, {{ user.fname }}.</h1>
+<div class="container">
+    <div class="row dashboard-links">
+    <div class="col profile-link">
+        <a href ="/user_profile">View and edit your profile.</a>
+    </div>
+    
+    <div class="col search-link">
+        <a href="/new_search">Search for candidates.</a> 
+    </div>
+    </div>
 
-<p>
-    Click <a href ="/user_profile">here</a> to view/edit your profile.
-</p>
-
-<p>
-    Click <a href="/new_search">here</a> to start a new search.
-</p>
 <div class="row connections">
-<h4>Your Pending Connection Requests</h4>
+    <div class="col pending-requests">
+<h4>Pending Connection Requests</h4>
 {% if requests %}
 {% for request in requests %} 
 {% if request.status == 'pending' %}
@@ -38,6 +42,7 @@
 {% endif %}
 </div>
 
+<div class="col existing-connections">
 <h4>Your Connections</h4>
 {% if connections is not none and connections %} 
 {% for connection in connections %} 
@@ -51,8 +56,11 @@
 <p>You have no connections at the moment.</p>
 {% endif %}
 <p><a href="/connections">Manage Your Connections</a></p>
-
-<form action="/logout" method="POST">
-    <button id="logout">Log Out</button>
+</div>
+</div>
+</div>
+</div>
+<form class="logout" action="/logout" method="POST">
+    <button class="btn btn-secondary rounded" id="logout">Log Out</button>
 </form>
 {% endblock %}

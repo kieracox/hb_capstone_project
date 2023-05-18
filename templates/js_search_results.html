@@ -11,10 +11,11 @@
 <p>
     Or click <a href="/new_search">here</a> to search again.
 </p>
-<form action ="/save_search" class="save_search" method="POST">
+<div class="container">
+<form action ="/save_search" class="save_search" method="POST" style="width: 300px;">
     <p>Want to save this search?</p>
-    <input type="text" name="search_nickname" placeholder="Search Nickname" required>
-    <input type="submit"value="Save This Search"/>
+    <input type="text" name="search_nickname" placeholder="Search Nickname" class="form-control form-control-rounded form-control-sm focus-state" required>
+    <input type="submit"value="Save This Search" class="btn btn-secondary rounded focus-state" style="margin-top: 10px;"/>
 </form>
 <div class="success" style="display: none;">
     <p>Search saved!</p>
@@ -22,12 +23,12 @@
 <div class="failure" style="display: none;">
     <p>You've already used that nickname. Please try again.</p>
     </div>
-<br>
+<hr>
 <input type="hidden" id="user_id" value="{{ user.id }}"/>
 <input type="hidden" id="search_params" value="{{search_params}}"/>
 
 <div id="js_search_results">
-    
+</div>
 </div>
 
 <script src="/static/JSSearchResults.jsx" type="text/jsx"></script>

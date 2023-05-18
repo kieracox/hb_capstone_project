@@ -3,39 +3,44 @@
 {% block title %} Dashboard {% endblock %} 
 
 {% block body %} 
-<h1>{{ user.fname }}, here's your dashboard.</h1>
-
-<p>
-    Click <a href ="/user_profile">here</a> to view/edit your profile.
-</p>
-
-<p>
-    Click <a href="/new_search">here</a> to start a new search.
-</p>
+<h1 id="welcome-message">Welcome back, {{ user.fname }}.</h1>
+<div class="container">
+    <div class="row dashboard-links">
+        <div class="col profile-link">
+            <a href ="/user_profile">View and edit your profile.</a>
+        </div>
+        
+        <div class="col search-link">
+            <a href="/new_search">Search for candidates.</a> 
+        </div>
+        </div>
 <div class="row connections">
-<h4>Your Pending Connection Requests</h4>
-{% if requests %}
-{% for request in requests %} 
-<div class="pending_request">
-    <p>{{ request.sender.fname }} from {{request.sender.company}} wants to connect with you!</p>
-    {% if request.message %} 
-    <p>Request message:<br>{{request.message}}</p>
-    {% endif %}
-    <form action ="/accept_request" class="handle_request" method="POST">
-        <input type="hidden" name="request_id" value="{{request.id}}">
-        <input type="submit" value="Accept">
-    </form>
-    <form action="/reject_request" class="handle_request" method="POST">
-        <input type="hidden" name="request_id" value="{{request.id}}">
-        <input type="submit" value="Reject">
-    </form>
-</div>
-{% endfor %}
-{% else %} 
-<p>You have no pending requests right now.</p>
-{% endif %}
-</div>
-
+    <div class="col pending-requests">
+        <h4>Pending Connection Requests</h4>
+        {% if requests %}
+        {% for request in requests %} 
+        {% if request.status == 'pending' %}
+        <div class="pending_request">
+            <p>{{ request.sender.fname }} wants to connect with you!</p>
+            {% if request.message %} 
+            <p>Request message:<br>{{request.message}}</p>
+            {% endif %}
+            <form action ="/accept_request" method="POST" class="handle_request" id="{{request.id}}">
+                <input type="hidden" name="request_id" value="{{request.id}}">
+                <input type="submit" value="Accept">
+            </form>
+            <form action="/reject_request" method="POST" class="handle_request" id="{{request.id}}">
+                <input type="hidden" name="request_id" value="{{request.id}}">
+                <input type="submit" value="Reject">
+            </form>
+        </div>
+        {% endif %}
+        {% endfor %}
+        {% else %} 
+        <p>You have no pending requests right now.</p>
+        {% endif %}
+        </div>
+<div class="col existing-connections">
 <h4>Your Connections</h4>
 {% if connections %} 
 {% for connection in connections %} 
@@ -49,10 +54,11 @@
 <p>You have no connections at the moment.</p>
 {% endif %}
 <p><a href="/connections">Manage Your Connections</a></p>
+</div>
 
-<form action="/logout" method="POST">
-    <button id="logout">Log Out</button>
+</div>
+<form class="logout" action="/logout" method="POST">
+    <button class="btn btn-secondary rounded" id="logout">Log Out</button>
 </form>
-
 
 {% endblock %}

@@ -66,26 +66,27 @@ function JobSeekerSearchResults() {
   
   function SearchResult({ role, showDetails, setShowDetails, existingConnections, handleConnect, connectionRequestResult }) {
     return (
-      <div key={role.id}>
-        <p>{role.name}</p>
-        <button onClick={() => setShowDetails((prev) => ({ ...prev, [role.id]: !prev[role.id] }))}>
+      <div className="container">
+      <div key={role.id} className="search-result">
+        <h6>{role.name}</h6>
+        <button className="btn btn-secondary rounded focus-state" onClick={() => setShowDetails((prev) => ({ ...prev, [role.id]: !prev[role.id] }))}>
           {showDetails ? 'Hide details' : 'Show details'}
         </button>
         {showDetails && (
           <div className="details">
-            <ul>
-              <li>Role Type: {role.role_type}</li>
-              <li>Job Description: <a href={role.jd_url}>View it here</a></li>
-              <li>Min YOE: {role.min_yoe}</li>
-              <li>Level: {role.level}</li>
-              <li>Location: {role.location}</li>
-              <li>Min Salary: {role.salary}</li>
-              <li>Remote: {role.remote}</li>
-              <li>Sponsorship Provided: {role.sponsorship_provided}</li>
-              <li>
+            <ul className="list-group" id="search-results-list">
+              <li className="list-group-item">Role Type: {role.role_type}</li>
+              <li className="list-group-item">Job Description: <a href={role.jd_url}>View it here</a></li>
+              <li className="list-group-item">Min YOE: {role.min_yoe}</li>
+              <li className="list-group-item">Level: {role.level}</li>
+              <li className="list-group-item">Location: {role.location}</li>
+              <li className="list-group-item">Min Salary: {role.salary}</li>
+              <li className="list-group-item">Remote: {role.remote}</li>
+              <li className="list-group-item">Sponsorship Provided: {role.sponsorship_provided}</li>
+              <li className="list-group-item">
                 Recruiter for this role: {role.recruiter.fname} {role.recruiter.lname}
               </li>
-              <li>
+              <li className="list-group-item">
                 Recruiter's Linkedin:{' '}
                 <a href={`https://${role.recruiter.linkedin}`}>{role.recruiter.linkedin}</a>
                 </li>
@@ -96,8 +97,8 @@ function JobSeekerSearchResults() {
             <div>
               <p>Want to connect with the recruiter for this role?</p>
               <input type="hidden" id={`rqst_id_${role.recruiter.id}`} value={role.recruiter.id}></input>
-              <input type="text" id={`connect_message_${role.recruiter.id}`} placeholder="Optional: Enter a message" />
-              <button id={`id_${role.recruiter.id}`} onClick={(event) => handleConnect(event, role.recruiter.id)}>Send Connection Request</button>
+              <input type="text" className="form-control form-control-rounded form-control-sm focus-state" id={`connect_message_${role.recruiter.id}`} placeholder="Optional: Enter a message" />
+              <button className="btn btn-secondary rounded show_edit focus-state" id={`id_${role.recruiter.id}`} onClick={(event) => handleConnect(event, role.recruiter.id)}>Send Connection Request</button>
               {connectionRequestResult[role.recruiter.id] === 'success' && (
                 <p id={`success_${role.recruiter.id}`}>Connection request sent!</p>
               )}
@@ -108,6 +109,7 @@ function JobSeekerSearchResults() {
           )}
         </div>
       )}
+    </div>
     </div>
   );
 }

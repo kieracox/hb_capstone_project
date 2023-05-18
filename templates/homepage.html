@@ -4,15 +4,19 @@
 
 {% block navbar %}{% endblock %}
 
+{% block body_id %}
+  id="homepage-body"
+{% endblock %}
+
 {% block body %} 
 <div class="row auth-forms-wrapper">
     <form action="/register" method="POST" class="auth_forms" id="signup">
-    <h5 class="auth-content">Create an Account</h4>
+    <h5 class="auth-content">Create an Account</h5>
     <p class="auth-content">
-        Email <input type="text" name="email">
+        Email <input class="focus-state" type="text" name="email">
     </p>
     <p class="auth-content">
-        Password <input type="password" name="password">
+        Password <input class="focus-state" type="password" name="password">
     </p>
     <p class="auth-content">
         I am a: 
@@ -22,16 +26,16 @@
         Recruiter <input type="radio" id="create_recruiter" name="user_type" value="recruiter">
     </p>
     <p class="auth-content">
-        <input type="submit" value="Create my account">
+        <input type="submit" value="Create my account" class="focus-state btn btn-secondary rounded">
     </p>
 </form>
 <form action="/login" method="POST" class="auth_forms" id="login">
     <h5 class="auth-content">Log In</h4>
     <p class="auth-content">
-        Email <input type="text" name="email">
+        Email <input type="text" name="email" class="focus-state">
     </p>
     <p class="auth-content">
-        Password <input type="password" name="password">
+        Password <input type="password" name="password" class="focus-state">
     </p>
     <p class="auth-content">
         I am a: 
@@ -41,36 +45,34 @@
         Recruiter <input type="radio" id="login_recruiter" name="user_type" value="recruiter">
     </p>
     <p class="auth-content">
-        <input type="submit" value="Log In">
+        <input type="submit" value="Log In" class="focus-state btn btn-secondary rounded">
     </p>
 </form>
 </div>
-<div class="container">
+<div class="container" id="homepage-container">
+    <div id="intro-container">
 <h1>[Insert Name Here]</h1>
 <div class="row">
-    <div class="col">
-<p>Connecting top employers with top candidates.</p> 
-</div>
-
-</div>   
-<div class="row">
-    <div class="col">
-        <p>Hiring? Say goodbye to cold messaging - connect with candidates who are interested and ready to interview.</p>
-    </div>
-       
-    <div class="col">
-        <p>Looking for your next opportunity? Cut out the middleman and the ATS - connect directly with the recruiter for your dream role.</p>
-    </div>
-</div>
-<div class="row">
-<img src="static/images/homepage_image_1.jpg">
-</div>
-
+<h5>Connecting top employers with top candidates.</h5> 
+</div>  
+</div> 
 {% if "user_email" in session %} 
-<p>
+<p id="logged-in">
     You're already logged in! Click <a href="/user_dashboard">here</a> to go to your dashboard.
 </p>
-{% endif %}
+{% endif %}  
+<div class="row" id="site-description">
+    <div class="col" id="rec_intro">
+        <h5 style="text-align: center; margin-top: 10px;">Hiring?</h5> <p><b>Say goodbye to cold messaging</b> - match with candidates who are ready to interview.</p>
+    </div>
+       
+    <div class="col" id="js_intro">
+        <h5 style="text-align: center; margin-top: 10px;">Looking for your next opportunity?</h5> <p><b>Cut out the middleman</b> - connect directly with the recruiter for your dream role.</p>
+    </div>
 </div>
 
+
+
+
+</div>
 {% endblock %}

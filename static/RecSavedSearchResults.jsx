@@ -67,15 +67,16 @@ function RecruiterSearchResults() {
 
         function SearchResult({candidate, showDetails, setShowDetails, existingConnections, handleConnect, connectionRequestResult}) {
             return (
-                <div key={candidate.id}>
-                <p>{candidate.fname}{candidate.lname}</p>
-                <button onClick={() => setShowDetails((prev) => ({ ...prev, [candidate.id]: !prev[candidate.id] }))}>
+              <div className="container">
+                <div key={candidate.id} className="search-result">
+                <h6>{candidate.fname}{candidate.lname}</h6>
+                <button className="btn btn-secondary rounded focus-state" onClick={() => setShowDetails((prev) => ({ ...prev, [candidate.id]: !prev[candidate.id] }))}>
               {showDetails ? 'Hide details' : 'Show details'}
             </button>
             {showDetails && (
                 <div className="details">
-                    <ul>
-                        <li>Role Types:
+                    <ul className="list-group" id="search-results-list">
+                        <li className="list-group-item">Role Types:
                         <span className="profile_details" id={`cand_roles_${candidate.id}`}>
                             {candidate.role_types.map((role_type) => (
                                 <React.Fragment key={role_type.id}>
@@ -84,8 +85,8 @@ function RecruiterSearchResults() {
                             ))}
                         </span>
                         </li>
-                        <li>YOE: {candidate.yoe}</li>
-                        <li>
+                        <li className="list-group-item">YOE: {candidate.yoe}</li>
+                        <li className="list-group-item">
                             Skills:
                             <span className="profile_details" id={`cand_skills_${candidate.id}`}>
                                 {candidate.skills.map((skill) => (
@@ -95,13 +96,13 @@ function RecruiterSearchResults() {
                                 ))}
                             </span>
                         </li>
-                        <li>Location: {candidate.location}</li>
-                        <li>Min Salary: {candidate.salary}</li>
-                        <li>Remote Only: {candidate.remote_only}</li>
-                        <li>Sponsorship Needed: {candidate.sponsorship_needed}</li>
-                        <li>Linkedin: <a href={`https://${candidate.linkedin}`}>{candidate.linkedin}</a></li>
-                        <li>Github: <a href={`https://${candidate.github}`}>{candidate.github}</a></li>
-                        <li>Resume: <a href={candidate.resume_url}>View it here.</a></li>
+                        <li className="list-group-item">Location: {candidate.location}</li>
+                        <li className="list-group-item">Min Salary: {candidate.salary}</li>
+                        <li className="list-group-item">Remote Only: {candidate.remote_only}</li>
+                        <li className="list-group-item">Sponsorship Needed: {candidate.sponsorship_needed}</li>
+                        <li className="list-group-item">Linkedin: <a href={`https://${candidate.linkedin}`}>{candidate.linkedin}</a></li>
+                        <li className="list-group-item">Github: <a href={`https://${candidate.github}`}>{candidate.github}</a></li>
+                        <li className="list-group-item">Resume: <a href={candidate.resume_url}>View it here.</a></li>
                     </ul>
                     {existingConnections.some((connection) => connection.id === candidate.id) ? (
                     <p>You are already connected with this user.</p>
@@ -109,8 +110,8 @@ function RecruiterSearchResults() {
                 <div>
                  <p>Want to connect with this candidate?</p>
                  <input type="hidden" id={`rqst_id_${candidate.id}`} value={candidate.id}/>
-                 <input type="text" id={`connect_message_${role.candidate.id}`} placeholder="Optional: Enter a message" />
-                 <button id={`id_${candidate.id}`} onClick={(event) => handleConnect(event, candidate.id)}>Send Connection Request</button>
+                 <input className="form-control form-control-rounded form-control-sm focus-state" type="text" id={`connect_message_${role.candidate.id}`} placeholder="Optional: Enter a message" />
+                 <button id={`id_${candidate.id}`} className="btn btn-secondary rounded show_edit focus-state" onClick={(event) => handleConnect(event, candidate.id)}>Send Connection Request</button>
                 {connectionRequestResult[candidate.id] === 'success' && (
                   <p id={`success_${candidate.id}`}>Connection request sent!</p>
                 )}
@@ -122,6 +123,7 @@ function RecruiterSearchResults() {
                 </div>
             )}
 
+            </div>
             </div>
             );
         }

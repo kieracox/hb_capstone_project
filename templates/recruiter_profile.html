@@ -4,132 +4,153 @@
 
 {% block body %} 
 <h1>Your Recruiter Profile</h1>
-
 <p>
     Click <a href="/user_dashboard">here</a> to return to your dashboard.
 </p>
 <p>
     Click <a href="/new_role">here</a> to add a new role. 
 </p>
-
-<h2>Personal Information</h2>
- <ul>
-    <li>
+<div class="container">
+<div class="row your-info d-flex">
+    <div class="col personal-info align-items-stretch">
+        <div class="card text-center px-4 card-equal-height" id="personal-info">
+<h2 class="card-title" style="text-align: center;">Personal Information</h2>
+ <ul class="list-group">
+    <li class="list-group-item">
         <span class="profile_details" id="rec_fname">First name: {{user.fname}}</span>
     </li>
-    <li>
+    <li class="list-group-item">
         <span class="profile_details" id="rec_lname">Last name: {{user.lname}}</span>
     </li>
-    <li>
+    <li class="list-group-item">
         <span class="profile_details" id="rec_company">Company: {{user.company}}</span>
     </li>
-    <li>
-        <span class="profile_details" id="rec_linkedin">Linkedin: {{user.linkedin}}</span>
+    <li class="list-group-item">
+        <span class="profile_details" id="rec_linkedin">Linkedin: <a href="{{user.linkedin}}">{{user.linkedin}}</a></span>
     </li>
     </ul>
-
-<h2>Role Information</h2>
+</div>
+</div>
+<div class="col role-info align-items-stretch">
+    <div class="card text-center px-4 card-equal-height" id="role-info">
+<h2 class="card-title" style="text-align: center;">Role Information</h2>
+<hr>
 {% if user.roles %}
 {% for role in user.roles %}
+<div class="card-text">
 <h4>{{role.name}}</h4>
-<div id="show_{{ role.id }}" style="display: none;">
-<ul>
-<li>
+<div class="show-role" id="show_{{ role.id }}" style="display: none;">
+<ul class="list-group">
+<li class="list-group-item">
     <span class="profile_details" id="role_name">Role Name: {{role.name}}</span>
 </li>
-<li>
+<li class="list-group-item">
     <span class="profile_details" id="role_type">Type: {{role.role_type}}</span>
 </li>
-<li>
+<li class="list-group-item">
     <span class="profile_details" id="role_yoe">Min YOE: {{role.min_yoe}}</span>
 </li>
-<li>
+<li class="list-group-item">
     <span class="profile_details" id="role_level">Level: {{role.level}}</span>
 </li>
-<li>
+<li class="list-group-item">
     <span class="profile_details" id="role_location">Location: {{role.location}}</span>
 </li>
-<li>
+<li class="list-group-item">
     <span class="profile_details" id="role_salary">Min Salary: {{role.salary}}</span>
 </li>
-<li>
+<li class="list-group-item">
     <span class="profile_details" id="role_remote">Remote: {{role.remote}}</span>
 </li>
-<li>
+<li class="list-group-item">
     <span class="profile_details" id="role_sponsorship">Sponsorship Provided: {{role.sponsorship_provided}}</span>
 </li>
 {%for skill in role.skills %} 
-<li>
+<li class="list-group-item">
     <span class="profile_details" id="role_skill">Top Skill: {{skill.skill_name}}</span>
 </li>
 {% endfor %}
 </ul>
 </div>
-<button class="show_details" id="show_details_{{ role.id }}">Show Details</button>
+<button class="btn btn-secondary rounded show_details focus-state" id="show_details_{{ role.id }}">Show Details</button>
+</div>
 {% endfor %}
 {% else %} 
 <p>You don't have any roles yet!</p>
 {% endif %}
-<h2>Edit Profile</h2>
-<form action="/update_rec_profile" id="#edit_rec_profile" method="POST">
+</div>
+</div>
+</div>
+<hr>
+<div class="row edit-info d-flex">
+<div class="col edit-personal align-items-stretch">
+    <div class="card text-center px-4 mb-4 card-equal-height" id="edit-personal" style="width: 75%">
+    <form action="/update_rec_profile" id="#edit_rec_profile" method="POST" style="width: 300px;">
     <fieldset>
-        <legend>Edit Personal Information</legend>
-    <p>
-        First Name: <input type="text" name="fname">
-    </p>
-    <p>
-        Last Name: <input type="text" name="lname">
-    </p>
-    <p>
-        Company: <input type="text" name="company">
-    </p>
-    <p>
-        Linkedin URL: <input type="text" name="linkedin">
-    </p>
+        <legend class="card-title" style="text-align: center;">Edit Personal Info</legend>
+        <ul class="list-group">
+            <li class="list-group-item">
+        First Name: <input type="text" name="fname" class="form-control form-control-rounded form-control-sm focus-state" >
+            </li>
+            <li class="list-group-item">
+        Last Name: <input type="text" name="lname" class="form-control form-control-rounded form-control-sm focus-state" >
+            </li>
+            <li class="list-group-item">
+        Company: <input type="text" name="company" class="form-control form-control-rounded form-control-sm focus-state" >
+            </li>
+            <li class="list-group-item">
+        Linkedin URL: <input type="text" name="linkedin" class="form-control form-control-rounded form-control-sm focus-state" >
+            </li>
+</ul>
 </fieldset>
+</div>
+</div>
+<div class="col edit-role">
 {% for role in user.roles %} 
+<div class="card text-center px-4 mb-4">
 <fieldset>
-    <legend>Edit {{role.name}} Role Information</legend>
+    <legend>Edit {{role.name}} Role Info</legend>
     <div id="edit_{{ role.id }}" style="display: none;">
-    <p>
-        Role Name: <input type="text" name="role_name">
-    </p>
-    <p>
-        Location: <input type="text" name="location">
-    </p>
-    <p>
-        Minimum years of experience: <input type="number" id="yoe" name="yoe" min="0">
-    </p>
-    <p>
-        Minimum salary: <input type="number" id="min_salary" name="min_salary" min="0">
-    </p>
-    <p>
+        <ul class="list-group">
+    <li class="list-group-item">
+        Role Name: <input type="text" class="form-control form-control-rounded form-control-sm focus-state"  name="role_name">
+    </li>
+    <li class="list-group-item">
+        Location: <input type="text" name="location" class="form-control form-control-rounded form-control-sm focus-state"  >
+    </li>
+    <li class="list-group-item">
+        Minimum years of experience: <input type="number" id="yoe" name="yoe" min="0" class="form-control form-control-rounded form-control-sm focus-state" >
+    </li>
+    <li class="list-group-item">
+        Minimum salary: <input type="number" id="min_salary" name="min_salary" min="0" class="form-control form-control-rounded form-control-sm focus-state" >
+    </li>
+    <li class="list-group-item">
         Level:
-        <select type="select" id="level">
+        <select type="select" id="level" class="form-select focus-state">
             <option value="Entry Level">Entry Level</option>
             <option value="Mid Level">Mid Level</option>
             <option value="Senior">Senior</option>
             <option value="Staff">Staff</option>
             <option value="Manager">Management</option>
         </select>
-    </p>
-    <p>
+    </li>
+    <li class="list-group-item">
         Is this role eligible for full-time remote? 
         <br>
         Yes <input type="radio" id="yes" name="remote" value="True">
         <br>
         No <input type="radio" id="no" name="remote" value="False">
-    </p>
-    <p>
+    </li>
+    <li class="list-group-item">
         Are you providing visa sponsorship for this role?
         <br>
         Yes <input type="radio" id="yes" name="sponsorship_provided" value="True">
         <br>
         No <input type="radio" id="no" name="sponsorship_provided" value="False">
-    </p>
-    <p>
+    </li>
+    <li class="list-group-item">
         Select the skill that is most desired for this role:
-        <select name="skill" id="role_skill">
+        <select name="skill" class="form-select focus-state" id="role_skill">
             <option value="Python">Python</option>
             <option value="Javascript">Javascript</option>
             <option value="React">React</option>
@@ -141,9 +162,9 @@
             <option value="Swift">Swift</option>
             <option value="Selenium">Selenium</option>
         </select>
-    </p>
-    <p>Select the type of role this is:
-        <select name="role_type" id="js_role_type">
+    </li>
+    <li class="list-group-item">Select the type of role this is:
+        <select name="role_type" class="form-select focus-state" id="js_role_type">
             <option value="Backend">Backend</option>
             <option value="Frontend">Frontend</option>
             <option value="Fullstack">Fullstack</option>
@@ -155,34 +176,45 @@
             <option value="Mobile">Mobile</option>
             <option value="QA">QA</option>
         </select>
-    </p>
+    </li>
+</ul>
     </div>
-    <button class="show_edit" id="edit_details_{{ role.id }}">Show Edit Form</button>
+    <button class="btn btn-secondary rounded show_edit focus-state" id="edit_details_{{ role.id }}">Show Edit Form</button>
 </fieldset>
-<input type="submit">
+</div>
+<br>
 {% endfor %}
 </form>
+</div>
+<input class="btn btn-secondary rounded focus-state" type="submit" style="margin-top: 20px;" value="Submit All">
+<hr>
+<div class="row upload">
 {% for role in user.roles %}
+<div class="col upload-form">
 <h4>Upload Your Job Description: {{role.name}}</h2>
     <!-- <button onclick="showUploadWidget()">Upload File</button> -->
-    <form action="/upload_jd" method="post" enctype="multipart/form-data">
-       <input type="hidden" name="role_id" value="{{ role.id }}">
-       <input type="file" name="jd">
+    <form action="/upload_jd" method="post" enctype="multipart/form-data" style="width:300px;">
+       <input type="hidden" class="btn btn-secondary rounded" name="role_id" value="{{ role.id }}">
+       <input type="file" name="jd" class="form-control form-control-rounded form-control-sm focus-state" >
        <br>
-       <input type="submit" value="Upload">
+       <input type="submit" class="btn btn-secondary rounded focus-state" value="Upload">
     </form>
+</div>
 {% endfor %}
-
- <br>
+</div>
+</div>
+ <hr>
+ <div class="row files">
  <h2>Your job descriptions</h2>
  {% for role in user.roles %}
     {%if role.jd_url %}
  <a href="{{ role.jd_url }}">{{role.name}}</a> <br>
  {% else %} 
- <p>You don't have a job description for {{role.name}}. Would you like to add one?</p>
+ <p>You don't have a job description uploaded for {{role.name}}.</p>
     {% endif %}
  {% endfor %}
-
+ </div>
+</div>
 
  <script src="/static/showDetails.js"></script>
  <!-- <script src="https://widget.cloudinary.com/v2.0/global/all.js" type="text/javascript"></script>

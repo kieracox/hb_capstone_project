@@ -5,24 +5,26 @@
 {% block body %} 
 
 <h2>Add a New Role</h2>
-<p>Please enter in the details on your new role.</p>
+<div class="container">
+<h4>Please enter the details on your new role.</h4>
 <p>You can upload a job description on your <a href="/user_profile">profile page.</a></p>
-<form action="/add_role" method="POST">
+<hr>
+<form action="/add_role" method="POST" style="width: 300px;">
     <p>
-        Role Name: <input type="text" name="role_name">
+        Role Name: <input type="text" name="role_name" class="form-control form-control-rounded form-control-sm focus-state">
     </p>
     <p>
-        Location: <input type="text" name="location">
+        Location: <input type="text" name="location" class="form-control form-control-rounded form-control-sm focus-state">
     </p>
     <p>
-        Minimum years of experience: <input type="number" id="yoe" name="yoe" min="0">
+        Minimum years of experience: <input type="number" id="yoe" name="yoe" min="0" class="form-control form-control-rounded form-control-sm focus-state">
     </p>
     <p>
-        Minimum salary: <input type="number" id="min_salary" name="min_salary" min="0">
+        Minimum salary: <input type="number" id="min_salary" name="min_salary" min="0" class="form-control form-control-rounded form-control-sm focus-state">
     </p>
     <p>
         Level:
-        <select type="select" id="level">
+        <select type="select" id="level" class="form-select focus-state">
             <option value="Entry Level">Entry Level</option>
             <option value="Mid Level">Mid Level</option>
             <option value="Senior">Senior</option>
@@ -46,7 +48,7 @@
     </p>
     <p>
         Select the skill that is most desired for this role:
-        <select name="skill" id="role_skill">
+        <select name="skill" id="role_skill" class="form-select focus-state">
             <option value="Python">Python</option>
             <option value="Javascript">Javascript</option>
             <option value="React">React</option>
@@ -60,7 +62,7 @@
         </select>
     </p>
     <p>Select the type of role this is:
-        <select name="role_type" id="js_role_type">
+        <select name="role_type" id="js_role_type" class="form-select focus-state">
             <option value="Backend">Backend</option>
             <option value="Frontend">Frontend</option>
             <option value="Fullstack">Fullstack</option>
@@ -73,7 +75,8 @@
             <option value="QA">QA</option>
         </select>
     </p>
-    <input type="submit">
+    <input type="submit" class="btn btn-secondary rounded focus-state">
 </form>
+</div>
 
 {% endblock %}

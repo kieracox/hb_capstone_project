@@ -7,44 +7,47 @@
 <p>
     Click <a href="/user_dashboard">here</a> to return to your dashboard.
 </p>
-
-<h2>Your Profile</h2>
- <ul>
-    <li>
+<div class="container">
+    <div class="row your-info">
+        <div class="col personal-info">
+            <div class="card" id="personal-info">
+<h2 class="card-title" style="text-align: center;">Your Profile</h2>
+ <ul class="list-group">
+    <li class="list-group-item">
         <span class="profile_details" id="js_fname">First name: {{user.fname}}</span>
     </li>
-    <li>
+    <li class="list-group-item">
         <span class="profile_details" id="js_lname">Last name: {{user.lname}}</span>
     </li>
-    <li>
-        <span class="profile_details" id="js_linkedin">Linkedin: {{user.linkedin}}</span>
+    <li class="list-group-item">
+        <span class="profile_details" id="js_linkedin">Linkedin:<a href="{{user.linkedin}}">{{user.linkedin}}</a></span>
     </li>
-    <li>
-        <span class="profile_details" id="js_github">Github: {{user.github}}</span>
+    <li class="list-group-item">
+        <span class="profile_details" id="js_github">Github: <a href="{{user.github}}">{{user.github}}</a></span>
     </li>
-    <li>
+    <li class="list-group-item">
         <span class="profile_details" id="js_location">Location: {{user.location}}</span>
     </li>
-    <li>
+    <li class="list-group-item">
         <span class="profile_details" id="js_yoe">Years of experience: {{user.yoe}}</span>
     </li>
-    <li>
+    <li class="list-group-item">
         <span class="profile_details" id="js_salary">Desired Salary: {{user.desired_salary}}</span>
     </li>
-    <li>
+    <li class="list-group-item">
     <span class="profile_details" id="js_remote">Remote only? {{user.remote_only}}</span>
     </li>
-    <li>
+    <li class="list-group-item">
         <span class="profile_details" id="js_sponsorship">Sponsorship needed? {{user.sponsorship_needed}}</span>
     </li>
-    <li>
+    <li class="list-group-item">
         <span class="profile_details" id="js_skills">Skills: 
             {% for skill in skills %}
             {{ skill.skill_name}},
             {% endfor %}
         </span>
     </li>
-    <li>
+    <li class="list-group-item">
         <span class="profile_details" id="js_role_types">Desired role:
             {% for role in roletypes %} 
             {{ role.role_type }},
@@ -52,48 +55,53 @@
         </span>
     </li>
  </ul>
-<br>
- <h2>Edit Profile</h2>
+</div>
+</div>
+<hr>
+<div class="row edit-info">
+    <div class="card">
+ <h2 class="card-title">Edit Profile</h2>
  
- <form action="/update_js_profile" id="#edit_profile" method="POST">
-    <p>
-        First Name: <input type="text" name="fname">
-    </p>
-    <p>
-        Last Name: <input type="text" name="lname">
-    </p>
-    <p>
-        Linkedin URL: <input type="text" name="linkedin">
-    </p>
-    <p>
-        Github URL: <input type="text" name="github">
-    </p>
-    <p>
-        Location: <input type="text" name="location">
-    </p>
-    <p>
-        Years of experience: <input type="number" id="yoe" name="yoe" min="0">
-    </p>
-    <p>
-        Minimum desired salary: <input type="number" id="desired_salary" name="desired_salary" min="0">
-    </p>
-    <p>
+ <form action="/update_js_profile" id="#edit_profile" method="POST" style="width: 300px;">
+    <ul class="list-group">
+        <li class="list-group-item">
+        First Name: <input type="text" name="fname" class="form-control form-control-rounded form-control-sm focus-state" >
+        </li>
+        <li class="list-group-item">
+        Last Name: <input type="text" name="lname" class="form-control form-control-rounded form-control-sm focus-state" >
+        </li>
+        <li class="list-group-item">
+        Linkedin URL: <input type="text" name="linkedin" class="form-control form-control-rounded form-control-sm focus-state" >
+        </li>
+        <li class="list-group-item">
+        Github URL: <input type="text" name="github" class="form-control form-control-rounded form-control-sm focus-state" >
+        </li>
+        <li class="list-group-item">
+        Location: <input type="text" name="location" class="form-control form-control-rounded form-control-sm focus-state" >
+        </li>
+        <li class="list-group-item">
+        Years of experience: <input type="number" id="yoe" name="yoe" min="0" class="form-control form-control-rounded form-control-sm focus-state" >
+        </li>
+        <li class="list-group-item">
+        Minimum desired salary: <input type="number" id="desired_salary" name="desired_salary" min="0" class="form-control form-control-rounded form-control-sm focus-state" >
+        </li>
+        <li class="list-group-item">
         Are you exclusively seeking remote roles? 
         <br>
         Yes <input type="radio" id="yes" name="remote_only" value="True">
         <br>
         No <input type="radio" id="no" name="remote_only" value="False">
-    </p>
-    <p>
+        </li>
+        <li class="list-group-item">
         Are you looking for visa sponsorship?
         <br>
         Yes <input type="radio" id="yes" name="sponsorship_needed" value="True">
         <br>
         No <input type="radio" id="no" name="sponsorship_needed" value="False">
-    </p>
-    <p>
+        </li>
+        <li class="list-group-item">
         Select the skill you are most proficient in:
-        <select name="skill" id="js_skill">
+        <select name="skill" id="js_skill" class="form-select focus-state">
             <option value="Python">Python</option>
             <option value="Javascript">Javascript</option>
             <option value="React">React</option>
@@ -105,9 +113,10 @@
             <option value="Swift">Swift</option>
             <option value="Selenium">Selenium</option>
         </select>
-    </p>
-    <p>Select the type of role you're most interested in:
-        <select name="role_type" id="js_role_type">
+    </li>
+    <li class="list-group-item">
+        Select the type of role you're most interested in:
+        <select name="role_type" id="js_role_type" class="form-select focus-state">
             <option value="Backend">Backend</option>
             <option value="Frontend">Frontend</option>
             <option value="Fullstack">Fullstack</option>
@@ -119,19 +128,26 @@
             <option value="Mobile">Mobile</option>
             <option value="QA">QA</option>
         </select>
-    </p>
-    <input type="submit">
- </form>
-<br>
-<h2>Upload Your Resume</h2>
- <form action="/upload_resume" method="post" enctype="multipart/form-data">
-    <input type="file" name="resume">
+    </li>
+</ul>
     <br>
-    <input type="submit" value="Upload">
+    <input class="btn btn-secondary rounded focus-state" type="submit">
+ </form>
+</div>
+</div>
+<div class="row upload">
+    <div class="col upload-form">
+<h2>Upload Your Resume</h2>
+ <form action="/upload_resume" method="post" enctype="multipart/form-data" style="width:300px;">
+    <input type="file" name="resume" class="form-control form-control-rounded form-control-sm focus-state" >
+    <br>
+    <input type="submit" class="btn btn-secondary rounded focus-state" value="Upload">
  </form>
 
- <br>
+ <hr>
  <h2>Your resume</h2>
  <a href="{{ user.resume_url }}">View it here</a>
+</div>
+</div>
 
 {% endblock %}

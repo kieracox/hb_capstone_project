@@ -8,27 +8,29 @@
 <p>
     Click <a href="/user_dashboard">here</a> to return to your dashboard.
 </p>
-<form action="/run_saved_search" class="saved_search_form" method="GET">
-    <p>Use one of your saved searches:</p>
-    <select id="rec_saved_searches" name="saved_searches" class="saved_search_select">
+<div class="container">
+<form action="/run_saved_search" class="saved_search_form" method="GET" style="width: 300px;">
+    <h5>Use one of your saved searches:</h5>
+    <select id="rec_saved_searches" name="saved_searches" class="saved_search_select form-select focus-state">
         <option value="None">None</option>
         {% for search in saved_searches %} 
         <option value="{{search.search_nickname}}" data-params="{{search.search_params}}">{{search.search_nickname}}</option>
         {% endfor %}
     </select>
-    <input type="submit" value="Search Again">
+    <input type="submit" value="Search Again" class="btn btn-secondary rounded focus-state" style="margin-top: 10px;">
 </form>
-<form action="/search" class="new_search_form" method="POST">
-    <p>Or start a new search:</p>
+<hr>
+<form action="/search" class="new_search_form" method="POST" style="width: 300px;">
+    <h5>Or start a new search:</h5>
     <p>
         Show me candidates in this location (leave blank if no desired location):
         <br>
-        <input type="text" name="location">
+        <input type="text" name="location" class="form-control form-control-rounded form-control-sm focus-state">
     </p>
     <p>
         With this YOE:
         <br>
-        <input type="number" name="yoe" min="0" value="0">
+        <input type="number" name="yoe" min="0" value="0" class="form-control form-control-rounded form-control-sm focus-state">
         <br>
         Show me candidates with this YOE or:
         <br>
@@ -41,7 +43,7 @@
     <p>
         With this skill:
         <br>
-        <select name="skill" id="cand_skill">
+        <select name="skill" id="cand_skill" class="form-select focus-state">
             <option value="All">Any Skill</option>
             <option value="Python">Python</option>
             <option value="Javascript">Javascript</option>
@@ -59,7 +61,7 @@
     <p>
         Who are interested in this type of role:
         <br>
-        <select name="role_type" id="cand_role_type">
+        <select name="role_type" id="cand_role_type" class="form-select focus-state">
             <option value="All">Any Role</option>
             <option value="Backend">Backend</option>
             <option value="Frontend">Frontend</option>
@@ -76,7 +78,7 @@
     <p>
         With this minimum desired salary:
         <br>
-        <input type="number" name="salary" min="0" value="0">
+        <input type="number" name="salary" min="0" value="0" class="form-control form-control-rounded form-control-sm focus-state">
         <br>
         Show me candidates with this minimum salary or:
         <br>
@@ -91,7 +93,7 @@
     <p>
         Should we show you candidates who are remote only?
         <br>
-        <select name="remote">
+        <select name="remote" class="form-select focus-state">
             <option value="yes">Yes</option>
             <option value="no">No</option>
         </select>
@@ -99,13 +101,14 @@
     <p>
         Should we show you candidates who need visa sponsorship?
         <br>
-        <select name="sponsorship">
+        <select name="sponsorship" class="form-select focus-state">
             <option value="yes">Yes</option>
             <option value="no">No</option>
         </select>
     </p>
     <p>
-        <input type="submit" value="See results">
+        <input type="submit" value="See results" class="btn btn-secondary rounded focus-state">
     </p>
 </form>
+</div>
 {% endblock %}

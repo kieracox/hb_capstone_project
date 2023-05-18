@@ -5,56 +5,68 @@
 {% block body %}
 <h1>Settings</h1>
 
-<h3>Notification Preferences</h3>
+<div class="container">
+    <div class="card">
+<h3 class="card-title" style="margin-top: 10px;">Notification Preferences</h3>
 {% if user.notifications_enabled %} 
-<form id="disable_notifications" method="POST" action="/set_notifications">
+<form id="disable_notifications" method="POST" action="/set_notifications" style="width: 300px;">
     <p>You currently have notifications enabled. Do you want to disable them?</p>
-    <input type="submit" name="disable_notifications" value="Disable Notifications">
+    <input class="btn btn-secondary rounded focus-state" type="submit" name="disable_notifications" value="Disable Notifications">
 </form>
 {% else %}
-<form id="enable_notifications"  method="POST" action="/set_notifications">
+<form id="enable_notifications"  method="POST" action="/set_notifications" style="width: 300px;">
     <p>You currently have notifications disabled. Do you want to enable them?</p>
-    <input type="submit" name="enable_notifications" value="Enable Notifications">
+    <input class="btn btn-secondary rounded focus-state" type="submit" name="enable_notifications" value="Enable Notifications">
 </form>
 {% endif %}
-
-<h3>Change Password</h3>
-<form id="change_password" method="POST" action="/change_password">
-    Enter your current password: <input type="password" name="current_password">
-    <br>
-    Enter your new password: <input type="password" name="new_password">
-    <br>
-    <input type="submit">
-</form>
-
-<h3>Manage Saved Searches</h3>
-{% if saved_searches %}
-<ul>
-{% for search in saved_searches %}
-<li class="parent_li" id="list_item_{{search.id}}"><span class="search_name_display">{{search.search_nickname}}</span>
-    <input type="hidden" id="hidden_search_name_{{search.id}}" value="{{search.search_nickname}}">
-    <ul>
-        <li class="child_li">Edit your search name: <input type="text" class="search_name_input" data-search-id="{{ search.id }}" name="new_nickname">
+</div>
+<hr>
+<div class="card">
+<h3 class="card-title" style="margin-top: 10px;">Change Password</h3>
+<form style="width: 300px;" id="change_password" method="POST" action="/change_password">
     
-    <button class="edit_saved_search">Save</button>
+    Enter your current password: <input class="form-control form-control-rounded form-control-sm focus-state" type="password" name="current_password">
+    <br>
+    Enter your new password: <input class="form-control form-control-rounded form-control-sm focus-state" type="password" name="new_password">
+    <br>
+    <input class="btn btn-secondary rounded focus-state" type="submit">
+</form>
+</div>
+<hr>
+<div class="card">
+<h3 class="card-title" style="margin: 10px;">Manage Saved Searches</h3>
+{% if saved_searches %}
+<ul class="centered-list">
+{% for search in saved_searches %}
+<li class="parent_li list-group-item" id="list_item_{{search.id}}">
+    <div class="list-group-item-content">
+    <span class="search_name_display">{{search.search_nickname}}</span>
+    <input type="hidden" id="hidden_search_name_{{search.id}}" value="{{search.search_nickname}}">
+    <ul style="width: 300px;" class="nested-list list-group">
+        <li class="child_li">Edit your search name: <input class="form-control form-control-rounded form-control-sm focus-state" type="text" class="search_name_input" data-search-id="{{ search.id }}" name="new_nickname">
+    
+    <button class="edit_saved_search btn btn-success rounded focus-state" style="margin-top: 10px;">Save</button>
     <div id="successMessage_{{search.id}}" class="successMessage"></div></li>
     
        <li class="child_li"> Or delete this search:
-        <button data-search-id="{{ search.id }}" class="delete_saved_search">Delete</button>
+        <br>
+        <button data-search-id="{{ search.id }}" class="delete_saved_search btn btn-danger rounded focus-state">Delete</button>
         <div id="deleteSuccessMessage_{{search.id}}" class="deleteSuccessMessage"></div></li>
 </ul>
+</div>
 </li>
 {% endfor %}
 </ul>
 {% else %} 
 <p>You don't have any saved searches yet!</p>
 {%endif%}
+</div>
+<!-- <h3>Privacy Settings</h3> -->
 
-<h3>Privacy Settings</h3>
 
-<h3>Log Out</h3>
-<form action="/logout" method="POST">
-    <button id="logout">Log Out</button>
+<form action="/logout" method="POST" style="margin-top: 10px;">
+    <button class="btn btn-secondary rounded focus-state" id="logout">Log Out</button>
 </form>
+</div>
 <script src="/static/updateSavedSearch.js"></script>
 {% endblock %}

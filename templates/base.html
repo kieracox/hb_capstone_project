@@ -21,10 +21,11 @@
       
     {% block head %}{% endblock %}
   </head>
-  <body>
+  <body {% block body_id %}{% endblock %}>
+    {% block navbar %}
     <div class="navbar-wrapper">
     <div class="container-fluid" id="navbar-container">
-    {% block navbar %}
+    
     <nav class="navbar navbar-expand-lg">
       <div class="container-fluid">
         <ul class="navbar-nav">
@@ -35,10 +36,10 @@
         <a class="nav-link active" href="/user_profile">Profile</a>
       </li>
       <li class="nav-item">     
-        <a href="/new_search">Search</a>
+        <a class="nav-link active" href="/new_search">Search</a>
       </li>
       <li class="nav-item">
-        <a href="/settings">Settings</a>
+        <a class="nav-link active" href="/settings">Settings</a>
       </li>
       {% if user is defined and user.notifications_enabled %}
       <li class="nav-item dropdown">  
@@ -59,7 +60,7 @@
           {% endif %}
           {% endfor %}
           <li>
-            <a href="/notifications">View all notifications</a>
+            <a style="color: #0A2463" href="/notifications">View all notifications</a>
           </li>
         </ul>
       </li>
@@ -71,6 +72,7 @@
       </ul>
       </div>
     </nav>
+    
     </div>
     </div>
     {% endblock %}
