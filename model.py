@@ -1,7 +1,6 @@
 """Models for hiring app."""
 
-#notes from code review:
-        # global lists in server.py > put the actual skill in the table rather than having to do a foreign key
+
     
 
 from flask_sqlalchemy import SQLAlchemy
